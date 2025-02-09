@@ -11,7 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::create('Cardapios', function (Blueprint $table) {
+            $table->id();
+            $table->string('imagem');
+            $table->string('nome');
+            $table->text('descricao');
+            $table->decimal('valor', 8, 2);
+            $table->decimal('desconto', 8, 2)->default(0);
+            $table->string('disponibilidade'); // Ex: "Todo dia", "Segunda", etc.
+            $table->text('ingredientes');
+            $table->foreignId('id_categoria')->constrained('Categorias');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('Cardapios');
     }
 };

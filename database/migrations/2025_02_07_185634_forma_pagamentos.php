@@ -11,7 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::create('Formas_de_pagamento', function (Blueprint $table) {
+            $table->id();
+            $table->string('nome');
+            $table->decimal('taxa', 5, 2);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('Formas_de_pagamento');
     }
 };
