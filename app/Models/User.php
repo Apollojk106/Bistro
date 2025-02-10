@@ -17,10 +17,22 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
+     protected $fillable = [
+        'nome',
         'email',
-        'password',
+        'telefone',
+        'senha',
+        'salt',
+        'cep',
+        'rua',
+        'bairro',
+        'numero_residencia',
+        'complemento',
+    ];
+
+    protected $hidden = [
+        'senha',
+        'salt',
     ];
 
     /**
@@ -28,10 +40,6 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
 
     /**
      * Get the attributes that should be cast.
