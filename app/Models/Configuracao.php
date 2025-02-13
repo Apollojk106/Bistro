@@ -13,4 +13,6 @@ class Configuracao extends Model
         'status',
         'valores',
     ];
+
+    public $timestamps = true;
 }

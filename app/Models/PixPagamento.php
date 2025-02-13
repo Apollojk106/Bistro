@@ -16,4 +16,6 @@ class PixPagamento extends Model
         'pix_code',
         'status',
     ];
+
+    public $timestamps = true;
 }

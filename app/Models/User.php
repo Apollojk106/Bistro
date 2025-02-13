@@ -35,6 +35,8 @@ class User extends Authenticatable
         'salt',
     ];
 
+    public $timestamps = true;
+
     /**
      * The attributes that should be hidden for serialization.
      *

@@ -14,4 +14,6 @@ class FormaPagamento extends Model
     protected $casts = [
         'taxa' => 'decimal:2',
     ];
+
+    public $timestamps = true;
 }

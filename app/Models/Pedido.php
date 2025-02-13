@@ -24,4 +24,6 @@ class Pedido extends Model
         'valor_total',
         'valor_taxa',
     ];
+
+    public $timestamps = true;
 }

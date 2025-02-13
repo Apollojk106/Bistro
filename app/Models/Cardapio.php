@@ -16,4 +16,6 @@ class Cardapio extends Model
         'ingredientes',
         'id_categoria',
     ];
+
+    public $timestamps = true;
 }

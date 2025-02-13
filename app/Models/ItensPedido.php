@@ -18,4 +18,6 @@ class ItensPedido extends Model
         'valor_unitario' => 'decimal:2',
         'subtotal' => 'decimal:2',
     ];
+
+    public $timestamps = true;
 }
