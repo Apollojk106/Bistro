@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class NavigationController extends Controller
+class UserController extends Controller
 {
     public function Home()
     {
@@ -12,6 +12,8 @@ class NavigationController extends Controller
     }
 
     //User
+
+
 
     //Admin
     public function Dashboard()
