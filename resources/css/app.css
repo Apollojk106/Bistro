@@ -1,3 +1,164 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* ESTILIZAÇÃO GERAL */
+body {
+    background-color: #f3f4f6;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* HEADER */
+.header {
+    background: #b7b7b7;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+/* Botão do menu hambúrguer */
+.menu-button {
+    font-size: 24px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    position: relative;
+    z-index: 10;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 24px;
+    color: #ea580c;
+    text-align: center;
+    flex-grow: 1;
+}
+
+.icons button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* MENU LATERAL */
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background: #b7b7b7;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    transition: left 0.3s ease-in-out;
+    padding-top: 20px;
+    z-index: 20;
+}
+
+.side-menu.open {
+    left: 0;
+}
+
+.side-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.side-menu ul li {
+    padding: 15px;
+    border-bottom: 1px solid #a1a1a1;
+}
+
+.side-menu ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.close-menu {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* NAVEGAÇÃO */
+.nav-bar {
+    background: #000;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.nav-item {
+    color: #ea580c;
+    padding: 8px 16px;
+}
+
+.nav-item:hover {
+    color: #f97316;
+}
+
+.active {
+    border-bottom: 2px solid #ea580c;
+}
+
+/* CONTEÚDO PRINCIPAL */
+.main-content {
+    padding: 16px;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 16px 0;
+}
+
+/* SWIPER */
+.swiper {
+    width: 100%;
+    padding-bottom: 16px;
+}
+
+.card {
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    width: 80%;
+}
+
+.card-image {
+    width: 100%;
+    height: 128px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.card-title {
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.card-description {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.card-price {
+    color: #dc2626;
+    font-weight: bold;
+}
