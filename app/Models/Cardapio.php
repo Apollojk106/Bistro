@@ -6,7 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cardapio extends Model
 {
-    //asdasd
+    protected $fillable = [
+        'imagem',
+        'nome',
+        'descricao',
+        'valor',
+        'desconto',
+        'disponibilidade',
+        'ingredientes',
+        'id_categoria',
+    ];
 
-    //slk
+    public $timestamps = true;
 }
