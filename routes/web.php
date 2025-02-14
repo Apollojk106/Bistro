@@ -9,6 +9,7 @@ Route::get('/', function () {
 
 //user
 
+
 //admin
 Route::get('/admin/Dashboard', [UserController::class, 'Dashboard'])->name("Dashboard");
 Route::get('/admin/Pedido', [UserController::class, 'Pedido'])->name("Pedidos");
