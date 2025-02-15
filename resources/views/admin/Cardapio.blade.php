@@ -1,8 +1,8 @@
 <div>
-    <x-hotbar-admin/>
+    <x-hotbar-admin />
 
     <div class="flex flex-col w-full h-auto space-y-4">
-   
+
         <div class="flex items-center justify-center w-auto space-x-3 mt-5 mr-5 ml-5">
             <form action="" class="bg-[#B7B7B7] p-4 rounded-lg w-full h-auto flex items-center space-x-2 m-auto">
                 <select id="categoria" name="categoria" class="shadow appearance-none border rounded w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
@@ -17,7 +17,7 @@
                 <button class="bg-white p-2 rounded-lg flex items-center justify-center">
                     <img src="{{ asset('Icons/search.png') }}" alt="Imagem Centralizada" class="object-contain" />
                 </button>
-            </form> 
+            </form>
 
             <div class="bg-[#B7B7B7] p-4 rounded-lg flex items-center space-x-2 h-auto">
                 <select id="categoria" name="categoria" class="shadow appearance-none border rounded w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
@@ -41,7 +41,7 @@
             </button>
         </div>
 
-    
+
         <div class="bg-[#B7B7B7] rounded-lg p-4 w-auto mt-5 ml-5 mr-5 flex justify-center overflow-x-auto">
             <table class="min-w-full table-auto text-center">
                 <thead>
@@ -83,6 +83,5 @@
                 </tbody>
             </table>
         </div>
-
+    </div>
 </div>
-
