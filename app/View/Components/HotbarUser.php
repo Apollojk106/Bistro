@@ -24,3 +24,5 @@ class HotbarUser extends Component
         return view('components.hotbar-user');
     }
 }
+
+

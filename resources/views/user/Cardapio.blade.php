@@ -9,25 +9,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 </head>
 <body class="bg-gray-100">
-    <header class="header">
-        <button class="menu-button" id="menuToggle">&#9776;</button>
-        <h1 class="title">TERRAÇO</h1>
-        <div class="icons">
-            <button>📞</button>
-            <button>📷</button>
-        </div>
-    </header>
 
-    <!-- Menu Lateral -->
-    <nav class="side-menu" id="sideMenu">
-        <button class="close-menu" id="closeMenu">&times;</button>
-        <ul>
-            <li><a href="#">📜 Cardápio</a></li>
-            <li><a href="#">🛒 Meus Pedidos</a></li>
-            <li><a href="#">📍 Localização</a></li>
-            <li><a href="#">⚙️ Configuração</a></li>
-        </ul>
-    </nav>
+<x-hotbar-user />
+
+   
+    
 
     <!-- Navegação Principal -->
     <nav class="nav-bar">
