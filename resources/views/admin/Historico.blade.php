@@ -12,7 +12,6 @@
                         <option value="Categoria B">Valor</option>
                         <option value="Categoria C">Data</option>
                     </select>
-                    <img src="{{ asset('Icons/vector.png') }}" alt="Ícone" class="h-5 w-10">
                 </div>
 
                 <input type="text" placeholder="Pesquisar..." class="p-2 outline-none flex-1 border rounded" />

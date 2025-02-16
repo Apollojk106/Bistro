@@ -18,12 +18,32 @@ class UserController extends Controller
     //Admin
     public function Dashboard()
     {
-        return view('admin.Dashboard');    
+        $pratosVendidos = [
+            'Segunda' => 120,
+            'Terça'   => 150,
+            'Quarta'  => 130,
+            'Quinta'  => 170,
+            'Sexta'   => 200,
+            'Sábado'  => 250,
+            'Domingo' => 180,
+        ];
+    
+        return view('admin.Dashboard', compact('pratosVendidos')); 
     }
 
     public function Cardapio()
     {
         return view('admin.Cardapio');    
+    }
+
+    public function GetItemCardapio()
+    {
+        return view('admin.ItemCardapio');    
+    }
+
+    public function PostItemCardapio(Request $request)
+    {
+        return view('admin.ItemCardapio');    
     }
 
     public function Configuracao()

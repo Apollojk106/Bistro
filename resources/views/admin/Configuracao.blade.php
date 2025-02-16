@@ -14,7 +14,6 @@
                         <option value="">Ligado</option>
                         <option value="Categoria A">Desligado</option>
                     </select>
-                    <img src="{{ asset('Icons/vector.png') }}" alt="Ícone" class="h-5 w-10">
                 </div>
             </div>
         </div>
@@ -95,16 +94,18 @@
                 <div class="bg-[#B7B7B7] rounded-lg p-4 w-full h-min mt-1">
                     Almoço
 
-                    <div class="flex justify-center items-center space-x-2 mt-1">
-                        <select id="categoria" name="categoria" class="rounded-lg shadow appearance-none border rounded w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            <option value="">Primeira</option>
-                            <option value="">Secundaria</option>
-                            <option value="">Terciaria</option>
-                        </select>
-                        <button class="rounded-lg p-2 flex items-center justify-center m-auto">
-                            <img src="{{ asset('Icons/edit.png') }}" alt="Ícone" class="h-5 w-5">
-                        </button>
-                    </div>
+                    <form action="">
+                        <div class="flex justify-center items-center space-x-2 mt-1">
+                            <select id="categoria" name="categoria" class="rounded-lg shadow appearance-none border rounded w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="">Primeira</option>
+                                <option value="">Secundaria</option>
+                                <option value="">Terciaria</option>
+                            </select>
+                            <button class="rounded-lg p-2 flex items-center justify-center m-auto">
+                                <img src="{{ asset('Icons/edit.png') }}" alt="Ícone" class="h-5 w-5">
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 

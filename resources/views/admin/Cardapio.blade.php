@@ -36,9 +36,11 @@
                 </button>
             </div>
 
-            <button class="bg-[#B7B7B7] rounded-lg p-2 flex items-center justify-center m-auto">
-                <img src="{{ asset('Icons/plus.png') }}" alt="Imagem Centralizada" class="h-15 w-15 object-contain" />
-            </button>
+            <a href="{{ route('ItemCardapio') }}">
+                <button class="bg-[#B7B7B7] rounded-lg p-2 flex items-center justify-center m-auto">
+                    <img src="{{ asset('Icons/plus.png') }}" alt="Imagem Centralizada" class="h-15 w-15 object-contain" />
+                </button>
+            </a>
         </div>
 
 
@@ -53,33 +55,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="p-2">Produto 1</td>
-                        <td class="p-2">Categoria A</td>
-                        <td class="p-2">R$ 100,00</td>
-                        <td class="p-2">
-                            <button class="bg-green-500 text-white p-1 rounded">Editar</button>
-                            <button class="bg-red-500 text-white p-1 rounded ml-2">Excluir</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="p-2">Produto 2</td>
-                        <td class="p-2">Categoria B</td>
-                        <td class="p-2">R$ 200,00</td>
-                        <td class="p-2">
-                            <button class="bg-green-500 text-white p-1 rounded">Editar</button>
-                            <button class="bg-red-500 text-white p-1 rounded ml-2">Excluir</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="p-2">Produto 3</td>
-                        <td class="p-2">Categoria C</td>
-                        <td class="p-2">R$ 300,00</td>
-                        <td class="p-2">
-                            <button class="bg-green-500 text-white p-1 rounded">Editar</button>
-                            <button class="bg-red-500 text-white p-1 rounded ml-2">Excluir</button>
-                        </td>
-                    </tr>
+
+                    <form action="{{ route('PostItemCardapio') }}" method="Post">
+                        @csrf
+                        <input type="hidden" name="Id" value="id"></input>
+                        <tr>
+                            <td class="p-2">Produto 1</td>
+                            <td class="p-2">Categoria A</td>
+                            <td class="p-2">R$ 100,00</td>
+                            <td class="p-2">
+                                <button type="submit" class="bg-green-500 text-white p-1 rounded">
+                                    <img src="{{ asset('Icons/edit.png') }}" alt="Imagem Centralizada" class="h-15 w-15 object-contain" />
+                                </button>
+                                <button type="submit" class="bg-red-500 text-white p-1 rounded ml-2">
+                                    <img src="{{ asset('Icons/trash.png') }}" alt="Imagem Centralizada" class="h-10 w-10 object-contain" />
+                                </button>
+                            </td>
+                        </tr>
+                    </form>
+
+
                 </tbody>
             </table>
         </div>
