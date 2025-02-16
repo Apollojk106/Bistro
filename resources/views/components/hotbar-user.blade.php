@@ -28,7 +28,7 @@
     </header>
 
     <!-- Menu Lateral -->
-    <nav id="sideMenu" class="fixed top-0 left-[-250px] w-64 h-full bg-[#B7B7B7] shadow-md transition-all ease-in-out duration-300 pt-5">
+    <nav id="sideMenu" class="fixed top-0 left-[-250px] w-64 h-full bg-[#B7B7B7] shadow-md transition-all ease-in-out duration-300 pt-5 z-50">
         <button id="closeMenu" class="absolute top-2 right-4 text-2xl bg-none border-none">&times;</button>
         <ul class="list-none p-0">
             <li class="p-4 border-b border-gray-300">
@@ -46,6 +46,7 @@
         </ul>
     </nav>
 
+    
     
 
     <script>
