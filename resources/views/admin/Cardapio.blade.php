@@ -67,7 +67,7 @@
                                 <button type="submit" class="bg-green-500 text-white p-1 rounded">
                                     <img src="{{ asset('Icons/edit.png') }}" alt="Imagem Centralizada" class="h-15 w-15 object-contain" />
                                 </button>
-                                <button type="submit" class="bg-red-500 text-white p-1 rounded ml-2">
+                                <button type="button" class="bg-red-500 text-white p-1 rounded ml-2">
                                     <img src="{{ asset('Icons/trash.png') }}" alt="Imagem Centralizada" class="h-10 w-10 object-contain" />
                                 </button>
                             </td>

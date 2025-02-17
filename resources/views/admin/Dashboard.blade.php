@@ -3,7 +3,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <div class="flex h-[calc(100vh-15rem)]"> <!-- Ajuste da altura para considerar a hotbar -->
+    <div class="flex h-[calc(100vh-11rem)]"> <!-- Ajuste da altura para considerar a hotbar -->
         <!-- Coluna da esquerda -->
         <div class="flex flex-1 bg-lightblue p-4 overflow-y-auto"> <!-- Adicionado overflow-y-auto -->
             <div class="flex flex-col w-full space-y-4">
@@ -54,7 +54,7 @@
         </div>
 
         <!-- Coluna da direita -->
-        <div class="flex flex-1 bg-lightcoral p-4 h-auto">
+        <div class="fflex flex-1 bg-lightblue p-4 overflow-y-full">
             <div class="flex flex-col w-full space-y-4">
                 <!-- Gráfico -->
                 <div class="bg-[#B7B7B7] p-4 w-full h-64">
@@ -93,19 +93,19 @@
 
                 <!-- Itens -->
                 <div class="bg-[#B7B7B7] p-4 w-full h-min">
-                    <div class="grid grid-cols-3 gap-4 justify-between w-full h-auto">
-                        <p class="flex items-center justify-center p-2">Item 1 : asdasda</p>
-                        <p class="flex items-center justify-center p-2">Item 2 : asdasda</p>
-                        <p class="flex items-center justify-center p-2">Item 3 : asdasda</p>
-                        <span class="flex items-center justify-center p-2">Item 4 : asdasda</span>
-                        <span class="flex items-center justify-center p-2">Item 5 : asdasda</span>
-                        <span class="flex items-center justify-center p-2">Item 6 : asdasda</span>
-                        <span class="flex items-center justify-center p-2">Item 4 : asdasda</span>
-                        <span class="flex items-center justify-center p-2">Item 5 : asdasda</span>
-                        <span class="flex items-center justify-center p-2">Item 6 : asdasda</span>
-                        <span class="flex items-center justify-center p-2">Item 4 : asdasda</span>
-                        <span class="flex items-center justify-center p-2">Item 5 : asdasda</span>
-                        <span class="flex items-center justify-center p-2">paia 6 : asdasda</span>
+                    <div class="grid grid-cols-3 gap-4 justify-between w-full h-min">
+                        <p class="flex items-center justify-center">Item 1 : asdasda</p>
+                        <p class="flex items-center justify-center ">Item 2 : asdasda</p>
+                        <p class="flex items-center justify-center ">Item 3 : asdasda</p>
+                        <span class="flex items-center justify-center ">Item 4 : asdasda</span>
+                        <span class="flex items-center justify-center ">Item 5 : asdasda</span>
+                        <span class="flex items-center justify-center ">Item 6 : asdasda</span>
+                        <span class="flex items-center justify-center ">Item 4 : asdasda</span>
+                        <span class="flex items-center justify-center ">Item 5 : asdasda</span>
+                        <span class="flex items-center justify-center ">Item 6 : asdasda</span>
+                        <span class="flex items-center justify-center ">Item 4 : asdasda</span>
+                        <span class="flex items-center justify-center ">Item 5 : asdasda</span>
+                        <span class="flex items-center justify-center ">paia 6 : asdasda</span>
                     </div>
                 </div>
             </div>

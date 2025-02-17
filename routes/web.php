@@ -18,6 +18,8 @@ Route::get('/admin/Historico', [UserController::class, 'Historico'])->name("Hist
 Route::get('/admin/Cardapio', [UserController::class, 'Cardapio'])->name("Cardapio");
 Route::get('/admin/ItemCardapio', [UserController::class, 'GetItemCardapio'])->name("ItemCardapio");
 Route::post('/admin/ItemCardapio', [UserController::class, 'PostItemCardapio'])->name("PostItemCardapio");
+Route::post('/admin/ItemCardapio/Save', [UserController::class, 'SaveItem'])->name("SaveItem");
+
 
 
 

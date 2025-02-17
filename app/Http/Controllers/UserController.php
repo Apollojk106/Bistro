@@ -41,6 +41,12 @@ class UserController extends Controller
         return view('admin.ItemCardapio');    
     }
 
+    public function SaveItem()
+    {
+        return view('admin.Cardapio');    
+    }
+
+
     public function PostItemCardapio(Request $request)
     {
         return view('admin.ItemCardapio');    
