@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <script src="https://cdn.tailwindcss.com"></script> <!-- Adicione o Tailwind CSS -->
 </head>
-<body class="bg-gray-100 text-white">
+<body class="bg-gray-100 text-white h-full">
 
     <x-hotbar-user />
     <nav class="flex justify-center space-x-10 bg-[#2E2E2E] py-4"></nav>

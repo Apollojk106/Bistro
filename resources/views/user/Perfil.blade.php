@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,21 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <script src="https://cdn.tailwindcss.com"></script> <!-- Adicione o Tailwind CSS -->
 </head>
+
 <body class="bg-gray-100 text-white">
 
     <x-hotbar-user />
-    <nav class="flex justify-center space-x-10 bg-[#2E2E2E] py-4"></nav>
-    
+    <nav class="flex justify-center space-x-10 bg-[#2E2E2E] py-4">
+        <!-- Bloco com borda cinza e imagem centralizada -->
+        <div class="border border-[#B7B7B7] p-4 flex justify-center items-center">
+            <img src="{{ asset('Icons/clipboard.png') }}" alt="Imagem" class="h-16 w-16 object-contain">
+        </div>
+    </nav>
+
+    <div class="border border-[#B7B7B7] p-4 flex justify-center items-center">
+        <img src="{{ asset('Icons/clipboard.png') }}" alt="Imagem" class="h-16 w-16 object-contain">
+    </div>
+
 </body>
+
 </html>

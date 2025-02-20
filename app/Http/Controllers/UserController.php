@@ -24,7 +24,7 @@ class UserController extends Controller
 
     public function Cadastro()
     {
-        return view('user.Cadrasto');    
+        return view('user.Cadastro');    
     }
 
     //User

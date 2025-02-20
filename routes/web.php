@@ -22,7 +22,6 @@ Route::get('/Selecao', [UserController::class, 'Selecao'])->name("User.Selecao")
 Route::get('/Localizacao', [UserController::class, 'Localizacao'])->name("User.Localizacao");
 Route::get('/MeuPedido', [UserController::class, 'MeuPedido'])->name("User.MeuPedido");
 
-
 //admin
 Route::get('/admin/Dashboard', [UserController::class, 'Dashboard'])->name("Dashboard");
 Route::get('/admin/Pedido', [UserController::class, 'Pedido'])->name("Pedidos");
