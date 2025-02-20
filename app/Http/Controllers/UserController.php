@@ -11,9 +11,62 @@ class UserController extends Controller
         return view('admin.Dashboard');    
     }
 
+    //Login
+    public function Perfil()
+    {
+        return view('user.Perfil');    
+    }
+
+    public function Login()
+    {
+        return view('user.Login');    
+    }
+
+    public function Cadastro()
+    {
+        return view('user.Cadrasto');    
+    }
+
     //User
+    public function UserCardapio()
+    {
+        return view('user.Cardapio');    
+    }
 
+    public function Carrinho()
+    {
+        return view('user.Carrinho');    
+    }
 
+    public function Forma()
+    {
+        return view('user.FormaDePagamento');    
+    }
+
+    public function Item()
+    {
+        return view('user.Item');    
+    }
+
+    public function Pagamento()
+    {
+        return view('user.Pagamento');    
+    }
+
+    public function Localizacao()
+    {
+        return view('user.Localizacao');    
+    }
+
+    public function MeuPedido()
+    {
+        return view('user.MeuPedido');    
+    }
+
+    public function Selecao()
+    {
+        return view('user.Selecao');    
+    }
 
     //Admin
     public function Dashboard()

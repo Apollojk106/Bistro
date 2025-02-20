@@ -8,6 +8,19 @@ Route::get('/', function () {
 });
 
 //user
+//login
+Route::get('/Perfil', [UserController::class, 'Perfil'])->name("User.Perfil");
+Route::get('/Login', [UserController::class, 'Login'])->name("User.Login");
+Route::get('/Cadastro', [UserController::class, 'Cadastro'])->name("User.Cadastro");
+//Cardapio
+Route::get('/Cardapio', [UserController::class, 'UserCardapio'])->name("User.Cardapio");
+Route::get('/Carrinho', [UserController::class, 'Carrinho'])->name("User.Carrinho");
+Route::get('/Forma', [UserController::class, 'Forma'])->name("User.Forma");
+Route::get('/Item', [UserController::class, 'Item'])->name("User.Item");
+Route::get('/Pagamento', [UserController::class, 'Pagamento'])->name("User.Pagamento");
+Route::get('/Selecao', [UserController::class, 'Selecao'])->name("User.Selecao");
+Route::get('/Localizacao', [UserController::class, 'Localizacao'])->name("User.Localizacao");
+Route::get('/MeuPedido', [UserController::class, 'MeuPedido'])->name("User.MeuPedido");
 
 
 //admin
