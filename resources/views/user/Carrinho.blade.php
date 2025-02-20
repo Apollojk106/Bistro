@@ -31,5 +31,10 @@
             <span class="text-gray-400 line-through">R$ 30,40</span>
         </div>
     </div>
+
+    <!-- Retângulo com texto -->
+    <div class="w-full bg-[#C8C8C8] py-3 mt-4">
+        <p class="pl-4 text-gray-900 font-medium">Escolha as opções de adicionais</p>
+    </div>
 </body>
 </html>
