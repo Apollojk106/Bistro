@@ -9,7 +9,7 @@
 <body class="bg-gray-100">
     <header class="bg-[#B7B7B7] h-40 p-4 flex justify-between items-center relative">
         <!-- Ícone do menu hambúrguer aumentado -->
-        <button id="menuToggle" class="text-4xl bg-none border-none">&#9776;</button>
+        <button id="menuToggle" class="text-4xl text-black bg-none border-none">&#9776;</button>
         
         <!-- Logo centralizada -->
         <div class="absolute left-1/2 transform -translate-x-1/2">
@@ -19,35 +19,32 @@
         <!-- Ícones do WhatsApp e Instagram diminuídos -->
         <div class="flex space-x-6">
             <button class="bg-none border-none">
-                <img src="{{ asset('Icons/zap.png') }}" alt="WhatsApp" class="h-8 w-8 object-contain">
+                <img src="{{ asset('Icons/zap.png') }}" alt="WhatsApp" class="h-8 w-8 object-contain filter brightness-0 saturate-100">
             </button>
             <button class="bg-none border-none">
-                <img src="{{ asset('Icons/instagram.png') }}" alt="Instagram" class="h-8 w-8 object-contain">
+                <img src="{{ asset('Icons/instagram.png') }}" alt="Instagram" class="h-8 w-8 object-contain filter brightness-0 saturate-100">
             </button>
         </div>
     </header>
 
     <!-- Menu Lateral -->
     <nav id="sideMenu" class="fixed top-0 left-[-250px] w-64 h-full bg-[#B7B7B7] shadow-md transition-all ease-in-out duration-300 pt-5 z-50">
-        <button id="closeMenu" class="absolute top-2 right-4 text-2xl bg-none border-none">&times;</button>
+        <button id="closeMenu" class="absolute top-2 right-4 text-2xl text-black bg-none border-none">&times;</button>
         <ul class="list-none p-0">
-            <li class="p-4 border-b border-gray-300">
-                <a href="#" class="text-lg flex items-center gap-2 menu-item"> Cardápio</a>
+            <li class="p-4 border-b border-black-300">
+                <a href="#" class="text-lg flex items-center gap-2 text-black menu-item"> Cardápio</a>
             </li>
-            <li class="p-4 border-b border-gray-300">
-                <a href="#" class="text-lg flex items-center gap-2 menu-item"> Meus Pedidos</a>
+            <li class="p-4 border-b border-black-300">
+                <a href="#" class="text-lg flex items-center gap-2 text-black menu-item"> Meus Pedidos</a>
             </li>
-            <li class="p-4 border-b border-gray-300">
-                <a href="#" class="text-lg flex items-center gap-2 menu-item"> Localização</a>
+            <li class="p-4 border-b border-black-300">
+                <a href="#" class="text-lg flex items-center gap-2 text-black menu-item"> Localização</a>
             </li>
-            <li class="p-4 border-b border-gray-300">
-                <a href="#" class="text-lg flex items-center gap-2 menu-item"> Configuração</a>
+            <li class="p-4 border-b border-black-300">
+                <a href="#" class="text-lg flex items-center gap-2 text-black menu-item"> Configuração</a>
             </li>
         </ul>
     </nav>
-
-    
-    
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
