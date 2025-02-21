@@ -28,4 +28,25 @@ document.addEventListener("DOMContentLoaded", function () {
             sideMenu.classList.remove("open");
         });
     }
+
+   
+        // Função para alternar o estado do checkbox
+        const checkbox = document.getElementById('checkbox');
+        const checkboxIcon = document.getElementById('checkbox-icon');
+
+        checkbox.addEventListener('click', () => {
+            // Verifica se o checkbox está selecionado
+            const isChecked = checkboxIcon.src.includes('checkbox.png');
+
+            // Altera o ícone do checkbox
+            if (isChecked) {
+                checkboxIcon.src = "{{ asset('Icons/checkbox-empty.png') }}";
+            } else {
+                checkboxIcon.src = "{{ asset('Icons/check-green.png') }}";
+            }
+
+            // Mostra ou esconde o ícone
+            checkboxIcon.classList.toggle('hidden');
+        });
+    
 });

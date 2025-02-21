@@ -14,7 +14,7 @@
 
     <div class="relative w-full">
         <!-- Ajuste a altura da imagem para telas maiores -->
-        <img class="h-[300px] sm:h-[150px] md:h-[400px] lg:h-[500px] w-full object-cover" src="{{ asset('Icons/food.png') }}" alt="Bife com batata frita">
+        <img class="h-[400px] sm:h-[200px] md:h-[500px] lg:h-[600px] w-full object-cover" src="{{ asset('Icons/food.png') }}" alt="Bife com batata frita">
         
         <!-- Botão de voltar com ícone de imagem -->
         <button class="absolute top-4 left-4 bg-white p-3 rounded-full shadow-md hover:bg-gray-100 transition duration-200">
@@ -36,5 +36,81 @@
     <div class="w-full bg-[#C8C8C8] py-3 mt-4">
         <p class="pl-4 text-gray-900 font-medium">Escolha as opções de adicionais</p>
     </div>
+
+    <!-- Opções de adicionais -->
+    <div class="w-full bg-white py-3 px-4">
+        <div class="flex items-center justify-between">
+            <!-- Texto e descrição -->
+            <div class="flex-1">
+                <h3 class="text-lg font-semibold">Batata frita com cheddar e bacon</h3>
+                <p class="text-gray-600 text-sm">Batatas fritas douradas e crocantes, cobertas com uma generosa...</p>
+                <span class="text-gray-900 font-medium">+R$ 25,40</span>
+            </div>
+            <!-- Imagem -->
+            <img src="{{ asset('Icons/food2.png') }}" alt="Batata frita com cheddar e bacon" class="w-24 h-24 rounded-lg object-cover">
+            <!-- Checkbox -->
+            <div id="checkbox" class="w-8 h-8 border-2 border-gray-900 rounded-full flex items-center justify-center ml-4 cursor-pointer">
+                <img id="checkbox-icon" src="{{ asset('Icons/checkbox-empty.png') }}" alt="Checkbox" class="w-6 h-6 hidden">
+            </div>
+        </div>
+        <!-- Linha que cobre de um lado ao outro -->
+        <div class="border-b border-[#C8C8C8] mt-2 w-full"></div>
+    </div>
+
+    <script>
+        // Função para alternar o estado do checkbox
+        const checkbox = document.getElementById('checkbox');
+        const checkboxIcon = document.getElementById('checkbox-icon');
+
+        checkbox.addEventListener('click', () => {
+            // Verifica se o checkbox está selecionado
+            const isChecked = checkboxIcon.src.includes('checkbox.png');
+
+            // Altera o ícone do checkbox
+            if (isChecked) {
+                checkboxIcon.src = "{{ asset('Icons/checkbox-empty.png') }}";
+            } else {
+                checkboxIcon.src = "{{ asset('Icons/check-green.png') }}";
+            }
+
+            // Mostra ou esconde o ícone
+            checkboxIcon.classList.toggle('hidden');
+        });
+    </script>
+
+
+   
+
+
+
+    <!-- Opções de adicionais -->
+    <div class="w-full bg-white py-3 px-4">
+        <div class="flex items-center justify-between">
+            <!-- Texto e descrição -->
+            <div class="flex-1">
+                <h3 class="text-lg font-semibold">Salada com contra file</h3>
+                <p class="text-gray-600 text-sm">Alface, tomate, cenoura ralada, e cebola com contra file</p>
+                <span class="text-gray-900 font-medium">+R$ 19,00</span>
+            </div>
+            <!-- Imagem -->
+            <img src="{{ asset('Icons/food3.png') }}" alt="Batata frita com cheddar e bacon" class="w-24 h-24 rounded-lg object-cover">
+            <!-- Checkbox -->
+            <div id="checkbox" class="w-8 h-8 border-2 border-gray-900 rounded-full flex items-center justify-center ml-4 cursor-pointer">
+                <img id="checkbox-icon" src="{{ asset('Icons/checkbox-empty.png') }}" alt="Checkbox" class="w-6 h-6 hidden">
+            </div>
+        </div>
+        <!-- Linha que cobre de um lado ao outro -->
+        <div class="border-b border-[#C8C8C8] mt-2 w-full"></div>
+    </div>
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>
