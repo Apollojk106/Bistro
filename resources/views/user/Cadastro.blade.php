@@ -12,6 +12,48 @@
 
     <x-hotbar-user />
     <nav class="flex justify-center space-x-10 bg-[#2E2E2E] py-4"></nav>
+
+    <div class="flex flex-col items-center justify-center h-full">
+
+        <p class="text-black text-left mt-4">Cadastro</p>
+
+        <form class="h-full max-h-md  rounded-lg " action="{{ route('User.Perfil') }}" method="get">
+            <div class="flex-grow p-4 max-h-screen m-4 rounded-lg bg-[#B7B7B7] m-4">
+                <!-- Conteúdo da div do meio -->
+                <p class="text-black text-left">E-mail:</p>
+                <input type="text" placeholder="Email..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" />
+
+                <p class="text-black text-left">Nome:</p>
+                <input type="text" placeholder="Senha..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" />
+
+                <p class="text-black text-left">Telefone:</p>
+                <input type="text" placeholder="Senha..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" />
+
+                <p class="text-black text-left">Cep:</p>
+                <input type="text" placeholder="Senha..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" />
+
+                <p class="text-black text-left">Numero da residencia:</p>
+                <input type="text" placeholder="Senha..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" />
+
+                <p class="text-black text-left">Senha:</p>
+                <input type="text" placeholder="Senha..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" />
+
+                <p class="text-black text-left">Confirmar Senha:</p>
+                <input type="text" placeholder="Senha..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" />
+
+            </div>
+
+            <!-- Botão de Logar -->
+            <button type="submit" class="bg-[#A74A04] rounded-lg p-2 w-full flex items-center justify-center hover:bg-[#8C3D03] transition duration-300">
+                <span class="text-white font-bold">Cadastrar</span>
+            </button>
+
+            <!-- Link de Cadastro -->
+            <div class="mt-4 text-center mb-4">
+                <a href="{{ route('User.Login') }}" class=" underline text-black font-bold hover:text-gray-700">Logar</a>
+            </div>
+        </form>
+    </div>
     
 </body>
 </html>

@@ -3,7 +3,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <div class="flex h-[calc(100vh-11rem)]"> <!-- Ajuste da altura para considerar a hotbar -->
+    <div class="flex c"> <!-- Ajuste da altura para considerar a hotbar -->
         <!-- Coluna da esquerda -->
         <div class="flex flex-1 bg-lightblue p-4 overflow-y-auto"> <!-- Adicionado overflow-y-auto -->
             <div class="flex flex-col w-full space-y-4">
