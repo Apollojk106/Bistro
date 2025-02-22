@@ -287,47 +287,82 @@
         }
     </script>     
 
-    <!-- Componente de valor total fixo no rodapé -->
-    <div class="fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
-        <div class="flex justify-between items-center p-2 bg-gray-300 rounded-t-lg">
-            <span class="text-black font-medium">Valor total do pedido</span>
-            <span class="text-black font-semibold">R$ <span id="total-price">49,40</span></span>
+   <!-- Componente de valor total fixo no rodapé -->
+<div class="fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
+    <div class="flex justify-between items-center p-2 bg-gray-300 rounded-t-lg">
+        <span class="text-black font-medium">Valor total do pedido</span>
+        <span class="text-black font-semibold">R$ <span id="total-price">49,40</span></span>
+    </div>
+    <div class="flex justify-between items-center p-4 bg-gray-300 rounded-b-lg">
+        <div class="flex items-center space-x-4">
+            <button id="decrease" class="text-xl">−</button>
+            <span id="quantity" class="text-black font-medium">1</span>
+            <button id="increase" class="text-xl">+</button>
         </div>
-        <div class="flex justify-between items-center p-4 bg-gray-300 rounded-b-lg">
-            <div class="flex items-center space-x-4">
-                <button id="decrease" class="text-xl">−</button>
-                <span id="quantity" class="text-black font-medium">1</span>
-                <button id="increase" class="text-xl">+</button>
+        <button id="openPopup" class="bg-[#a34702] text-white py-2 px-4 rounded-xl">Adicionar a sacola</button>
+    </div>
+</div>
+
+<!-- Pop-up -->
+<div id="popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white border-2 border-black rounded-2xl p-6 w-80 shadow-lg text-center">
+            <p class="text-black text-lg font-semibold">E agora qual o próximo passo?</p>
+            <div class="flex justify-between mt-4">
+                <button id="confirm-clear" class="bg-[#a34702] text-white py-2 px-4 rounded-lg w-1/2 mr-2">Continuar Comprando</button>
+                <button id="close-popup" class="bg-[#a34702] text-white py-2 px-4 rounded-lg w-1/2">Ir para o pagamento</button>
             </div>
-            <button class="bg-[#a34702] text-white py-2 px-4 rounded-xl">Adicionar a sacola</button>
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let quantity = 1;
-            let pricePerItem = 49.40;
-            const quantityElement = document.getElementById("quantity");
-            const totalPriceElement = document.getElementById("total-price");
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let quantity = 1;
+        let pricePerItem = 49.40;
+        const quantityElement = document.getElementById("quantity");
+        const totalPriceElement = document.getElementById("total-price");
+        const popup = document.getElementById("popup");
 
-            document.getElementById("increase").addEventListener("click", function () {
-                quantity++;
+        document.getElementById("increase").addEventListener("click", function () {
+            quantity++;
+            updateValues();
+        });
+
+        document.getElementById("decrease").addEventListener("click", function () {
+            if (quantity > 1) {
+                quantity--;
                 updateValues();
-            });
-
-            document.getElementById("decrease").addEventListener("click", function () {
-                if (quantity > 1) {
-                    quantity--;
-                    updateValues();
-                }
-            });
-
-            function updateValues() {
-                quantityElement.textContent = quantity;
-                totalPriceElement.textContent = (pricePerItem * quantity).toFixed(2).replace(".", ",");
             }
         });
-    </script>
+
+        function updateValues() {
+            quantityElement.textContent = quantity;
+            totalPriceElement.textContent = (pricePerItem * quantity).toFixed(2).replace(".", ",");
+        }
+
+        // Mostrar o pop-up ao clicar no botão "Adicionar a sacola"
+        document.getElementById("openPopup").addEventListener("click", function () {
+            popup.classList.remove("hidden");
+        });
+
+        // Fechar pop-up ao clicar fora dele
+        popup.addEventListener("click", function (event) {
+            if (event.target === popup) {
+                popup.classList.add("hidden");
+            }
+        });
+
+        // Fechar pop-up ao clicar no botão "Continuar comprando"
+        document.getElementById("continueShopping").addEventListener("click", function () {
+            popup.classList.add("hidden");
+        });
+
+        // Aqui você pode adicionar a ação para "Ir para o pagamento"
+        document.getElementById("goToPayment").addEventListener("click", function () {
+            alert("Indo para o pagamento..."); // Substitua com a lógica real de redirecionamento
+        });
+    });
+</script>
+
 
 </body>
 </body>
