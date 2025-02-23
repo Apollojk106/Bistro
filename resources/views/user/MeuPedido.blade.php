@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <script src="https://cdn.tailwindcss.com"></script> <!-- Adicione o Tailwind CSS -->
+    <!-- Adicionando Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body class="bg-gray-100 text-white h-full">
 
@@ -22,7 +24,7 @@
     </nav>
 
     <!-- Cabeçalho da Sacola -->
-    <div class="bg-white py-4 px-6  flex justify-between items-center">
+    <div class="bg-white py-4 px-6 flex justify-between items-center">
         <h1 class="text-xl font-semibold mx-auto text-black">Sacola</h1>
         <button class="text-red-600" id="open-popup">
             <img src="{{ asset('Icons/trash-red.png') }}" alt="Lixeira" class="w-6 h-6">
@@ -35,8 +37,8 @@
     </div>
 
     <!-- Pop-up de confirmação -->
-    <div id="popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white border-2 border-black rounded-2xl p-6 w-80 shadow-lg text-center">
+    <div id="popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+        <div class="bg-white border-2 border-black rounded-2xl p-6 w-80 shadow-lg text-center">
             <p class="text-black text-lg font-semibold">Você tem certeza que deseja limpar a sacola?</p>
             <div class="flex justify-between mt-4">
                 <button id="confirm-clear" class="bg-[#a34702] text-white py-2 px-4 rounded-lg w-1/2 mr-2">Limpar</button>
@@ -62,7 +64,8 @@
             <img src="{{ asset('Icons/food.png') }}" alt="Bife com batata" class="w-28 h-28 rounded">
             <div class="ml-8 flex-1">
                 <h2 class="font-bold text-black">Bife com batata</h2><br>
-                <p class="text-black font-semibold">R$ 49,40 <span class="text-gray-400 line-through">R$ 54,40</span></p><br>
+                <p class="text-green-600 font-semibold inline">R$ 49,40</p>
+                <span class="text-gray-400 line-through ml-2">R$ 54,40</span><br>
                 <p class="text-gray-500 text-sm flex items-center"><span class="bg-gray-200 px-2 py-1 rounded-full mr-2">1</span> Coca-Cola 0</p>
                 <p class="text-gray-500 text-sm flex items-center"><span class="bg-gray-200 px-2 py-1 rounded-full mr-2">1</span> Salada com filé de frango</p>
                 <a href="#" class="text-[#BE3816] font-semibold">Editar o pedido</a>
@@ -77,17 +80,20 @@
                 </button>
             </div>
         </div>
+         
+        <div class="border-b border-[#C8C8C8] mt-2 w-full"></div>
+
         <!-- Item 2 -->
         <div class="flex items-center pt-8">
             <img src="{{ asset('Icons/food5.png') }}" alt="Salada com omelete" class="w-28 h-28 rounded">
             <div class="ml-8 flex-1">
                 <h2 class="font-bold text-black">Salada com omelete</h2><br>
-                <p class="text-black font-semibold">R$ 15,00</p><br>
+                <p class="text-green-600 font-semibold">R$ 15,00</p><br>
                 <a href="#" class="text-[#BE3816] font-semibold">Editar o pedido</a>
             </div>
             <div class="flex items-center bg-gray-200 rounded-full px-2 py-1">
                 <button class="p-1 text-orange-500" onclick="decrementar(2)">
-                    <i id="icon-2" class="ph ph-trash"></i>
+                    <i id="icon-2" class="ph ph-minus"></i>
                 </button>
                 <span id="quantidade-2" class="px-3 font-bold text-orange-500 text-sm">1</span>
                 <button class="p-1 text-orange-500" onclick="incrementar(2)">
@@ -97,12 +103,16 @@
         </div>
     </div>
 
+    <div class="border-b border-[#C8C8C8] mt-2 w-full"></div>
+
     <script>
         function incrementar(id) {
             let quantidade = document.getElementById(`quantidade-${id}`);
             let icon = document.getElementById(`icon-${id}`);
             let valor = parseInt(quantidade.textContent);
             quantidade.textContent = valor + 1;
+
+            // Atualiza o ícone para "menos" se o valor for maior que 1
             if (valor + 1 > 1) {
                 icon.className = "ph ph-minus";
             }
@@ -112,15 +122,40 @@
             let quantidade = document.getElementById(`quantidade-${id}`);
             let icon = document.getElementById(`icon-${id}`);
             let valor = parseInt(quantidade.textContent);
+
             if (valor > 1) {
                 quantidade.textContent = valor - 1;
-                icon.className = "ph ph-minus";
+                icon.className = "ph ph-minus"; // Ícone de menos
             } else {
                 quantidade.textContent = 1;
-                icon.className = "ph ph-trash";
+                icon.className = "ph ph-trash"; // Ícone de lixo
             }
         }
     </script>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resumo de Compra</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+
+  <div class="w-[428px] h-[111px] bg-gray-300 rounded-2xl flex items-center justify-between px-4">
+    <div class="flex items-center space-x-2">
+      <p class="text-black  text-lg font-semibold">R$ 64,40</p>
+      <span class="text-sm text-gray-700 text-center">2 itens</span>
+    </div>
+
+    <button class="bg-orange-800 text-white text-base font-medium px-6 py-3 rounded-2xl hover:bg-orange-700 transition">
+      Continuar
+    </button>
+  </div>
+
+</body>
+
+
+
 </body>
 </body>
 </html>
