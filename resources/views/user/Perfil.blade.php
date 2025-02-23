@@ -45,26 +45,54 @@
 
         <p class="text-black text-center">Historico</p>
 
-        <div class="swiper mySwiper">
+        <div class="swiper mySwiper mt-4">
             <div class="swiper-wrapper">
                 <!-- Card 1 -->
+
                 <div class="swiper-slide bg-white shadow-lg rounded-lg overflow-hidden w-80 md:w-96 mt-2 mr-2">
-                    <img src="{{ asset('Icons/food.png') }}" alt="Bife com batata" class="w-full h-40 sm:h-48 md:h-52 lg:h-56 object-cover">
-                    <div class="p-6 text-center">
-                        <h3 class="text-xl font-semibold text-black">Bife com batata</h3>
-                        <p class="text-gray-600 text-sm mt-2">Arroz, feijão, batata frita crocante...</p>
-                        <p class="text-orange-500 font-bold mt-4">R$ 25,00</p>
-                    </div>
+                    <form method="post" action="#">
+                        <input type="hidden" name="id" value="valor_do_id">
+                        <img src="{{ asset('Icons/food.png') }}" alt="Bife com batata" class="w-full h-40 sm:h-48 md:h-52 lg:h-56 object-cover">
+                        <div class="p-6 text-center">
+                            <h3 class="text-xl font-semibold text-black">Bife com batata</h3>
+                            <p class="text-gray-600 text-sm mt-2">Arroz, feijão, batata frita crocante...</p>
+                            <p class="text-orange-500 font-bold mt-4">R$ 25,00</p>
+                        </div>
+                        <button type="submit" class="bg-[#A74A04] rounded-lg p-2 w-full flex items-center justify-center hover:bg-[#8C3D03] transition duration-300">
+                            <span class="text-white font-bold">Pedir Novamente</span>
+                        </button>
+                    </form>
                 </div>
 
                 <!-- Card 2 -->
                 <div class="swiper-slide bg-white shadow-lg rounded-lg overflow-hidden w-80 md:w-96 mt-2 mr-2">
-                    <img src="{{ asset('Icons/food.png') }}" alt="Bife com batata" class="w-full h-40 sm:h-48 md:h-52 lg:h-56 object-cover">
-                    <div class="p-6 text-center">
-                        <h3 class="text-xl font-semibold text-black">Bife com batata</h3>
-                        <p class="text-gray-600 text-sm mt-2">Arroz, feijão, batata frita crocante...</p>
-                        <p class="text-orange-500 font-bold mt-4">R$ 25,00</p>
-                    </div>
+                    <form method="post" action="#">
+                        <input type="hidden" name="id" value="valor_do_id">
+                        <img src="{{ asset('Icons/food.png') }}" alt="Bife com batata" class="w-full h-40 sm:h-48 md:h-52 lg:h-56 object-cover">
+                        <div class="p-6 text-center">
+                            <h3 class="text-xl font-semibold text-black">Bife com batata</h3>
+                            <p class="text-gray-600 text-sm mt-2">Arroz, feijão, batata frita crocante...</p>
+                            <p class="text-orange-500 font-bold mt-4">R$ 25,00</p>
+                        </div>
+                        <button type="submit" class="bg-[#A74A04] rounded-lg p-2 w-full flex items-center justify-center hover:bg-[#8C3D03] transition duration-300">
+                            <span class="text-white font-bold">Pedir Novamente</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="swiper-slide bg-white shadow-lg rounded-lg overflow-hidden w-80 md:w-96 mt-2 mr-2">
+                    <form method="post" action="#">
+                        <input type="hidden" name="id" value="valor_do_id">
+                        <img src="{{ asset('Icons/food.png') }}" alt="Bife com batata" class="w-full h-40 sm:h-48 md:h-52 lg:h-56 object-cover">
+                        <div class="p-6 text-center">
+                            <h3 class="text-xl font-semibold text-black">Bife com batata</h3>
+                            <p class="text-gray-600 text-sm mt-2">Arroz, feijão, batata frita crocante...</p>
+                            <p class="text-orange-500 font-bold mt-4">R$ 25,00</p>
+                        </div>
+                        <button type="submit" class="bg-[#A74A04] rounded-lg p-2 w-full flex items-center justify-center hover:bg-[#8C3D03] transition duration-300">
+                            <span class="text-white font-bold">Pedir Novamente</span>
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -78,8 +106,8 @@
             }
         </script>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="js/app.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script src="js/app.js"></script>
 
 </body>
 

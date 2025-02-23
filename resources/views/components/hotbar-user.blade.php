@@ -37,7 +37,7 @@
                 <a href="{{ route('User.Cardapio') }}" class="text-lg flex items-center gap-2 text-black menu-item"> Cardápio</a>
             </li>
             <li class="p-4 border-b border-black-300">
-                <a href="{{ route('User.Cardapio') }}" class="text-lg flex items-center gap-2 text-black menu-item"> Carrinho</a>
+                <a href="{{ route('User.Carrinho') }}" class="text-lg flex items-center gap-2 text-black menu-item"> Carrinho</a>
             </li>
             <li class="p-4 border-b border-black-300">
                 <a href="{{ route('User.MeuPedido') }}" class="text-lg flex items-center gap-2 text-black menu-item">Meu Pedido</a>
