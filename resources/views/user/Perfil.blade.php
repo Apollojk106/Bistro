@@ -22,24 +22,57 @@
     </div>
 
     <div class="flex flex-col items-center justify-center h-full">
-        <form class="h-full max-h-md p-6 rounded-lg " action="{{ route('User.Perfil') }}" method="get">
+           <form class="h-full max-h-md p-6 rounded-lg" action="{{ route('User.Perfil') }}" method="get">
             <!-- Div que ocupa o resto da tela -->
-            <div class="flex-grow p-4 max-h-screen m-4 rounded-lg bg-[#B7B7B7] m-4 ">
+            <div class="flex-grow p-4 max-h-screen m-4 rounded-lg bg-[#B7B7B7] m-4">
                 <!-- Conteúdo da div do meio -->
-                <p class="text-black text-center">"Nome"</p>
+                <div class="flex justify-between items-center mb-4">
+                    <p class="text-black text-center">"Nome"</p>
+                    <!-- Ícone de edição -->
+                    <svg class="w-6 h-6 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" onclick="toggleEdit()">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                    </svg>
+                </div>
+
+                <input type="text" placeholder="Nome..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" disabled />
 
                 <p class="text-black text-left">E-mail:</p>
-                <input type="text" placeholder="Email..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" />
+                <input type="text" placeholder="Email..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" disabled />
 
                 <p class="text-black text-left">Telefone:</p>
-                <input type="text" placeholder="Senha..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" />
+                <input type="text" placeholder="Telefone..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" disabled />
 
-                <p class="text-black text-left">CEP:</p>
-                <input type="text" placeholder="Email..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" />
+                <!-- Dropdown de Endereço -->
+                <div class="mt-4">
+                    <div class="flex justify-between items-center cursor-pointer" onclick="toggleAddress()">
+                        <p class="text-black text-left font-semibold">Endereço</p>
+                        <svg id="addressArrow" class="w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <!-- Campos de Endereço (inicialmente ocultos) -->
+                    <div id="addressFields" class="hidden mt-2">
+                        <p class="text-black text-left">CEP:</p>
+                        <input type="text" placeholder="CEP..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" disabled />
 
-                <p class="text-black text-left">Numero de Residencia:</p>
-                <input type="text" placeholder="Senha..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" />
+                        <p class="text-black text-left">Rua:</p>
+                        <input type="text" placeholder="Rua..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" disabled />
 
+                        <p class="text-black text-left">Bairro:</p>
+                        <input type="text" placeholder="Bairro..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" disabled />
+
+                        <p class="text-black text-left">Número de Residência:</p>
+                        <input type="text" placeholder="Número de Residência..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" disabled />
+
+                        <p class="text-black text-left">Complemento:</p>
+                        <input type="text" placeholder="Complemento..." class="text-black bg-transparent p-2 outline-none flex-1 border-0 border-b-2 border-black" disabled />
+                    </div>
+                </div>
+
+                <!-- Botão de salvar edição na parte inferior centralizado -->
+                <div class="flex justify-center mt-4">
+                    <button type="submit" id="saveButton" class="bg-blue-500 text-white px-4 py-2 rounded-lg hidden">Salvar Edição</button>
+                </div>
             </div>
         </form>
 
@@ -104,24 +137,26 @@
                 document.querySelectorAll('nav a').forEach(a => a.classList.remove('text-orange-500'));
                 element.classList.add('text-orange-500');
             }
+            
+   function toggleEdit() {
+            const inputs = document.querySelectorAll('input');
+            const saveButton = document.getElementById('saveButton');
 
-        
-    function toggleEdit() {
-        const inputs = document.querySelectorAll('input');
-        const saveButton = document.getElementById('saveButton');
+            inputs.forEach(input => {
+                input.disabled = !input.disabled;
+            });
 
-        inputs.forEach(input => {
-            input.disabled = !input.disabled;
-        });
+            saveButton.classList.toggle('hidden');
+        }
 
-        saveButton.classList.toggle('hidden');
-    }
+        // Função para alternar a visibilidade dos campos de endereço
+        function toggleAddress() {
+            const addressFields = document.getElementById('addressFields');
+            const addressArrow = document.getElementById('addressArrow');
 
-    function saveChanges() {
-        alert('Alterações salvas!');
-        toggleEdit(); // Desativa a edição após salvar
-    }
-
+            addressFields.classList.toggle('hidden');
+            addressArrow.classList.toggle('rotate-180');
+        }
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
