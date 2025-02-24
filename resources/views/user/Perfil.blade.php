@@ -104,6 +104,24 @@
                 document.querySelectorAll('nav a').forEach(a => a.classList.remove('text-orange-500'));
                 element.classList.add('text-orange-500');
             }
+
+        
+    function toggleEdit() {
+        const inputs = document.querySelectorAll('input');
+        const saveButton = document.getElementById('saveButton');
+
+        inputs.forEach(input => {
+            input.disabled = !input.disabled;
+        });
+
+        saveButton.classList.toggle('hidden');
+    }
+
+    function saveChanges() {
+        alert('Alterações salvas!');
+        toggleEdit(); // Desativa a edição após salvar
+    }
+
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
