@@ -24,10 +24,10 @@
     <div class="flex flex-col items-center justify-center h-full">
            <form class="h-full max-h-md p-6 rounded-lg" action="{{ route('User.Perfil') }}" method="get">
             <!-- Div que ocupa o resto da tela -->
-            <div class="flex-grow p-4 max-h-screen m-4 rounded-lg bg-[#B7B7B7] m-4">
+            <div class="flex-grow p-4 max-h-screen m-4 rounded-lg bg-[#B7B7B7] m-4 mb-4">
                 <!-- Conteúdo da div do meio -->
-                <div class="flex justify-between items-center mb-4">
-                    <p class="text-black text-center">"Nome"</p>
+                <div class="flex justify-between items-center">
+                    <p class="text-black text-center">Nome:</p>
                     <!-- Ícone de edição -->
                     <svg class="w-6 h-6 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" onclick="toggleEdit()">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>

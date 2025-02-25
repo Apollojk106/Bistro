@@ -147,7 +147,7 @@
       <span class="text-sm text-gray-700 text-center">2 itens</span>
     </div>
 
-    <button class="bg-orange-800 text-white text-base font-medium px-6 py-3 rounded-2xl hover:bg-orange-700 transition">
+    <button onclick="window.location.href='/Selecao'" class="bg-orange-800 text-white text-base font-medium px-6 py-3 rounded-2xl hover:bg-orange-700 transition">
       Continuar
     </button>
   </div>
