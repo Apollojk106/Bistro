@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\CardapioController;
+use App\Http\Controllers\CarrinhoController;
+use App\Http\Controllers\ConfiguracaoController;
+use App\Http\Controllers\FormaPagamentoController;
+use App\Http\Controllers\ItensPedidoController;
+use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\PixController;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function Home()
-    {
-        return view('admin.Dashboard');    
-    }
-
     //Login
     public function Perfil()
     {
@@ -117,7 +119,11 @@ class UserController extends Controller
 
     public function Pedido()
     {
-        return view('admin.Pedido');    
+        $Pedidos = new PedidoController();
+
+        $TodosPedidos = $Pedidos->GetPedidos(); 
+
+        return view('admin.Pedido', [$TodosPedidos]);    
     }
 
 

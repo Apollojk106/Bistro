@@ -5,9 +5,7 @@
 
         <div class="flex flex-1 flex-col p-4">
             <div class="bg-[#A7C7E7] p-4 w-full h-min mt-1">
-                Barra de pesquisa
-
-
+                Agendados
             </div>
 
             <div class="bg-[#A7C7E7] p-4 w-full mt-1">
@@ -28,13 +26,13 @@
 
         <div class="flex flex-1 flex-col p-4">
             <div class="p-4 w-full h-min bg-[#F2A97E]">
-                Barra de pesquisa
+                Pedidos
             </div>
         </div>
 
         <div class="flex flex-1 flex-col  p-4">
             <div class="p-4 w-full h-min bg-[#F9E3A1]">
-                Barra de pesquisa
+                Em andamento
             </div>
         </div>
 

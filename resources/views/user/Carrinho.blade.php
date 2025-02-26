@@ -308,8 +308,8 @@
     <div class="bg-white border-2 border-black rounded-2xl p-6 w-80 shadow-lg text-center">
             <p class="text-black text-lg font-semibold">E agora qual o próximo passo?</p>
             <div class="flex justify-between mt-4">
-                <button id="confirm-clear" class="bg-[#a34702] text-white py-2 px-4 rounded-lg w-1/2 mr-2">Continuar Comprando</button>
-                <button id="close-popup" class="bg-[#a34702] text-white py-2 px-4 rounded-lg w-1/2">Ir para o pagamento</button>
+                <button onclick="window.location.href='/Cardapio'" class="bg-[#a34702] text-white py-2 px-4 rounded-lg w-1/2 mr-2">Continuar Comprando</button>
+                <button onclick="window.location.href='/MeuPedido'" class="bg-[#a34702] text-white py-2 px-4 rounded-lg w-1/2">Ir para o pagamento</button>
             </div>
         </div>
     </div>
