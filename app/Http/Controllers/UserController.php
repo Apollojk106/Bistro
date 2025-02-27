@@ -45,9 +45,9 @@ class UserController extends Controller
         return view('user.FormaDePagamento');    
     }
 
-    public function Item()
+    public function OpcaoPedido()
     {
-        return view('user.Item');    
+        return view('user.OpcaoPedido');    
     }
 
     public function Pagamento()
@@ -119,13 +119,7 @@ class UserController extends Controller
 
     public function Pedido()
     {
-        $Pedidos = new PedidoController();
-
-        $Pendentes = $Pedidos->GetPedidos();
-        $EmAndamentos = $Pedidos->GetEmAndamento();
-        $Agendamentos = $Pedidos->GetEmAndamento();
-
-        return view('admin.Pedido', [$Pendentes, $EmAndamentos, $Agendamentos]);    
+        return view('admin.Pedido', );    
     }
 
 
