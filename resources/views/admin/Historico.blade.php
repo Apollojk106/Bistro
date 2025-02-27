@@ -4,6 +4,8 @@
     <div class="flex flex-col w-full h-auto space-y-4">
 
         <div class="flex items-center justify-center w-auto space-x-3 mt-5 mr-5 ml-5">
+            
+
             <form action="" class="bg-[#B7B7B7] p-4 rounded-lg w-full h-auto flex items-center space-x-2 m-auto">
                 <div class="flex items-center space-x-2">
                     <select id="categoria" name="categoria" class="shadow appearance-none border rounded w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">

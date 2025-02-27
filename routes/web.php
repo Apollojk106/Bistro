@@ -28,6 +28,8 @@ Route::get('/admin/Dashboard', [UserController::class, 'Dashboard'])->name("Dash
 
 Route::get('/admin/Pedido', [UserController::class, 'Pedido'])->name("Pedidos");
 Route::get('/pedidos/json', [PedidoController::class, 'getPedidosJson'])->name('pedidos.json');
+Route::get('/admin/Pedidos/Avancar/{id}', [PedidoController::class, 'AvancarPedidos'])->name('Avancar.pedidos');
+
 
 Route::get('/admin/Configuracao', [UserController::class, 'Configuracao'])->name("Configuracao");
 

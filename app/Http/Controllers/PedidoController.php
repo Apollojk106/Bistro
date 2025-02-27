@@ -9,8 +9,8 @@ class PedidoController extends Controller
 {
     public function GetPedidos()
     {
-        $TodosPedidos = Pedido::where('opcao_entrega', 'Agora')
-            ->orWhere('opcao_entrega', 'Viagem')
+        $TodosPedidos = Pedido::where('opcao_entrega','!=', 'Agendamento')
+            ->where('status', 'Pendente')
             ->get();
 
         return $TodosPedidos;
@@ -18,7 +18,9 @@ class PedidoController extends Controller
 
     public function GetAgendados()
     {
-        $Agendados = Pedido::where('opcao_entrega', 'Agendamento')->get();
+        $Agendados = Pedido::where('opcao_entrega', 'Agendamento')
+            ->where('status', 'Pendente')
+            ->get();
 
         return $Agendados;
     }
@@ -39,5 +41,29 @@ class PedidoController extends Controller
         ];
 
         return response()->json($pedidos);
+    }
+
+    public function AvancarPedidos($id)
+    {
+        $pedido = Pedido::findOrFail($id);
+
+        // Lógica para atualizar o status
+        $statusAtual = $pedido->status;
+
+        // Definindo os status possíveis
+        $statusPossiveis = ['Pendente', 'EmAndamento', 'Concluido'];
+
+        // Pegando o próximo status
+        $proximoStatusIndex = array_search($statusAtual, $statusPossiveis) + 1;
+
+        // Se o status atual for o último ('Concluido'), não faz mais a atualização
+        if ($proximoStatusIndex < count($statusPossiveis)) {
+
+
+            $pedido->status = $statusPossiveis[$proximoStatusIndex];
+            $pedido->save();
+        }
+
+        return redirect()->route('Pedidos');
     }
 }

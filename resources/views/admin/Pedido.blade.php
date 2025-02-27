@@ -55,13 +55,15 @@
                         <div class="mb-4 mt-1 bg-[#A7C7E7]  border-2 border-black border-opacity-30">
                             <p>Nome: ${pedido.nome}</p>
                             <p>Status: ${pedido.status_pedido}</p>
+                            <p>ID: ${pedido.id}</p>
                             <div class="flex space-x-4 justify-center m-4">
                                 <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2">
                                     <span>Imprimir</span> <img src="{{ asset('Icons/box.png') }}" alt="Imagem Centralizada" class="h-5 w-5 object-contain" />
                                 </button>
-                                <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2">
+                                <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2" onclick="window.location.href='/admin/Pedidos/Avancar/${pedido.id}'">
                                     <span>Avançar</span> <img src="{{ asset('Icons/arrow-left.png') }}" alt="Imagem Centralizada" class="h-5 w-5 object-contain" />
                                 </button>
+                             
                             </div>
                         </div>
                     `);
@@ -73,15 +75,12 @@
                         <div class="mb-4 mt-1 bg-[#F2A97E] border-2 border-black border-opacity-30">
                             <p>Nome: ${pedido.nome}</p>
                             <p>Status: ${pedido.status_pedido}</p>
-                            <p>Status: ${pedido.status_pedido}</p>
-                            <p>Status: ${pedido.status_pedido}</p>
-                            <p>Status: ${pedido.status_pedido}</p>
-                            <p>Status: ${pedido.status_pedido}</p>
+                            <p>ID: ${pedido.id}</p>
                             <div class="flex space-x-4 justify-center m-4">
                                 <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2">
                                     <span>Imprimir</span> <img src="{{ asset('Icons/box.png') }}" alt="Imagem Centralizada" class="h-5 w-5 object-contain" />
                                 </button>
-                                <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2">
+                                <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2" onclick="window.location.href='/admin/Pedidos/Avancar/${pedido.id}'">
                                     <span>Avançar</span> <img src="{{ asset('Icons/arrow-left.png') }}" alt="Imagem Centralizada" class="h-5 w-5 object-contain" />
                                 </button>
                             </div>
@@ -95,11 +94,12 @@
                         <div class="mb-4 mt-1 bg-[#F9E3A1] border-2 border-black border-opacity-30">
                             <p>Nome: ${pedido.nome}</p>
                             <p>Status: ${pedido.status_pedido}</p>
+                            <p>ID: ${pedido.id}</p>
                             <div class="flex space-x-4 justify-center m-4">
                                 <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2">
                                     <span>Imprimir</span> <img src="{{ asset('Icons/box.png') }}" alt="Imagem Centralizada" class="h-5 w-5 object-contain" />
                                 </button>
-                                <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2">
+                                <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2" onclick="window.location.href='/admin/Pedidos/Avancar/${pedido.id}'">
                                     <span>Avançar</span> <img src="{{ asset('Icons/arrow-left.png') }}" alt="Imagem Centralizada" class="h-5 w-5 object-contain" />
                                 </button>
                             </div>
