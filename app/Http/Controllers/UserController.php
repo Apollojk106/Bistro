@@ -121,9 +121,11 @@ class UserController extends Controller
     {
         $Pedidos = new PedidoController();
 
-        $TodosPedidos = $Pedidos->GetPedidos(); 
+        $Pendentes = $Pedidos->GetPedidos();
+        $EmAndamentos = $Pedidos->GetEmAndamento();
+        $Agendamentos = $Pedidos->GetEmAndamento();
 
-        return view('admin.Pedido', [$TodosPedidos]);    
+        return view('admin.Pedido', [$Pendentes, $EmAndamentos, $Agendamentos]);    
     }
 
 

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->enum('categoria_pedido', ['Local', 'Entrega']);
             $table->enum('status_pedido', ['Pago', 'Pendente']);
             $table->enum('opcao_entrega', ['Agora', 'Viagem', 'Agendamento']);
+            $table->enum('status', ['Pendente','EmAndamento','Concluido'])->default('Pendente')->nullable();
             $table->timestamp('horario')->nullable();
             $table->foreignId('id_forma_pagamento')->constrained('Formas_de_pagamento');
             $table->text('descricao')->nullable();
