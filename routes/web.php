@@ -3,9 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PedidoController;
+use App\Models\Pedido;
 
 Route::get('/', function () {
     return view('user.Cardapio');
+});
+Route::get('/admin', function () {
+    return view('admin.Pedido');
 });
 
 //user
@@ -33,7 +37,8 @@ Route::get('/admin/Pedidos/Avancar/{id}', [PedidoController::class, 'AvancarPedi
 
 Route::get('/admin/Configuracao', [UserController::class, 'Configuracao'])->name("Configuracao");
 
-Route::get('/admin/Historico', [UserController::class, 'Historico'])->name("Historico");
+Route::get('/admin/Historico', [PedidoController::class, 'PedidosConcluidos'])->name("Historico");
+Route::post('/admin/Historico/Filtro', [PedidoController::class, 'HistoricoFiltro'])->name("Historico.filtro");
 
 Route::get('/admin/Cardapio', [UserController::class, 'Cardapio'])->name("Cardapio");
 

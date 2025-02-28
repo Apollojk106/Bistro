@@ -58,12 +58,36 @@ class PedidoController extends Controller
 
         // Se o status atual for o último ('Concluido'), não faz mais a atualização
         if ($proximoStatusIndex < count($statusPossiveis)) {
-
-
             $pedido->status = $statusPossiveis[$proximoStatusIndex];
             $pedido->save();
         }
 
         return redirect()->route('Pedidos');
     }
+
+    public function Historico($Pedidos)
+    {
+        return view('admin.Historico', compact('Pedidos'));    
+    }
+
+    public function PedidosConcluidos()
+    {
+        $PedidosConcluidos = Pedido::where('status','Concluido')
+        ->take(10)
+        ->get();
+
+        return $this->Historico($PedidosConcluidos);
+    }
+
+    public function HistoricoFiltro(Request $request) 
+    {
+        $PedidosFiltrado =Pedido::where($request->categoria, 'like', '%' . $request->pesquisa . '%')
+        ->where('status','Concluido')
+        ->take(10)
+        ->get();
+
+        return $this->Historico($PedidosFiltrado);
+    }
+
+    
 }

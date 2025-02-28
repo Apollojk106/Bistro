@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Categoria extends Model
 {
     protected $fillable = [
-        'imagem', 'nome', 'descricao', 'valor', 'desconto', 'disponibilidade', 
-        'ingredientes', 'id_categoria'
+        'id',
+        'nome',
+        'nivel'
     ];
 
     public $timestamps = true;

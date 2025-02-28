@@ -24,6 +24,7 @@ class Pedido extends Model
         'frete',
         'valor_total',
         'valor_taxa',
+        'updated_at'
     ];
 
     public $timestamps = true;

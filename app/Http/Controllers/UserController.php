@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    //Esse controler é somente para a rota GET
+
     //Login
     public function Perfil()
     {
@@ -112,10 +114,7 @@ class UserController extends Controller
         return view('admin.Configuracao');    
     }
 
-    public function Historico()
-    {
-        return view('admin.Historico');    
-    }
+    
 
     public function Pedido()
     {
