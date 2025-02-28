@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PedidoController;
-use App\Models\Pedido;
+use App\Http\Controllers\CardapioController;
 
 Route::get('/', function () {
     return view('user.Cardapio');
@@ -40,7 +40,8 @@ Route::get('/admin/Configuracao', [UserController::class, 'Configuracao'])->name
 Route::get('/admin/Historico', [PedidoController::class, 'PedidosConcluidos'])->name("Historico");
 Route::post('/admin/Historico/Filtro', [PedidoController::class, 'HistoricoFiltro'])->name("Historico.filtro");
 
-Route::get('/admin/Cardapio', [UserController::class, 'Cardapio'])->name("Cardapio");
+Route::get('/admin/Cardapio', [CardapioController::class, 'Cardapio'])->name("Cardapio");
+Route::get('/admin/Cardapio/Filtro', [CardapioController::class, 'CardapioFiltro'])->name("Cardapio.Filtro");
 
 Route::get('/admin/ItemCardapio', [UserController::class, 'GetItemCardapio'])->name("ItemCardapio");
 
