@@ -24,7 +24,7 @@
     <div class="container mx-auto px-4 py-6">
         <div class="bg-white p-8 rounded-2xl shadow-lg">
             <!-- Título mais para cima -->
-            <h2 class="text-2xl font-bold text-left mb-8 text-[#A74A04]">Opção de Pagamento</h2>
+            <h2 class="text-2xl font-bold text-left mb-9 text-[#A74A04]">Opção de Pagamento</h2>
 
             <!-- Opções de pagamento -->
             <div class="space-y-6">
