@@ -76,9 +76,11 @@
     <div class="bg-[#B7B7B7] flex justify-between items-center px-6 py-6 mt-12 fixed bottom-0 w-full">
         <span class="text-xl font-bold text-black">R$ 64,40</span>
         <span class="text-sm text-black">2 itens</span>
-        <button class="bg-[#A74A04] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#8B3D03] transition-all">
+        <form action="{{ route('User.Pix') }}" method="get">
+        <button type="submit" class="bg-[#A74A04] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#8B3D03] transition-all">
             Continuar
         </button>
+        </form>
     </div>
 
     <script>

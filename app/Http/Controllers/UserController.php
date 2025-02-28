@@ -42,9 +42,9 @@ class UserController extends Controller
         return view('user.Carrinho');    
     }
 
-    public function Forma()
+    public function PagamentoPix()
     {
-        return view('user.FormaDePagamento');    
+        return view('user.PagamentoPix');    
     }
 
     public function OpcaoPedido()
@@ -52,9 +52,9 @@ class UserController extends Controller
         return view('user.OpcaoPedido');    
     }
 
-    public function Pagamento()
+    public function FormaPagamento()
     {
-        return view('user.Pagamento');    
+        return view('user.FormaDePagamento');    
     }
 
     public function Localizacao()

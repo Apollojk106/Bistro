@@ -131,9 +131,11 @@
         <span class="font-semibold text-lg">R$ 64,40</span>
         <span class="text-sm text-gray-600 ml-2">2 itens</span>
       </div>
-      <button class="bg-orange-700 text-white text-lg font-semibold px-6 py-3 rounded-2xl hover:bg-orange-800 focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95">
+      <form action="{{route('User.Pagamento')}}" method="get">
+      <button type="submit" class="bg-orange-700 text-white text-lg font-semibold px-6 py-3 rounded-2xl hover:bg-orange-800 focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95">
         Continuar
       </button>
+      </form>
     </div>
   </footer>
 
