@@ -20,7 +20,7 @@ Route::get('/Cadastro', [UserController::class, 'Cadastro'])->name("User.Cadastr
 //Cardapio
 Route::get('/Cardapio', [UserController::class, 'UserCardapio'])->name("User.Cardapio");
 Route::get('/Carrinho', [UserController::class, 'Carrinho'])->name("User.Carrinho");
-Route::get('/Pagamento/Pix', [UserController::class, 'PagamentoPix'])->name("User.Pix");
+Route::get('/PagamentoPix', [UserController::class, 'PagamentoPix'])->name("User.Pix");
 Route::get('/OpcaoPedido', [UserController::class, 'OpcaoPedido'])->name("User.OpcaoPedido");
 Route::get('/Pagamento', [UserController::class, 'FormaPagamento'])->name("User.Pagamento");
 Route::get('/Selecao', [UserController::class, 'Selecao'])->name("User.Selecao");

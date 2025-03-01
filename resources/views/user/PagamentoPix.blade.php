@@ -10,8 +10,53 @@
 </head>
 <body class="bg-gray-100 text-white">
 
+    <!-- Hotbar -->
     <x-hotbar-user />
-    <nav class="flex justify-center space-x-10 bg-[#2E2E2E] py-4"></nav>
-    
+
+    <!-- Navbar com botão de voltar -->
+    <nav class="flex justify-center relative bg-[#2E2E2E] py-6">
+        <a href="javascript:history.back()" class="absolute top-2 left-4 transition-transform transform hover:scale-110">
+            <img src="{{ asset('Icons/btn-back.png') }}" alt="Voltar" class="w-8 h-8">
+        </a>
+    </nav>
+
+    <!-- Conteúdo principal -->
+    <div class="min-h-screen flex flex-col items-center p-4 pt-8"> <!-- Ajuste do padding-top -->
+        <!-- Título "Pagamento" -->
+        <h1 class="text-3xl font-bold text-[#2E2E2E] mb-8">Pagamento</h1> <!-- Texto maior e mais espaçamento -->
+
+        <!-- Caixa do QR Code -->
+        <div class="w-full max-w-md bg-[#B7B7B7] rounded-2xl shadow-lg p-6 text-center">
+            <!-- Valor -->
+            <p class="text-xl font-semibold text-[#2E2E2E] mb-6">Total: <span class="text-[#A74A04]">R$ 64,40</span></p> <!-- Texto maior -->
+
+            <!-- QR Code -->
+            <div class="mb-6"> <!-- Removido o fundo branco -->
+                <img src="{{ asset('Icons/qrcode.png') }}" alt="QR Code" class="mx-auto w-48 h-48"> <!-- Imagem maior -->
+            </div>
+
+            <!-- Botão para copiar código -->
+            <button id="copyButton" class="w-full bg-[#A74A04] text-white font-semibold py-3 rounded-lg hover:bg-[#8B3D03] transition-colors">
+                Copiar Código
+            </button>
+
+            <!-- Código -->
+            <p id="code" class="text-lg text-gray-700 mt-6">a56c-4928-93be-9b7bf14beeab</p> <!-- Texto maior -->
+        </div>
+
+        <!-- Mensagem de tempo (fora da caixa cinza) -->
+        <p class="text-sm text-gray-600 mt-6">O pagamento deve ser efetuado em até 10 minutos.</p> <!-- Texto maior e fora da caixa -->
+    </div>
+
+    <script>
+        // Função para copiar o código
+        document.getElementById("copyButton").addEventListener("click", function() {
+            const codeText = document.getElementById("code").innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                alert("Código copiado!");
+            });
+        });
+    </script>
+
 </body>
 </html>
