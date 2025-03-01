@@ -26,7 +26,7 @@ Route::get('/Pagamento', [UserController::class, 'FormaPagamento'])->name("User.
 Route::get('/Selecao', [UserController::class, 'Selecao'])->name("User.Selecao");
 Route::get('/Localizacao', [UserController::class, 'Localizacao'])->name("User.Localizacao");
 Route::get('/Sacola', [UserController::class, 'Sacola'])->name("User.Sacola");
-Route::get('/MeuPedido', [UserController::class, 'MeuPedido'])->name("User.MeuPedido");
+Route::get('/VerPedido', [UserController::class, 'VerPedido'])->name("User.VerPedido");
 
 
 //admin

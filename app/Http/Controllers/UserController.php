@@ -67,9 +67,9 @@ class UserController extends Controller
         return view('user.Sacola');    
     }
 
-    public function MeuPedido()
+    public function VerPedido()
     {
-        return view('user.MeuPedido');
+        return view('user.VerPedido');
     }
 
     public function Selecao()
