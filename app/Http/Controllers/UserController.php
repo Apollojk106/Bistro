@@ -37,9 +37,9 @@ class UserController extends Controller
         return view('user.Cardapio');    
     }
 
-    public function Carrinho()
+    public function Item()
     {
-        return view('user.Carrinho');    
+        return view('user.Item');    
     }
 
     public function PagamentoPix()
@@ -62,9 +62,14 @@ class UserController extends Controller
         return view('user.Localizacao');    
     }
 
+    public function Sacola()
+    {
+        return view('user.Sacola');    
+    }
+
     public function MeuPedido()
     {
-        return view('user.MeuPedido');    
+        return view('user.MeuPedido');
     }
 
     public function Selecao()
