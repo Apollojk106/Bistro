@@ -12,8 +12,6 @@
 
     <!-- Hotbar -->
     <x-hotbar-user />
-
-    <!-- Navbar com botão de voltar -->
     <nav class="flex justify-center relative bg-[#2E2E2E] py-6">
         <a href="javascript:history.back()" class="absolute top-2 left-4 transition-transform transform hover:scale-110">
             <img src="{{ asset('Icons/btn-back.png') }}" alt="Voltar" class="w-8 h-8">

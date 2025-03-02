@@ -19,13 +19,15 @@ Route::get('/Login', [UserController::class, 'Login'])->name("User.Login");
 Route::get('/Cadastro', [UserController::class, 'Cadastro'])->name("User.Cadastro");
 //Cardapio
 Route::get('/Cardapio', [UserController::class, 'UserCardapio'])->name("User.Cardapio");
-Route::get('/Carrinho', [UserController::class, 'Carrinho'])->name("User.Carrinho");
-Route::get('/Pagamento/Pix', [UserController::class, 'PagamentoPix'])->name("User.Pix");
+Route::get('/Item', [UserController::class, 'Item'])->name("User.Item");
+Route::get('/PagamentoPix', [UserController::class, 'PagamentoPix'])->name("User.Pix");
 Route::get('/OpcaoPedido', [UserController::class, 'OpcaoPedido'])->name("User.OpcaoPedido");
 Route::get('/Pagamento', [UserController::class, 'FormaPagamento'])->name("User.Pagamento");
 Route::get('/Selecao', [UserController::class, 'Selecao'])->name("User.Selecao");
 Route::get('/Localizacao', [UserController::class, 'Localizacao'])->name("User.Localizacao");
-Route::get('/MeuPedido', [UserController::class, 'MeuPedido'])->name("User.MeuPedido");
+Route::get('/Sacola', [UserController::class, 'Sacola'])->name("User.Sacola");
+Route::get('/VerPedido', [UserController::class, 'VerPedido'])->name("User.VerPedido");
+
 
 //admin
 Route::get('/admin/Dashboard', [UserController::class, 'Dashboard'])->name("Dashboard");
