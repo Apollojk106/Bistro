@@ -53,9 +53,15 @@
                 response.agendamentos.forEach(function(pedido) {
                     $('#agendados').append(`
                         <div class="mb-4 mt-1 bg-[#A7C7E7]  border-2 border-black border-opacity-30">
+                            <p>Para: ${pedido.id}</p>
                             <p>Nome: ${pedido.nome}</p>
-                            <p>Status: ${pedido.status_pedido}</p>
+                            <p>Contato: ${pedido.id}</p>
+                            <p>Opção: ${pedido.status_pedido}</p>
                             <p>ID: ${pedido.id}</p>
+                            <p>Valor: ${pedido.id}</p>
+                            <p>Items: ${pedido.id}</p>
+                            <p>Comentarios: ${pedido.id}</p>
+
                             <div class="flex space-x-4 justify-center m-4">
                                 <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2">
                                     <span>Imprimir</span> <img src="{{ asset('Icons/box.png') }}" alt="Imagem Centralizada" class="h-5 w-5 object-contain" />
