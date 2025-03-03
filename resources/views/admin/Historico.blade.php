@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="//unpkg.com/alpinejs" defer></script> <!-- Adicione o Alpine.js -->
 </head>
+
 <body class="bg-gray-100">
 
     <!-- Hotbar -->
@@ -84,19 +86,32 @@
                     <p class="text-lg font-bold">Nº <span x-text="pedido.id"></span></p>
                     <img src="{{ asset('logo.png') }}" class="mx-auto w-16" alt="Logo">
                     <p class="mt-2 font-semibold" x-text="pedido.nome"></p>
-                    <p class="text-gray-600" x-text="pedido.email"></p>
-                    <p class="mt-2" x-text="pedido.endereco"></p>
+
                     <p class="mt-2 font-bold" x-text="pedido.item"></p>
-                    <p x-text="pedido.bebida"></p>
                     <p class="mt-3 font-semibold text-xl" x-text="'R$ ' + pedido.valor_total"></p>
-                    <p class="text-gray-600" x-text="pedido.data"></p>
-                    <p class="mt-2 text-red-500" x-show="pedido.sem_feijao">Sem feijão</p>
+
                     <p class="mt-2 font-bold text-green-600" x-text="pedido.local ? 'Local' : 'Delivery'"></p>
+                    <p class="mt-2">Categoria Pedido: <span x-text="pedido.categoria_pedido"></span></p>
+                    <p class="mt-2">Status Pagamento: <span x-text="pedido.status_pedido"></span></p>
+                    <p class="mt-2">Opção de Entrega: <span x-text="pedido.opcao_entrega"></span></p>
+                    <p class="mt-2">Forma de Pagamento: <span x-text="pedido.id_forma_pagamento"></span></p>
+                    <p class="mt-2">Descrição: <span x-text="pedido.descricao"></span></p>
+
+                    <p class="mt-2">Contato: <span x-text="pedido.telefone"></span></p>
+                    <p class="mt-2">Email: <span x-text="pedido.email"></span></p>
+                    <p class="mt-2">Bairro: <span x-text="pedido.bairro"></span></p>
+                    <p class="mt-2">Endereço: <span x-text="pedido.rua"> </span></p>
+                    <p class="mt-2">Número Residência: <span x-text="pedido.numero_residencia"></span></p>
+                    <p class="mt-2">Complemento: <span x-text="pedido.complemento"></span></p>
+
+                    
                 </div>
+
             </div>
         </div>
 
     </div>
 
 </body>
+
 </html>

@@ -82,16 +82,11 @@ class PedidoController extends Controller
     public function HistoricoFiltro(Request $request) 
     {
 
-        if($request->categoria == "")
-
-        
-        $PedidosFiltrado =Pedido::where($request->categoria, 'like', '%' . $request->pesquisa . '%')
+        $PedidosFiltrado = Pedido::where($request->categoria, 'like', '%' . $request->pesquisa . '%')
         ->where('status','Concluido')
         ->take(10)
         ->get();
 
         return $this->Historico($PedidosFiltrado);
     }
-
-    
 }
