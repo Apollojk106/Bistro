@@ -87,17 +87,7 @@
                     <img src="{{ asset('logo.png') }}" class="mx-auto w-16" alt="Logo">
                     <p class="mt-2 font-semibold" x-text="pedido.nome"></p>
 
-                    <p class="mt-2 font-bold" x-text="pedido.item"></p>
-                    <p class="mt-2 font-bold" x-text="pedido.itensPedido"></p>
-
-                    <template x-for="item in pedido.itensPedido" :key="item.id">
-                        <div class="mt-2">
-                            <p class="font-bold" x-text="item.cardapio.nome"></p>
-                            <p class="text-sm" x-text="'Quantidade: ' + item.quantidade"></p>
-                            <p class="text-sm" x-text="'Valor Unitário: R$ ' + item.valor_unitario"></p>
-                            <p class="text-sm" x-text="'Subtotal: R$ ' + item.subtotal"></p>
-                        </div>
-                    </template>
+                    <p class="mt-2"><span x-text="pedido.Items"></span></p>
 
                     <p class="mt-3 font-semibold text-xl" x-text="'R$ ' + pedido.valor_total"></p>
 

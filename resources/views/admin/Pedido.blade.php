@@ -61,7 +61,7 @@
                             <p>Opção: ${pedido.status_pedido}</p>
                             <p>ID: ${pedido.id}</p>
                             <p>Valor: ${pedido.id}</p>
-                            <p>Itens: ${itensNomes}</p> <!-- Aqui é onde mostramos os nomes dos itens -->
+                            <p>${pedido.Items}</p> 
                             <p>Comentarios: ${pedido.id}</p>
 
                             <div class="flex space-x-4 justify-center m-4">

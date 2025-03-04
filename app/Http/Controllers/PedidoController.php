@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Pedido;
 use Illuminate\Http\Request;
+use App\Models\Cardapio;
 
 class PedidoController extends Controller
 {
     public function GetPedidos()
     {
-        $TodosPedidos = Pedido::where('opcao_entrega','!=', 'Agendamento')
+        $TodosPedidos = Pedido::where('opcao_entrega', '!=', 'Agendamento')
             ->where('status', 'Pendente')
             ->get();
 
@@ -67,40 +68,58 @@ class PedidoController extends Controller
 
     public function Historico($Pedidos)
     {
-        return view('admin.Historico', compact('Pedidos'));    
+        return view('admin.Historico', compact('Pedidos'));
     }
 
     public function PedidosConcluidos()
     {
         $PedidosConcluidos = Pedido::with('itensPedido.cardapio')
-        ->where('status','Concluido')
-        ->take(10)
-        ->get();
+            ->where('status', 'Concluido')
+            ->take(10)
+            ->get();
 
-        foreach($PedidosConcluidos as $Pedido)
-        {
-            foreach($Pedido->itensPedido as $item)
-            {
-
-                
-                $Pedido->Itens = "x";
-
-            }
-        }
-        dd($PedidosConcluidos);
+        $PedidosConcluidos = $this->GetItems($PedidosConcluidos);
 
         return $this->Historico($PedidosConcluidos);
     }
 
-    public function HistoricoFiltro(Request $request) 
+    public function HistoricoFiltro(Request $request)
     {
 
         $PedidosFiltrado = Pedido::ith('itensPedido.cardapio')
-        ->where($request->categoria, 'like', '%' . $request->pesquisa . '%')
-        ->where('status','Concluido')
-        ->take(10)
-        ->get();
+            ->where($request->categoria, 'like', '%' . $request->pesquisa . '%')
+            ->where('status', 'Concluido')
+            ->take(10)
+            ->get();
+
+        $PedidosFiltrado = $this->GetItems($PedidosFiltrado);
 
         return $this->Historico($PedidosFiltrado);
+    }
+
+    public function GetItems($Pedidos)
+    {
+        foreach ($Pedidos as $Pedido) {
+
+            if ($Pedido->Items === null) {
+                $Pedido->Items = "";
+            }
+
+            foreach ($Pedido->itensPedido as $Items) {
+
+                $Retornos = Cardapio::where('id', $Items->id_cardapio)
+                ->get();
+
+                foreach($Retornos as $Retorno)
+                { 
+
+                    $Pedido->Items .= $Items->quantidade . "x ". $Retorno->nome . ".";
+
+                }
+                
+            }
+        }
+
+        return $Pedidos;
     }
 }
