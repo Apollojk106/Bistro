@@ -72,9 +72,22 @@ class PedidoController extends Controller
 
     public function PedidosConcluidos()
     {
-        $PedidosConcluidos = Pedido::where('status','Concluido')
+        $PedidosConcluidos = Pedido::with('itensPedido.cardapio')
+        ->where('status','Concluido')
         ->take(10)
         ->get();
+
+        foreach($PedidosConcluidos as $Pedido)
+        {
+            foreach($Pedido->itensPedido as $item)
+            {
+
+                
+                $Pedido->Itens = "x";
+
+            }
+        }
+        dd($PedidosConcluidos);
 
         return $this->Historico($PedidosConcluidos);
     }
@@ -82,7 +95,8 @@ class PedidoController extends Controller
     public function HistoricoFiltro(Request $request) 
     {
 
-        $PedidosFiltrado = Pedido::where($request->categoria, 'like', '%' . $request->pesquisa . '%')
+        $PedidosFiltrado = Pedido::ith('itensPedido.cardapio')
+        ->where($request->categoria, 'like', '%' . $request->pesquisa . '%')
         ->where('status','Concluido')
         ->take(10)
         ->get();

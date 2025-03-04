@@ -51,6 +51,8 @@
 
                 // Preenche a coluna Agendados
                 response.agendamentos.forEach(function(pedido) {
+                    // Cria uma string com os nomes dos itens do pedido
+
                     $('#agendados').append(`
                         <div class="mb-4 mt-1 bg-[#A7C7E7]  border-2 border-black border-opacity-30">
                             <p>Para: ${pedido.id}</p>
@@ -59,7 +61,7 @@
                             <p>Opção: ${pedido.status_pedido}</p>
                             <p>ID: ${pedido.id}</p>
                             <p>Valor: ${pedido.id}</p>
-                            <p>Items: ${pedido.id}</p>
+                            <p>Itens: ${itensNomes}</p> <!-- Aqui é onde mostramos os nomes dos itens -->
                             <p>Comentarios: ${pedido.id}</p>
 
                             <div class="flex space-x-4 justify-center m-4">
@@ -69,11 +71,11 @@
                                 <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2" onclick="window.location.href='/admin/Pedidos/Avancar/${pedido.id}'">
                                     <span>Avançar</span> <img src="{{ asset('Icons/arrow-left.png') }}" alt="Imagem Centralizada" class="h-5 w-5 object-contain" />
                                 </button>
-                             
                             </div>
                         </div>
                     `);
                 });
+
 
                 // Preenche a coluna Pedidos
                 response.pendentes.forEach(function(pedido) {
