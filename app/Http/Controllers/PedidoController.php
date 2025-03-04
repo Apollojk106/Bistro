@@ -14,7 +14,8 @@ class PedidoController extends Controller
             ->where('status', 'Pendente')
             ->get();
 
-        return $TodosPedidos;
+        return   $this->GetItems($TodosPedidos);
+
     }
 
     public function GetAgendados()
@@ -23,14 +24,14 @@ class PedidoController extends Controller
             ->where('status', 'Pendente')
             ->get();
 
-        return $Agendados;
+        return $this->GetItems($Agendados);
     }
 
     public function GetEmAndamento()
     {
         $EmAndamento  = Pedido::where('status', 'EmAndamento')->get();
 
-        return $EmAndamento;
+        return  $this->GetItems($EmAndamento);
     }
 
     public function getPedidosJson()

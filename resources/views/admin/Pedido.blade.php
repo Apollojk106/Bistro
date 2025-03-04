@@ -60,8 +60,8 @@
                             <p>Contato: ${pedido.id}</p>
                             <p>Opção: ${pedido.status_pedido}</p>
                             <p>ID: ${pedido.id}</p>
-                            <p>Valor: ${pedido.id}</p>
-                            <p>${pedido.Items}</p> 
+                            <p>Valor: ${pedido.Items}</p>
+                            <p><span x-text="pedido.Items"></span></p> 
                             <p>Comentarios: ${pedido.id}</p>
 
                             <div class="flex space-x-4 justify-center m-4">

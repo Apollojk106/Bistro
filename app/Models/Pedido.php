@@ -46,5 +46,6 @@ class Pedido extends Model
         });
     }
 
+
     public $timestamps = true;
 }

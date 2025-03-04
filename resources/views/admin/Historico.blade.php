@@ -101,7 +101,7 @@
                     <p class="mt-2">Contato: <span x-text="pedido.telefone"></span></p>
                     <p class="mt-2">Email: <span x-text="pedido.email"></span></p>
                     <p class="mt-2">Bairro: <span x-text="pedido.bairro"></span></p>
-                    <p class="mt-2">Endereço: <span x-text="pedido.rua"> </span></p>
+                    <p class="mt-2">Rua: <span x-text="pedido.rua"> </span></p>
                     <p class="mt-2">Número Residência: <span x-text="pedido.numero_residencia"></span></p>
                     <p class="mt-2">Complemento: <span x-text="pedido.complemento"></span></p>
 
