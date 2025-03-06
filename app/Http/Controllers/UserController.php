@@ -111,6 +111,8 @@ class UserController extends Controller
 
     public function PostItemCardapio(Request $request)
     {
+        dd($request);
+        
         return view('admin.ItemCardapio');    
     }
 
@@ -118,8 +120,6 @@ class UserController extends Controller
     {
         return view('admin.Configuracao');    
     }
-
-    
 
     public function Pedido()
     {

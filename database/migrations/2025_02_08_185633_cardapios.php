@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('valor', 8, 2);
             $table->decimal('desconto', 8, 2)->default(0);
             $table->string('disponibilidade'); // Ex: "Todo dia", "Segunda", etc.
+            $table->enum('status', ['ligado', 'desligado'])->default('ligado');
             $table->text('ingredientes');
             $table->foreignId('id_categoria')->constrained('Categorias');
             $table->timestamps();

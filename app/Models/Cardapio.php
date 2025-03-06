@@ -13,6 +13,7 @@ class Cardapio extends Model
         'valor',
         'desconto',
         'disponibilidade',
+        'status',
         'ingredientes',
         'id_categoria',
     ];
