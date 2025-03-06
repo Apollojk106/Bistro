@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Cardapio;
 use App\Models\Categoria;
-use GuzzleHttp\Psr7\Request as Psr7Request;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 
 class CardapioController extends Controller
 {
@@ -87,4 +87,71 @@ class CardapioController extends Controller
 
         return $this->IndexCardapio();
     }
+
+    //Tela de Item
+
+    public function SaveItem($Item)
+    {
+        if($Item->categoria == "novo")
+        {
+            $idcategoria = $this->CriarCategoria($Item->newcategory);
+        }
+        else
+        {
+            $idcategoria = $Item->categoria;
+        }
+
+        $ItemCriado = Cardapio::updateOrCreate(
+            ['nome' => $Item->Nome],
+        [
+            'nome' => $Item->Nome,
+            'imagem' => $Item->Imagem,
+            'descricao' => $Item->Descricao,
+            'valor' => $Item->Valor,
+            'desconto' => $request->Desconto ?? 0, 
+            'disponibilidade' => $Item->Disponibilidade,
+            'status' => 'ligado', // Valor default
+            'ingredientes' => $Item->Igredientes,
+            'id_categoria' => $idcategoria, // Referência à categoria (seja nova ou existente)
+        ]);
+
+        return $this->IndexCardapio();
+    }
+
+    public function CriarCategoria($nome)
+    {
+        $categoria = Categoria::firstOrCreate([
+            'nome' => $nome,
+        ]);
+
+        return $categoria->id;
+    }
+
+    /*
+        #parameters: array:10 [▼
+      "_token" => "5uDzBXUHj9OfROAzOCoz8VlLXq7Jhqdy08p61j73"
+      "Nome" => "asd"
+      "Imagem" => "Diagrama em branco (2).png"
+      "Descricao" => "asd"
+      "Valor" => "asd"
+      "categoria" => "novo"
+      "c" => "asd"
+      "Igredientes" => "asd"
+      "Desconto" => "asd"
+      "Disponibilidade" => "asd"
+    ]
+
+    #parameters: array:10 [▼
+      "_token" => "5uDzBXUHj9OfROAzOCoz8VlLXq7Jhqdy08p61j73"
+      "Nome" => "asd"
+      "Imagem" => "Diagrama em branco (2).png"
+      "Descricao" => "asd"
+      "Valor" => "asd"
+      "categoria" => "Complemento"
+      "newcategory" => null
+      "Igredientes" => "asd"
+      "Desconto" => "asd"
+      "Disponibilidade" => "asd"
+    ]
+    */
 }

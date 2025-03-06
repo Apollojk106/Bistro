@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('Cardapios', function (Blueprint $table) {
             $table->id();
             $table->string('imagem');
-            $table->string('nome');
+            $table->string('nome')->unique();
             $table->text('descricao');
             $table->decimal('valor', 8, 2);
             $table->decimal('desconto', 8, 2)->default(0);

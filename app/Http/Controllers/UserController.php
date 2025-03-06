@@ -9,11 +9,14 @@ use App\Http\Controllers\FormaPagamentoController;
 use App\Http\Controllers\ItensPedidoController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PixController;
+use App\Models\Cardapio;
+use Illuminate\Support\Facades\View;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    //Esse controler é somente para a rota GET
+    //Esse controler é somente para a rota view
 
     //Login
     public function Perfil()
@@ -100,12 +103,29 @@ class UserController extends Controller
 
     public function GetItemCardapio()
     {
-        return view('admin.ItemCardapio');    
+        $Categorias = Categoria::pluck('nome', 'id');
+
+        return view('admin.ItemCardapio', compact('Categorias'));    
     }
 
-    public function SaveItem()
+    public function SaveItem(Request $request)
     {
-        return view('admin.Cardapio');    
+        $request->validate([
+            'Nome' => 'required|string|max:255',
+            'Imagem' => 'required|string|max:255',
+            'Descricao' => 'required|string',
+            'Valor' => 'required|numeric',
+            'categoria' => 'required|string', // Categoria pode ser nova ou existente
+            'Igredientes' => 'required|string',
+            'Desconto' => 'nullable|numeric',
+            'Disponibilidade' => 'required|string',
+        ]);
+
+        $Cardapio = new CardapioController();
+
+        $Cardapio->SaveItem($request);
+
+        return  $Cardapio->IndexCardapio();    
     }
 
 
