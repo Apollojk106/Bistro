@@ -49,7 +49,7 @@ Route::post('/admin/Cardapio/Filtro', [CardapioController::class, 'CardapioFiltr
 
 Route::get('/admin/ItemCardapio', [UserController::class, 'GetItemCardapio'])->name("ItemCardapio");
 
-Route::post('/admin/ItemCardapio', [UserController::class, 'PostItemCardapio'])->name("PostItemCardapio");
+Route::post('/admin/ItemCardapio', [UserController::class, 'EditItemCardapio'])->name("EditItemCardapio");
 
 Route::post('/admin/ItemCardapio/Save', [UserController::class, 'SaveItem'])->name("SaveItem");
 

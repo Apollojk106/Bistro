@@ -10,7 +10,7 @@
             <div class="flex-1 p-4 m-2 justify-between">
                 <div class="text-center bg-white p-4 rounded-lg shadow m-2">
                     <label for="imagem" class="text-lg font-semibold mb-2">Nome do Item</label>
-                    <input id="Nome" name="Nome" type="text" value="" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
+                    <input id="Nome" name="Nome" type="text" value="{{ isset($Item) ? $Item->nome : '' }}" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
                 </div>
 
                 @if ($errors->any())
@@ -25,13 +25,13 @@
 
                 <div class="flex flex-col items-center justify-center p-4 m-2 bg-white rounded-lg shadow">
                     <label for="imagem" class="text-lg font-semibold mb-2">Carregar Imagem</label>
-                    <input id="Imagem" name="Imagem" type="file" id="imagem" accept="image/*" class="w-full p-2 border rounded">
+                    <input id="Imagem" name="Imagem" type="file" id="imagem" accept="image/" file="{{ isset($Item) ? $Item->imagem : '' }}" class="w-full p-2 border rounded">
                 </div>
 
                 <!-- Descrição -->
                 <div class="text-center bg-white p-4 rounded-lg shadow m-2">
                     <label for="imagem" class="text-lg font-semibold mb-2">Descrição</label>
-                    <input id="Descricao" name="Descricao" type="text" value="" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
+                    <input id="Descricao" name="Descricao" type="text" value="{{ isset($Item) ? $Item->descricao : '' }}" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
                 </div>
             </div>
 
@@ -41,7 +41,7 @@
 
                 <div class="text-center bg-white p-4 rounded-lg shadow m-2">
                     <label for="imagem" class="text-lg font-semibold mb-2">Valor</label>
-                    <input id="Valor" name="Valor" type="text" value="" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
+                    <input id="Valor" name="Valor" type="text" value="{{ isset($Item) ? $Item->valor : '' }}" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
                 </div>
 
                 <div class="text-center bg-white p-4 rounded-lg shadow m-2">
@@ -49,7 +49,7 @@
 
                     <!-- Select para categorias existentes e a opção de adicionar nova categoria -->
                     <select id="categoria" name="categoria" class="w-full shadow appearance-none border rounded w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onchange="handleCategoryChange(this)">
-                        <option value="">Escolha uma Categoria</option>
+                        <option value="{{ isset($Item) ? $Item->id_categoria : '' }}">{{ isset($Item) ? $Item->categoria : 'Escolha uma Categoria' }}</option>
 
                         <!-- Preenchendo com as categorias existentes -->
                         @foreach($Categorias as $id => $nome)
@@ -69,7 +69,7 @@
 
                 <div class="text-center bg-white p-4 rounded-lg shadow m-2">
                     <label for="imagem" class="text-lg font-semibold mb-2">Igredientes</label>
-                    <input id="Igredientes" name="Igredientes" type="text" value="" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
+                    <input id="Igredientes" name="Igredientes" type="text" value="{{ isset($Item) ? $Item->ingredientes : '' }}" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
                 </div>
             </div>
 
@@ -77,12 +77,12 @@
             <div class="flex-1 p-4 m-2">
                 <div class="text-center bg-white p-4 rounded-lg shadow m-2">
                     <label for="imagem" class="text-lg font-semibold mb-2">Desconto</label>
-                    <input id="Desconto" name="Desconto" type="text" value="" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
+                    <input id="Desconto" name="Desconto" type="text" value="{{ isset($Item) ? $Item->desconto : '0' }}" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
                 </div>
 
                 <div class="text-center bg-white p-4 rounded-lg shadow m-2">
                     <label for="imagem" class="text-lg font-semibold mb-2">Disponibilidade</label>
-                    <input id="Disponibilidade" name="Disponibilidade" type="text" value="Todo dia" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
+                    <input id="Disponibilidade" name="Disponibilidade" type="text" value="{{ isset($Item) ? $Item->disponibilidade : 'Todo dia' }}" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
                 </div>
 
                 <div class="text-center p-4 rounded-lg m-2">

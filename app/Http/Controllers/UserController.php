@@ -21,53 +21,53 @@ class UserController extends Controller
     //Login
     public function Perfil()
     {
-        return view('user.Perfil');    
+        return view('user.Perfil');
     }
 
     public function Login()
     {
-        return view('user.Login');    
+        return view('user.Login');
     }
 
     public function Cadastro()
     {
-        return view('user.Cadastro');    
+        return view('user.Cadastro');
     }
 
     //User
     public function UserCardapio()
     {
-        return view('user.Cardapio');    
+        return view('user.Cardapio');
     }
 
     public function Item()
     {
-        return view('user.Item');    
+        return view('user.Item');
     }
 
     public function PagamentoPix()
     {
-        return view('user.PagamentoPix');    
+        return view('user.PagamentoPix');
     }
 
     public function OpcaoPedido()
     {
-        return view('user.OpcaoPedido');    
+        return view('user.OpcaoPedido');
     }
 
     public function FormaPagamento()
     {
-        return view('user.FormaDePagamento');    
+        return view('user.FormaDePagamento');
     }
 
     public function Localizacao()
     {
-        return view('user.Localizacao');    
+        return view('user.Localizacao');
     }
 
     public function Sacola()
     {
-        return view('user.Sacola');    
+        return view('user.Sacola');
     }
 
     public function VerPedido()
@@ -77,7 +77,7 @@ class UserController extends Controller
 
     public function Selecao()
     {
-        return view('user.Selecao');    
+        return view('user.Selecao');
     }
 
     //Admin
@@ -92,20 +92,35 @@ class UserController extends Controller
             'Sábado'  => 250,
             'Domingo' => 180,
         ];
-    
-        return view('admin.Dashboard', compact('pratosVendidos')); 
+
+        return view('admin.Dashboard', compact('pratosVendidos'));
     }
 
     public function Cardapio()
     {
-        return view('admin.Cardapio');    
+        return view('admin.Cardapio');
     }
 
     public function GetItemCardapio()
     {
+
         $Categorias = Categoria::pluck('nome', 'id');
 
-        return view('admin.ItemCardapio', compact('Categorias'));    
+        return view('admin.ItemCardapio', compact('Categorias'));
+    }
+
+    public function EditItemCardapio(Request $request)
+    {
+        $Item = Cardapio::where('id', $request->Id)
+            ->first();
+
+        $Categorias = Categoria::pluck('nome', 'id');
+
+        $Item->categoria = Categoria::where('id', $Item->id_categoria)
+            ->first()
+            ->nome ?? null;
+
+        return view('admin.ItemCardapio', compact('Categorias', 'Item'));
     }
 
     public function SaveItem(Request $request)
@@ -125,26 +140,16 @@ class UserController extends Controller
 
         $Cardapio->SaveItem($request);
 
-        return  $Cardapio->IndexCardapio();    
-    }
-
-
-    public function PostItemCardapio(Request $request)
-    {
-        dd($request);
-        
-        return view('admin.ItemCardapio');    
+        return  $Cardapio->IndexCardapio();
     }
 
     public function Configuracao()
     {
-        return view('admin.Configuracao');    
+        return view('admin.Configuracao');
     }
 
     public function Pedido()
     {
-        return view('admin.Pedido', );    
+        return view('admin.Pedido',);
     }
-
-
 }

@@ -62,7 +62,7 @@
                 <tbody>
 
                     @foreach($Items as $Item)
-                    <form action="{{ route('PostItemCardapio') }}" method="Post">
+                    <form action="{{ route('EditItemCardapio') }}" method="Post">
                         @csrf
                         <input type="hidden" name="Id" value="{{ $Item->id }}"></input>
                         <tr>

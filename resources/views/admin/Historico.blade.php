@@ -7,7 +7,7 @@
     <title>Histórico de Pedidos</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="//unpkg.com/alpinejs" defer></script> <!-- Adicione o Alpine.js -->
+    <script src="//unpkg.com/alpinejs" defer></script> 
 </head>
 
 <body class="bg-gray-100">
