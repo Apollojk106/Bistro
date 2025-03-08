@@ -18,5 +18,10 @@ class Cardapio extends Model
         'id_categoria',
     ];
 
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class, 'id_categoria');
+    }
+
     public $timestamps = true;
 }

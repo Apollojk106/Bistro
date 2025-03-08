@@ -12,5 +12,10 @@ class Categoria extends Model
         'nivel'
     ];
 
+    public function cardapios()
+    {
+        return $this->hasMany(Cardapio::class, 'id_categoria');
+    }
+
     public $timestamps = true;
 }

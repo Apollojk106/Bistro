@@ -19,10 +19,15 @@ class ItensPedido extends Model
         'subtotal' => 'decimal:2',
     ];
 
-    // Relacionamento com Cardapio
+    // Relacionamento 
     public function cardapio()
     {
         return $this->belongsTo(Cardapio::class, 'id_cardapio');
+    }
+
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class, 'id_categoria');
     }
 
     public $timestamps = true;

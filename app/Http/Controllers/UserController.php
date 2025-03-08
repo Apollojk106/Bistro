@@ -81,19 +81,39 @@ class UserController extends Controller
     }
 
     //Admin
-    public function Dashboard()
+    public function Dashboard(
+        $pratosVendidos, 
+        $pedidosAgendados,
+        $pedidosNormais,
+        $valorTotalAgendados,
+        $valorTotalNormais,
+        $categoriasMaisPedidas,
+        $itensMaisPedidos,
+        $top3dias,
+        )
     {
-        $pratosVendidos = [
-            'Segunda' => 120,
-            'Terça'   => 150,
-            'Quarta'  => 130,
-            'Quinta'  => 170,
-            'Sexta'   => 200,
-            'Sábado'  => 250,
-            'Domingo' => 180,
-        ];
+        /*dd(
+            $pratosVendidos, 
+            $pedidosAgendados,
+            $pedidosNormais,
+            $valorTotalAgendados,
+            $valorTotalNormais,
+            $categoriasMaisPedidas,
+            $itensMaisPedidos,
+            $top3dias,
+            );*/
 
-        return view('admin.Dashboard', compact('pratosVendidos'));
+        return view('admin.Dashboard', 
+            compact(
+                'pratosVendidos',
+                'pedidosAgendados',
+                'pedidosNormais',
+                'valorTotalAgendados',
+                'valorTotalNormais',
+                'categoriasMaisPedidas',
+                'itensMaisPedidos',
+                'top3dias',
+            ));
     }
 
     public function Cardapio()

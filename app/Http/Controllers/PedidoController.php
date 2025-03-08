@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Pedido;
 use Illuminate\Http\Request;
 use App\Models\Cardapio;
+use Carbon\Carbon;
+use App\Models\ItensPedido;
+use App\Http\Controllers\DB;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class PedidoController extends Controller
 {
@@ -15,7 +19,6 @@ class PedidoController extends Controller
             ->get();
 
         return   $this->GetItems($TodosPedidos);
-
     }
 
     public function GetAgendados()
@@ -109,18 +112,195 @@ class PedidoController extends Controller
             foreach ($Pedido->itensPedido as $Items) {
 
                 $Retornos = Cardapio::where('id', $Items->id_cardapio)
-                ->get();
+                    ->get();
 
-                foreach($Retornos as $Retorno)
-                { 
+                foreach ($Retornos as $Retorno) {
 
-                    $Pedido->Items .= $Items->quantidade . "x ". $Retorno->nome . ".";
-
+                    $Pedido->Items .= $Items->quantidade . "x " . $Retorno->nome . ".";
                 }
-                
             }
         }
 
         return $Pedidos;
+    }
+
+    //Dashboard
+    public function IndexDashboard()
+    {
+        $Pedidos = Pedido::where('created_at', '>=', Carbon::now()->subDays(30))
+            ->get();
+
+        $ItemPedido = ItensPedido::with('cardapio.categoria') // Carrega Cardapio e Categoria
+            ->where('created_at', '>=', Carbon::now()->subDays(30))
+            ->get();
+
+        return $this->ReturnDashboard($Pedidos, $ItemPedido);
+    }
+
+    public function FilterDashboard(Request $request)
+    {
+        $filtro = $request->filtro;
+        $pesquisa = $request->pesquisa;
+
+        switch ($filtro) {
+            case 'Ano':
+                // Filtra pelo ano inteiro
+                $ano = $pesquisa;
+                $Pedidos = Pedido::whereYear('created_at', $ano)->get();
+                $ItemPedido = ItensPedido::with('cardapio.categoria')
+                    ->whereYear('created_at', $ano)
+                    ->get();
+                break;
+
+            case 'Mes':
+                // Filtra pelo mês inteiro do ano atual
+                $mes = $pesquisa;
+                $ano = Carbon::now()->year; // Assume o ano atual
+                $Pedidos = Pedido::whereYear('created_at', $ano)
+                    ->whereMonth('created_at', $mes)
+                    ->get();
+                $ItemPedido = ItensPedido::with('cardapio.categoria')
+                    ->whereYear('created_at', $ano)
+                    ->whereMonth('created_at', $mes)
+                    ->get();
+                break;
+
+            case 'Dia':
+                // Filtra pelo dia específico
+                $dia = $pesquisa;
+                $mes = Carbon::now()->month; // Assume o mês atual
+                $ano = Carbon::now()->year; // Assume o ano atual
+                $Pedidos = Pedido::whereYear('created_at', $ano)
+                    ->whereMonth('created_at', $mes)
+                    ->whereDay('created_at', $dia)
+                    ->get();
+                $ItemPedido = ItensPedido::with('cardapio.categoria')
+                    ->whereYear('created_at', $ano)
+                    ->whereMonth('created_at', $mes)
+                    ->whereDay('created_at', $dia)
+                    ->get();
+                break;
+
+            case 'Data':
+                // Filtra por data específica (formato d/m/Y)
+                try {
+                    // Define os formatos de data
+                    $formatacaoInicial = "d/m/Y";
+                    $formatacaoFinal = "Y-m-d";
+    
+                    // Tenta converter a data para o formato Y-m-d
+                    $dataFormatada = Carbon::createFromFormat($formatacaoInicial, $pesquisa)->format($formatacaoFinal);
+    
+                    // Filtra os pedidos e itens pedidos pela data formatada
+                    $Pedidos = Pedido::whereDate('created_at', $dataFormatada)->get();
+                    $ItemPedido = ItensPedido::with('cardapio.categoria')
+                        ->whereDate('created_at', $dataFormatada)
+                        ->get();
+                } catch (\Exception $e) {
+                    return back()->with('error', 'Data inválida. Por favor,
+                        insira uma data válida no formato dd/mm/aaaa.'
+                    );
+                }
+            default:
+                // Filtro padrão (últimos 30 dias)
+                $Pedidos = Pedido::where('created_at', '>=', Carbon::now()->subDays(30))->get();
+                $ItemPedido = ItensPedido::with('cardapio.categoria')
+                    ->where('created_at', '>=', Carbon::now()->subDays(30))
+                    ->get();
+                break;
+        }
+
+        return $this->ReturnDashboard($Pedidos, $ItemPedido);
+    }
+
+    public function ReturnDashboard($Pedidos, $ItemPedido)
+    {
+        // Quantidade de pedidos agendados e normais
+        $pedidosAgendados = $Pedidos->where('opcao_entrega', 'Agendamento')->count();
+        $pedidosNormais = $Pedidos->where('opcao_entrega', '!=', 'Agendamento')->count();
+
+        // Total de valores de pedidos agendados e normais
+        $valorTotalAgendados = $Pedidos->where('opcao_entrega', 'Agendamento')->sum('valor_total');
+        $valorTotalNormais = $Pedidos->where('opcao_entrega', '!=', 'Agendamento')->sum('valor_total');
+
+        // As 3 categorias mais pedidas
+        $categoriasMaisPedidas = $ItemPedido->groupBy(function ($item) {
+            return $item->cardapio->categoria->nome;
+        })
+            ->map(function ($group) {
+                return $group->count();
+            })
+            ->sortDesc()
+            ->take(3);
+
+        // Os 3 itens mais pedidos
+        $itensMaisPedidos = $ItemPedido->groupBy('id_cardapio')
+            ->map(function ($group) {
+                return [
+                    'item' => $group->first()->cardapio->nome,
+                    'total_pedidos' => $group->sum('quantidade'),
+                ];
+            })
+            ->sortByDesc('total_pedidos')
+            ->take(3);
+
+        $top3dias = $this->TopPedidos($Pedidos);
+
+        $pratosVendidos = $this->UltimosPedidos($Pedidos);
+
+        $User = new UserController;
+        return $User->Dashboard(
+            $pratosVendidos,
+            $pedidosAgendados,
+            $pedidosNormais,
+            $valorTotalAgendados,
+            $valorTotalNormais,
+            $categoriasMaisPedidas,
+            $itensMaisPedidos,
+            $top3dias,
+        );
+    }
+
+    public function TopPedidos($Pedidos)
+    {
+        $pedidosPorDia = $Pedidos->groupBy(function ($pedido) {
+            return Carbon::parse($pedido->created_at)->format('d/m');
+        });
+
+        // Calcula o total de pedidos e o valor total por dia
+        $diasComVendas = $pedidosPorDia->map(function ($pedidosDoDia) {
+            return [
+                'total_pedidos' => $pedidosDoDia->count(), // Total de pedidos no dia
+                'valor_total' => $pedidosDoDia->sum('valor_total'), // Valor total vendido no dia
+            ];
+        });
+
+        // Ordena os dias pelo valor total vendido (do maior para o menor)
+        $diasOrdenados = $diasComVendas->sortByDesc('valor_total');
+
+        return $diasOrdenados->take(3);
+    }
+
+    public function UltimosPedidos($Pedidos)
+    {
+        $pedidosPorDia = $Pedidos->groupBy(function ($pedido) {
+            return Carbon::parse($pedido->created_at)->format('d/m');
+        });
+
+        // Ordena os dias pela data de criação (do mais recente para o mais antigo)
+        $diasOrdenados = $pedidosPorDia->sortKeysDesc();
+
+        // Pega os 7 dias mais recentes
+        $ultimos7Dias = $diasOrdenados->take(7);
+
+        // Formata o resultado: data (dd/mm) e quantidade de pedidos
+        $resultados = $ultimos7Dias->map(function ($pedidosDoDia) {
+            return [
+                'data' => $pedidosDoDia->first()->created_at->format('d/m'), // Data no formato dd/mm
+                'quantidade' => $pedidosDoDia->count(), // Quantidade de pedidos no dia
+            ];
+        });
+
+        return $resultados;
     }
 }

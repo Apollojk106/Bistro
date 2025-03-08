@@ -30,7 +30,9 @@ Route::get('/VerPedido', [UserController::class, 'VerPedido'])->name("User.VerPe
 
 
 //admin
-Route::get('/admin/Dashboard', [UserController::class, 'Dashboard'])->name("Dashboard");
+Route::get('/admin/Dashboard', [PedidoController::class, 'IndexDashboard'])->name("Dashboard");
+Route::get('/admin/Dashboard/Filtro', [PedidoController::class, 'IndexDashboard'])->name("Dashboard.get");
+Route::post('/admin/Dashboard/Filtro', [PedidoController::class, 'FilterDashboard'])->name("Dashboard.filtro");
 
 Route::get('/admin/Pedido', [UserController::class, 'Pedido'])->name("Pedidos");
 Route::get('/pedidos/json', [PedidoController::class, 'getPedidosJson'])->name('pedidos.json');
