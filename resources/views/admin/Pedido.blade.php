@@ -49,20 +49,33 @@
                 $('#pedidos').empty();
                 $('#em-andamento').empty();
 
+                // Função para gerar o endereço completo, caso a categoria seja "Entrega"
+                function gerarEnderecoCompleto(pedido) {
+                    if (pedido.categoria_pedido === 'Entrega') {
+                        return `
+                            <p>Endereço: <br>${pedido.rua}, ${pedido.numero_residencia}, ${pedido.bairro} ${pedido.complemento ? `<br> ${pedido.complemento}` : ''}</p>
+                        `;
+                    }
+                    return ''; // Retorna uma string vazia se não for "Entrega"
+                }
+
                 // Preenche a coluna Agendados
                 response.agendamentos.forEach(function(pedido) {
-                    // Cria uma string com os nomes dos itens do pedido
+                    let enderecoCompleto = gerarEnderecoCompleto(pedido); // Gerar endereço completo
 
                     $('#agendados').append(`
                         <div class="mb-4 mt-1 bg-[#A7C7E7]  border-2 border-black border-opacity-30">
-                            <p>Para: ${pedido.id}</p>
+                            <p>Pagamento: ${pedido.status_pedido}</p>
+                            <p>Para: ${pedido.horario}</p>
                             <p>Nome: ${pedido.nome}</p>
-                            <p>Contato: ${pedido.id}</p>
-                            <p>Opção: ${pedido.status_pedido}</p>
-                            <p>ID: ${pedido.id}</p>
-                            <p>Valor: ${pedido.Items}</p>
+                            <p>Contato: ${pedido.telefone}</p>
+                            <p>Opção: ${pedido.categoria_pedido}</p>
+                            <p>Items: ${pedido.Items}</p>
+                            <p>Valor: ${pedido.valor_total}</p>
                             <p><span x-text="pedido.Items"></span></p> 
-                            <p>Comentarios: ${pedido.id}</p>
+                            <p>Comentarios:<br> ${pedido.descricao}</p>
+
+                            ${enderecoCompleto} <!-- Endereço será mostrado aqui se for "Entrega" -->
 
                             <div class="flex space-x-4 justify-center m-4">
                                 <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2">
@@ -76,14 +89,24 @@
                     `);
                 });
 
-
                 // Preenche a coluna Pedidos
                 response.pendentes.forEach(function(pedido) {
+                    let enderecoCompleto = gerarEnderecoCompleto(pedido); // Gerar endereço completo
+
                     $('#pedidos').append(`
                         <div class="mb-4 mt-1 bg-[#F2A97E] border-2 border-black border-opacity-30">
+                            <p>Pagamento: ${pedido.status_pedido}</p>
+                            <p>Para: ${pedido.horario}</p>
                             <p>Nome: ${pedido.nome}</p>
-                            <p>Status: ${pedido.status_pedido}</p>
-                            <p>ID: ${pedido.id}</p>
+                            <p>Contato: ${pedido.telefone}</p>
+                            <p>Opção: ${pedido.categoria_pedido}</p>
+                            <p>Items: ${pedido.Items}</p>
+                            <p>Valor: ${pedido.valor_total}</p>
+                            <p><span x-text="pedido.Items"></span></p> 
+                            <p>Comentarios:<br> ${pedido.descricao}</p>
+
+                            ${enderecoCompleto} <!-- Endereço será mostrado aqui se for "Entrega" -->
+
                             <div class="flex space-x-4 justify-center m-4">
                                 <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2">
                                     <span>Imprimir</span> <img src="{{ asset('Icons/box.png') }}" alt="Imagem Centralizada" class="h-5 w-5 object-contain" />
@@ -98,11 +121,22 @@
 
                 // Preenche a coluna Em andamento
                 response.em_andamento.forEach(function(pedido) {
+                    let enderecoCompleto = gerarEnderecoCompleto(pedido); // Gerar endereço completo
+
                     $('#em-andamento').append(`
                         <div class="mb-4 mt-1 bg-[#F9E3A1] border-2 border-black border-opacity-30">
+                            <p>Pagamento: ${pedido.status_pedido}</p>
+                            <p>Para: ${pedido.horario}</p>
                             <p>Nome: ${pedido.nome}</p>
-                            <p>Status: ${pedido.status_pedido}</p>
-                            <p>ID: ${pedido.id}</p>
+                            <p>Contato: ${pedido.telefone}</p>
+                            <p>Opção: ${pedido.categoria_pedido}</p>
+                            <p>Items: ${pedido.Items}</p>
+                            <p>Valor: ${pedido.valor_total}</p>
+                            <p><span x-text="pedido.Items"></span></p> 
+                            <p>Comentarios:<br> ${pedido.descricao}</p>
+
+                            ${enderecoCompleto} <!-- Endereço será mostrado aqui se for "Entrega" -->
+
                             <div class="flex space-x-4 justify-center m-4">
                                 <button class="bg-[#A74A04] text-white px-6 py-2 rounded-lg flex items-center space-x-2">
                                     <span>Imprimir</span> <img src="{{ asset('Icons/box.png') }}" alt="Imagem Centralizada" class="h-5 w-5 object-contain" />

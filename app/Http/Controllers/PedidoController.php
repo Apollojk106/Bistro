@@ -16,15 +16,17 @@ class PedidoController extends Controller
     {
         $TodosPedidos = Pedido::where('opcao_entrega', '!=', 'Agendamento')
             ->where('status', 'Pendente')
+            ->with('itensPedido') // Carregar o relacionamento
             ->get();
 
-        return   $this->GetItems($TodosPedidos);
+        return $this->GetItems($TodosPedidos);
     }
 
     public function GetAgendados()
     {
         $Agendados = Pedido::where('opcao_entrega', 'Agendamento')
             ->where('status', 'Pendente')
+            ->with('itensPedido') // Carregar o relacionamento
             ->get();
 
         return $this->GetItems($Agendados);
@@ -32,9 +34,11 @@ class PedidoController extends Controller
 
     public function GetEmAndamento()
     {
-        $EmAndamento  = Pedido::where('status', 'EmAndamento')->get();
+        $EmAndamento = Pedido::where('status', 'EmAndamento')
+            ->with('itensPedido') // Carregar o relacionamento
+            ->get();
 
-        return  $this->GetItems($EmAndamento);
+        return $this->GetItems($EmAndamento);
     }
 
     public function getPedidosJson()
@@ -104,21 +108,39 @@ class PedidoController extends Controller
     public function GetItems($Pedidos)
     {
         foreach ($Pedidos as $Pedido) {
-
-            if ($Pedido->Items === null) {
-                $Pedido->Items = "";
+            // Verifica se o relacionamento "itensPedido" foi carregado
+            if (!$Pedido->relationLoaded('itensPedido')) {
+                \Log::error('Relacionamento itensPedido não carregado para o pedido: ' . $Pedido->id);
+                $Pedido->Items = ''; // Garante que o campo Items seja vazio
+                continue;
             }
 
-            foreach ($Pedido->itensPedido as $Items) {
+            // Verifica se há itens no pedido
+            if ($Pedido->itensPedido->isEmpty()) {
+                \Log::info('Pedido ' . $Pedido->id . ' não possui itens.');
+                $Pedido->Items = ''; // Garante que o campo Items seja vazio
+                continue;
+            }
 
-                $Retornos = Cardapio::where('id', $Items->id_cardapio)
-                    ->get();
+            // Array para armazenar as descrições dos itens
+            $itensDescricao = [];
 
-                foreach ($Retornos as $Retorno) {
+            // Itera sobre os itens do pedido
+            foreach ($Pedido->itensPedido as $item) {
+                // Usa o relacionamento "cardapio" para buscar as informações do item
+                $cardapio = $item->cardapio;
 
-                    $Pedido->Items .= $Items->quantidade . "x " . $Retorno->nome . ".";
+                // Verifica se o cardápio foi encontrado
+                if ($cardapio) {
+                    // Concatena a quantidade e o nome do item
+                    $itensDescricao[] = $item->quantidade . "x " . $cardapio->nome;
+                } else {
+                    \Log::warning('Cardápio não encontrado para o item: ' . $item->id_cardapio);
                 }
             }
+
+            // Junta todos os itens em uma única string separada por ponto
+            $Pedido->Items = implode('. ', $itensDescricao) . '.';
         }
 
         return $Pedidos;
@@ -187,17 +209,19 @@ class PedidoController extends Controller
                     // Define os formatos de data
                     $formatacaoInicial = "d/m/Y";
                     $formatacaoFinal = "Y-m-d";
-    
+
                     // Tenta converter a data para o formato Y-m-d
                     $dataFormatada = Carbon::createFromFormat($formatacaoInicial, $pesquisa)->format($formatacaoFinal);
-    
+
                     // Filtra os pedidos e itens pedidos pela data formatada
                     $Pedidos = Pedido::whereDate('created_at', $dataFormatada)->get();
                     $ItemPedido = ItensPedido::with('cardapio.categoria')
                         ->whereDate('created_at', $dataFormatada)
                         ->get();
                 } catch (\Exception $e) {
-                    return back()->with('error', 'Data inválida. Por favor,
+                    return back()->with(
+                        'error',
+                        'Data inválida. Por favor,
                         insira uma data válida no formato dd/mm/aaaa.'
                     );
                 }

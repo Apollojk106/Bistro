@@ -20,6 +20,11 @@ class ItensPedido extends Model
     ];
 
     // Relacionamento 
+    public function pedido()
+    {
+        return $this->belongsTo(Pedido::class, 'id_pedido');
+    }
+
     public function cardapio()
     {
         return $this->belongsTo(Cardapio::class, 'id_cardapio');

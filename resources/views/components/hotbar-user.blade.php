@@ -26,9 +26,10 @@
             <button class="bg-none border-none focus:outline-none">
                 <img src="{{ asset('Icons/zap.png') }}" alt="WhatsApp" class="h-8 w-8 md:h-10 md:w-10 object-contain filter brightness-0 saturate-100">
             </button>
-            <button class="bg-none border-none focus:outline-none">
+            <!-- Ícone do Instagram com link -->
+            <a href="https://instagram.com/bistro.terraco?igsh=a3l2ejV3azVyNTBz&utm_sourc" target="_blank" class="bg-none border-none focus:outline-none">
                 <img src="{{ asset('Icons/instagram.png') }}" alt="Instagram" class="h-8 w-8 md:h-10 md:w-10 object-contain filter brightness-0 saturate-100">
-            </button>
+            </a>
         </div>
     </header>
 

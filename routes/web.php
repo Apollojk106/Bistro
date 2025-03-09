@@ -34,6 +34,9 @@ Route::get('/admin/Dashboard', [PedidoController::class, 'IndexDashboard'])->nam
 Route::get('/admin/Dashboard/Filtro', [PedidoController::class, 'IndexDashboard'])->name("Dashboard.get");
 Route::post('/admin/Dashboard/Filtro', [PedidoController::class, 'FilterDashboard'])->name("Dashboard.filtro");
 
+
+Route::get('/getPedidosJson', [PedidoController::class, 'getPedidosJson'])->name("getPedidosJson");
+
 Route::get('/admin/Pedido', [UserController::class, 'Pedido'])->name("Pedidos");
 Route::get('/pedidos/json', [PedidoController::class, 'getPedidosJson'])->name('pedidos.json');
 Route::get('/admin/Pedidos/Avancar/{id}', [PedidoController::class, 'AvancarPedidos'])->name('Avancar.pedidos');
