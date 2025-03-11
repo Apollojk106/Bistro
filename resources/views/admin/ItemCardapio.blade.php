@@ -1,7 +1,7 @@
 <div class="min-h-screen">
     <x-hotbar-admin />
 
-    <form action="{{ route('SaveItem') }}" method="post">
+    <form action="{{ route('SaveItem') }}" enctype="multipart/form-data" method="post">
         @csrf
         <div class="flex flex-col md:flex-row h-[calc(100vh-13rem)] flex-1 m-5 bg-[#B7B7B7]">
 
@@ -25,14 +25,19 @@
 
                 <div class="flex flex-col items-center justify-center p-4 m-2 bg-white rounded-lg shadow">
                     <label for="imagem" class="text-lg font-semibold mb-2">Carregar Imagem</label>
-                    <input id="Imagem" name="Imagem" type="file" id="imagem" accept="image/" file="{{ isset($Item) ? $Item->imagem : '' }}" class="w-full p-2 border rounded">
+
+                    <!-- Exibir a imagem atual -->
+                    @if(isset($Item) && $Item->imagem)
+                    <div class="mb-4">
+                        <img src="{{ asset('storage/' . $Item->imagem) }}" alt="{{ $Item->nome }}" class="w-32 h-32 object-cover">
+                    </div>
+                    @endif
+
+                    <!-- Campo para upload de nova imagem -->
+                    <input id="Imagem" name="Imagem" type="file" accept="image/*" class="w-full p-2 border rounded">
                 </div>
 
-                <!-- Descrição -->
-                <div class="text-center bg-white p-4 rounded-lg shadow m-2">
-                    <label for="imagem" class="text-lg font-semibold mb-2">Descrição</label>
-                    <input id="Descricao" name="Descricao" type="text" value="{{ isset($Item) ? $Item->descricao : '' }}" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
-                </div>
+
             </div>
 
             <!-- Coluna 2 -->
@@ -76,6 +81,11 @@
             <!-- Coluna 3 -->
             <div class="flex-1 p-4 m-2">
                 <div class="text-center bg-white p-4 rounded-lg shadow m-2">
+                    <label for="imagem" class="text-lg font-semibold mb-2">Descrição</label>
+                    <input id="Descricao" name="Descricao" type="text" value="{{ isset($Item) ? $Item->descricao : '' }}" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
+                </div>
+
+                <div class="text-center bg-white p-4 rounded-lg shadow m-2">
                     <label for="imagem" class="text-lg font-semibold mb-2">Desconto</label>
                     <input id="Desconto" name="Desconto" type="text" value="{{ isset($Item) ? $Item->desconto : '0' }}" class="border border-gray-300 p-2 rounded-lg w-full" placeholder="Digite algo aqui...">
                 </div>
@@ -102,7 +112,9 @@
 
 
         </div>
-        </fomr>
+
+
+    </form>
 </div>
 
 <script>

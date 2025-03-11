@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
         // Cardapio
         DB::table('Cardapios')->insert([
             [
-                'imagem' => 'almoco1.jpg',
+                'imagem' => null,
                 'nome' => 'Feijoada Completa',
                 'descricao' => 'Feijão preto, carne de porco, arroz branco, farofa e couve',
                 'valor' => 29.99,
@@ -39,11 +39,11 @@ class DatabaseSeeder extends Seeder
                 'disponibilidade' => 'Todo dia',
                 'ingredientes' => 'Feijão preto, carne de porco, arroz, couve, farofa',
                 'id_categoria' => 1, // Categoria "Almoço"
-                'created_at' => now(),
+                'created_at' => "2025-03-11 00:46:14",
                 'updated_at' => now()
             ],
             [
-                'imagem' => 'almoco2.jpg',
+                'imagem' => null,
                 'nome' => 'Bife à Parmegiana',
                 'descricao' => 'Bife empanado com queijo e molho de tomate, acompanhado de arroz e batata frita',
                 'valor' => 24.50,
@@ -51,11 +51,11 @@ class DatabaseSeeder extends Seeder
                 'disponibilidade' => 'Todo dia',
                 'ingredientes' => 'Carne bovina, queijo, molho de tomate, arroz, batata frita',
                 'id_categoria' => 1, // Categoria "Almoço"
-                'created_at' => now(),
+                'created_at' => "2025-03-11 00:46:14",
                 'updated_at' => now()
             ],
             [
-                'imagem' => 'complemento1.jpg',
+                'imagem' => null,
                 'nome' => 'Arroz de Brócolis',
                 'descricao' => 'Arroz temperado com brócolis e alho',
                 'valor' => 10.00,
@@ -63,11 +63,11 @@ class DatabaseSeeder extends Seeder
                 'disponibilidade' => 'Todo dia',
                 'ingredientes' => 'Arroz, brócolis, alho, óleo',
                 'id_categoria' => 2, // Categoria "Complemento"
-                'created_at' => now(),
+                'created_at' => "2025-03-10 00:46:14",
                 'updated_at' => now()
             ],
             [
-                'imagem' => 'complemento2.jpg',
+                'imagem' => null,
                 'nome' => 'Batata Frita',
                 'descricao' => 'Porção de batatas fritas crocantes',
                 'valor' => 8.50,
@@ -75,11 +75,11 @@ class DatabaseSeeder extends Seeder
                 'disponibilidade' => 'Todo dia',
                 'ingredientes' => 'Batata, óleo, sal',
                 'id_categoria' => 2, // Categoria "Complemento"
-                'created_at' => now(),
+                'created_at' => "2025-03-10 00:46:14",
                 'updated_at' => now()
             ],
             [
-                'imagem' => 'bebida1.jpg',
+                'imagem' => null,
                 'nome' => 'Suco de Laranja',
                 'descricao' => 'Suco natural de laranja, fresco e sem aditivos',
                 'valor' => 7.50,
@@ -87,7 +87,7 @@ class DatabaseSeeder extends Seeder
                 'disponibilidade' => 'Todo dia',
                 'ingredientes' => 'Laranja',
                 'id_categoria' => 3, // Categoria "Bebida"
-                'created_at' => now(),
+                'created_at' => "2025-03-9 00:46:14",
                 'updated_at' => now()
             ]
         ]);
@@ -112,7 +112,7 @@ class DatabaseSeeder extends Seeder
                 'frete' => 7.00,
                 'valor_total' => 80.00,
                 'valor_taxa' => 8.00,
-                'created_at' => now(),
+                'created_at' => "2025-03-10 00:46:14",
                 'updated_at' => now()
             ],
             [
@@ -133,7 +133,7 @@ class DatabaseSeeder extends Seeder
                 'frete' => 5.00,
                 'valor_total' => 60.00,
                 'valor_taxa' => 6.00,
-                'created_at' => now(),
+                'created_at' => "2025-03-10 00:46:14",
                 'updated_at' => now()
             ],
             [
@@ -154,7 +154,7 @@ class DatabaseSeeder extends Seeder
                 'frete' => 6.00,
                 'valor_total' => 75.00,
                 'valor_taxa' => 7.50,
-                'created_at' => now(),
+                'created_at' => "2025-03-11 00:46:14",
                 'updated_at' => now()
             ],
             [
@@ -175,7 +175,7 @@ class DatabaseSeeder extends Seeder
                 'frete' => 10.00,
                 'valor_total' => 120.00,
                 'valor_taxa' => 12.00,
-                'created_at' => now(),
+                'created_at' => "2025-03-9 00:46:14",
                 'updated_at' => now()
             ],
             [
@@ -196,7 +196,7 @@ class DatabaseSeeder extends Seeder
                 'frete' => 8.00,
                 'valor_total' => 95.00,
                 'valor_taxa' => 9.50,
-                'created_at' => now(),
+                'created_at' => "2025-03-8 00:46:14",
                 'updated_at' => now()
             ],
             [
@@ -217,7 +217,7 @@ class DatabaseSeeder extends Seeder
                 'frete' => 5.00,
                 'valor_total' => 50.00,
                 'valor_taxa' => 5.00,
-                'created_at' => now(),
+                'created_at' => "2025-02-10 00:46:14",
                 'updated_at' => now()
             ],
             [
@@ -238,7 +238,7 @@ class DatabaseSeeder extends Seeder
                 'frete' => 10.00,
                 'valor_total' => 80.00,
                 'valor_taxa' => 8.00,
-                'created_at' => now(),
+                'created_at' => "2025-02-11 00:46:14",
                 'updated_at' => now()
             ],
             [
@@ -259,7 +259,7 @@ class DatabaseSeeder extends Seeder
                 'frete' => 0.00,
                 'valor_total' => 45.00,
                 'valor_taxa' => 5.00,
-                'created_at' => now(),
+                'created_at' => "2025-03-11 00:46:14",
                 'updated_at' => now()
             ],
             [
@@ -280,7 +280,7 @@ class DatabaseSeeder extends Seeder
                 'frete' => 5.50,
                 'valor_total' => 35.00,
                 'valor_taxa' => 3.50,
-                'created_at' => now(),
+                'created_at' => "2026-03-10 00:46:14",
                 'updated_at' => now()
             ],
             [
@@ -301,7 +301,7 @@ class DatabaseSeeder extends Seeder
                 'frete' => 7.00,
                 'valor_total' => 100.00,
                 'valor_taxa' => 10.00,
-                'created_at' => now(),
+                'created_at' => "2026-02-10 00:46:14",
                 'updated_at' => now()
             ]
         ]);

@@ -16,7 +16,7 @@ class PedidoController extends Controller
     {
         $TodosPedidos = Pedido::where('opcao_entrega', '!=', 'Agendamento')
             ->where('status', 'Pendente')
-            ->with('itensPedido') // Carregar o relacionamento
+            ->with('itensPedido.cardapio') // Carregar o relacionamento
             ->get();
 
         return $this->GetItems($TodosPedidos);
@@ -26,7 +26,7 @@ class PedidoController extends Controller
     {
         $Agendados = Pedido::where('opcao_entrega', 'Agendamento')
             ->where('status', 'Pendente')
-            ->with('itensPedido') // Carregar o relacionamento
+            ->with('itensPedido.cardapio') // Carregar o relacionamento
             ->get();
 
         return $this->GetItems($Agendados);
@@ -35,7 +35,7 @@ class PedidoController extends Controller
     public function GetEmAndamento()
     {
         $EmAndamento = Pedido::where('status', 'EmAndamento')
-            ->with('itensPedido') // Carregar o relacionamento
+            ->with('itensPedido.cardapio') // Carregar o relacionamento
             ->get();
 
         return $this->GetItems($EmAndamento);
@@ -94,7 +94,7 @@ class PedidoController extends Controller
     public function HistoricoFiltro(Request $request)
     {
 
-        $PedidosFiltrado = Pedido::ith('itensPedido.cardapio')
+        $PedidosFiltrado = Pedido::with('itensPedido.cardapio')
             ->where($request->categoria, 'like', '%' . $request->pesquisa . '%')
             ->where('status', 'Concluido')
             ->take(10)
@@ -206,32 +206,18 @@ class PedidoController extends Controller
             case 'Data':
                 // Filtra por data específica (formato d/m/Y)
                 try {
-                    // Define os formatos de data
-                    $formatacaoInicial = "d/m/Y";
-                    $formatacaoFinal = "Y-m-d";
+                    $dataFormatada = Carbon::createFromFormat("d/m/Y", $pesquisa)->format( "Y-m-d");
+            
+                    $Pedidos = Pedido::whereRaw('DATE(created_at) = ?', [$dataFormatada])->get();
 
-                    // Tenta converter a data para o formato Y-m-d
-                    $dataFormatada = Carbon::createFromFormat($formatacaoInicial, $pesquisa)->format($formatacaoFinal);
-
-                    // Filtra os pedidos e itens pedidos pela data formatada
-                    $Pedidos = Pedido::whereDate('created_at', $dataFormatada)->get();
                     $ItemPedido = ItensPedido::with('cardapio.categoria')
                         ->whereDate('created_at', $dataFormatada)
                         ->get();
+
                 } catch (\Exception $e) {
-                    return back()->with(
-                        'error',
-                        'Data inválida. Por favor,
-                        insira uma data válida no formato dd/mm/aaaa.'
-                    );
+                    
+                    return response()->json(['error' => 'Erro ao processar a data: ' . $e->getMessage()], 400);
                 }
-            default:
-                // Filtro padrão (últimos 30 dias)
-                $Pedidos = Pedido::where('created_at', '>=', Carbon::now()->subDays(30))->get();
-                $ItemPedido = ItensPedido::with('cardapio.categoria')
-                    ->where('created_at', '>=', Carbon::now()->subDays(30))
-                    ->get();
-                break;
         }
 
         return $this->ReturnDashboard($Pedidos, $ItemPedido);

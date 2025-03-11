@@ -23,7 +23,7 @@ class CardapioRequest extends FormRequest
     {
         return [
             'Nome' => 'required|string|max:255',
-            'Imagem' => 'required|string|max:255',
+            'Imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'Descricao' => 'required|string',
             'Valor' => 'required|numeric',
             'categoria' => 'required|string', // Categoria pode ser nova ou existente
@@ -44,9 +44,6 @@ class CardapioRequest extends FormRequest
             'Nome.required' => 'O nome do item é obrigatório.',
             'Nome.string' => 'O nome do item deve ser uma string.',
             'Nome.max' => 'O nome do item não pode ter mais de 255 caracteres.',
-            'Imagem.required' => 'A imagem é obrigatória.',
-            'Imagem.string' => 'A imagem deve ser uma string.',
-            'Imagem.max' => 'O nome da imagem não pode ter mais de 255 caracteres.',
             'Descricao.required' => 'A descrição é obrigatória.',
             'Descricao.string' => 'A descrição deve ser uma string.',
             'Valor.required' => 'O valor é obrigatório.',

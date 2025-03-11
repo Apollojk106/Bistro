@@ -130,9 +130,10 @@
                             <p>Nome: ${pedido.nome}</p>
                             <p>Contato: ${pedido.telefone}</p>
                             <p>Opção: ${pedido.categoria_pedido}</p>
+
                             <p>Items: ${pedido.Items}</p>
+
                             <p>Valor: ${pedido.valor_total}</p>
-                            <p><span x-text="pedido.Items"></span></p> 
                             <p>Comentarios:<br> ${pedido.descricao}</p>
 
                             ${enderecoCompleto} <!-- Endereço será mostrado aqui se for "Entrega" -->

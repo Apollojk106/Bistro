@@ -67,7 +67,7 @@ class CardapioController extends Controller
         return $this->AlterarVisibilidade($request->categoria, "ligado");
     }
 
-    public function eyeOff(Request $request) 
+    public function eyeOff(Request $request)
     {
         return $this->AlterarVisibilidade($request->categoria, "desligado");
     }
@@ -82,7 +82,7 @@ class CardapioController extends Controller
         // Atualiza o status de todos os itens para "ligado"
         foreach ($items as $item) {
             $item->status = $Status;
-            $item->save(); 
+            $item->save();
         }
 
         return $this->IndexCardapio();
@@ -92,28 +92,34 @@ class CardapioController extends Controller
 
     public function SaveItem($Item)
     {
-        if($Item->categoria == "novo")
-        {
-            $idcategoria = $this->CriarCategoria($Item->newcategory);
+        // Processar o upload da imagem
+        $imagemPath = null;
+        if ($Item->hasFile('Imagem')) {
+            $imagemPath = $Item->file('Imagem')->store('cardapio_imagens', 'public'); // Armazena a imagem na pasta "storage/app/public/cardapio_imagens"
         }
-        else
-        {
+
+        if ($Item->categoria == "novo") {
+            $idcategoria = $this->CriarCategoria($Item->newcategory);
+        } else {
             $idcategoria = $Item->categoria;
         }
 
+        $registroExistente = Cardapio::where('nome', $Item->Nome)->first();
+
         $ItemCriado = Cardapio::updateOrCreate(
             ['nome' => $Item->Nome],
-        [
-            'nome' => $Item->Nome,
-            'imagem' => $Item->Imagem,
-            'descricao' => $Item->Descricao,
-            'valor' => $Item->Valor,
-            'desconto' => $request->Desconto ?? 0, 
-            'disponibilidade' => $Item->Disponibilidade,
-            'status' => 'ligado', // Valor default
-            'ingredientes' => $Item->Igredientes,
-            'id_categoria' => $idcategoria, // Referência à categoria (seja nova ou existente)
-        ]);
+            [
+                'nome' => $Item->Nome,
+                'imagem' => $imagemPath ?? $registroExistente->imagem,
+                'descricao' => $Item->Descricao,
+                'valor' => $Item->Valor,
+                'desconto' => $request->Desconto ?? 0,
+                'disponibilidade' => $Item->Disponibilidade,
+                'status' => 'ligado', 
+                'ingredientes' => $Item->Igredientes,
+                'id_categoria' => $idcategoria, 
+            ]
+        );
 
         return $this->IndexCardapio();
     }
@@ -126,32 +132,4 @@ class CardapioController extends Controller
 
         return $categoria->id;
     }
-
-    /*
-        #parameters: array:10 [▼
-      "_token" => "5uDzBXUHj9OfROAzOCoz8VlLXq7Jhqdy08p61j73"
-      "Nome" => "asd"
-      "Imagem" => "Diagrama em branco (2).png"
-      "Descricao" => "asd"
-      "Valor" => "asd"
-      "categoria" => "novo"
-      "c" => "asd"
-      "Igredientes" => "asd"
-      "Desconto" => "asd"
-      "Disponibilidade" => "asd"
-    ]
-
-    #parameters: array:10 [▼
-      "_token" => "5uDzBXUHj9OfROAzOCoz8VlLXq7Jhqdy08p61j73"
-      "Nome" => "asd"
-      "Imagem" => "Diagrama em branco (2).png"
-      "Descricao" => "asd"
-      "Valor" => "asd"
-      "categoria" => "Complemento"
-      "newcategory" => null
-      "Igredientes" => "asd"
-      "Desconto" => "asd"
-      "Disponibilidade" => "asd"
-    ]
-    */
 }

@@ -19,7 +19,7 @@
 
         <!-- Barra de pesquisa -->
         <div class="flex items-center justify-center w-auto space-x-3 mt-5 mr-5 ml-5">
-            <form action="{{ route('Historico.filtro') }}" method="post" class="bg-[#B7B7B7] p-4 rounded-lg w-full h-auto flex items-center space-x-2 m-auto">
+            <form action="{{ route('Historico.filtro') }}" method="post"  class="bg-[#B7B7B7] p-4 rounded-lg w-full h-auto flex items-center space-x-2 m-auto">
                 @csrf
                 <div class="flex items-center space-x-2">
                     <select id="categoria" name="categoria" class="shadow appearance-none border rounded w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">

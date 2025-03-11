@@ -9,6 +9,7 @@ use App\Http\Controllers\FormaPagamentoController;
 use App\Http\Controllers\ItensPedidoController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PixController;
+use App\Http\Requests\CardapioRequest;
 use App\Models\Cardapio;
 use Illuminate\Support\Facades\View;
 use App\Models\Categoria;
@@ -143,19 +144,8 @@ class UserController extends Controller
         return view('admin.ItemCardapio', compact('Categorias', 'Item'));
     }
 
-    public function SaveItem(Request $request)
+    public function SaveItem(CardapioRequest $request)
     {
-        $request->validate([
-            'Nome' => 'required|string|max:255',
-            'Imagem' => 'required|string|max:255',
-            'Descricao' => 'required|string',
-            'Valor' => 'required|numeric',
-            'categoria' => 'required|string', // Categoria pode ser nova ou existente
-            'Igredientes' => 'required|string',
-            'Desconto' => 'nullable|numeric',
-            'Disponibilidade' => 'required|string',
-        ]);
-
         $Cardapio = new CardapioController();
 
         $Cardapio->SaveItem($request);
