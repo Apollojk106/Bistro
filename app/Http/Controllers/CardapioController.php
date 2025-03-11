@@ -115,9 +115,9 @@ class CardapioController extends Controller
                 'valor' => $Item->Valor,
                 'desconto' => $request->Desconto ?? 0,
                 'disponibilidade' => $Item->Disponibilidade,
-                'status' => 'ligado', 
+                'status' => 'ligado',
                 'ingredientes' => $Item->Igredientes,
-                'id_categoria' => $idcategoria, 
+                'id_categoria' => $idcategoria,
             ]
         );
 
@@ -131,5 +131,23 @@ class CardapioController extends Controller
         ]);
 
         return $categoria->id;
+    }
+
+    public function DeleteItem($id)
+    {
+        // Encontre o item do cardápio
+        $item = Cardapio::find($id);
+
+        if ($item) {
+            // Exclua todos os registros dependentes na tabela `itens_pedidos`
+            $item->itensPedidos()->delete();
+
+            // Agora exclua o item do cardápio
+            $item->delete();
+
+            return redirect()->route('Cardapio')->with('success', 'Item deletado com sucesso!');
+        } else {
+            return redirect()->route('Cardapio')->with('error', 'Item não encontrado!');
+        }
     }
 }

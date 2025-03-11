@@ -103,7 +103,7 @@
                         </button>
 
                         <!-- Botão Lixeira -->
-                        <button onclick="window.location.href='/admin/Cardapio'" class="bg-red-400 p-2 rounded-lg flex items-center justify-center">
+                        <button onclick="window.location.href='/admin/Cardapio/'" class="bg-red-400 p-2 rounded-lg flex items-center justify-center">
                             <img src="{{ asset('Icons/trash.png') }}" alt="Ícone Lixeira" class="h-12 w-12 object-contain" />
                         </button>
                     </div>

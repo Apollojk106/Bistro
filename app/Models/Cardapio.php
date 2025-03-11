@@ -18,6 +18,11 @@ class Cardapio extends Model
         'id_categoria',
     ];
 
+    public function itensPedidos()
+    {
+        return $this->hasMany(ItensPedido::class, 'id_cardapio');
+    }
+
     public function categoria()
     {
         return $this->belongsTo(Categoria::class, 'id_categoria');

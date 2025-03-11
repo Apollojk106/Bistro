@@ -51,6 +51,8 @@ Route::get('/admin/Cardapio', [CardapioController::class, 'IndexCardapio'])->nam
 Route::get('/eye-on', [CardapioController::class, 'eyeOn'])->name('rota-eye-on');
 Route::get('/eye-off', [CardapioController::class, 'eyeOff'])->name('rota-eye-off');
 Route::post('/admin/Cardapio/Filtro', [CardapioController::class, 'CardapioFiltro'])->name("Cardapio.Filtro");
+Route::get('/admin/Cardapio/Delete{id}', [CardapioController::class, 'DeleteItem'])->name('DeleteItem');
+
 
 Route::get('/admin/ItemCardapio', [UserController::class, 'GetItemCardapio'])->name("ItemCardapio");
 

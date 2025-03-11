@@ -73,8 +73,8 @@
                                 <button type="submit" class="bg-green-500 text-white p-1 rounded">
                                     <img src="{{ asset('Icons/edit.png') }}" alt="Imagem Centralizada" class="h-15 w-15 object-contain" />
                                 </button>
-                                <button type="button" class="bg-red-500 text-white p-1 rounded ml-2">
-                                    <img src="{{ asset('Icons/trash.png') }}" alt="Imagem Centralizada" class="h-10 w-10 object-contain" />
+                                <button type="button" class="bg-red-400 text-white p-1 rounded delete-button" data-id="{{ $Item->id }}">
+                                    <img src="{{ asset('Icons/trash.png') }}" alt="Ícone Lixeira" class="h-10 w-10 object-contain" />
                                 </button>
                             </td>
                         </tr>
@@ -102,6 +102,22 @@
 
             // Redireciona para a rota "eye-off" passando o valor da categoria como parâmetro
             window.location.href = `/eye-off?categoria=${categoria}`;
+        });
+
+        // Selecionando todos os botões com a classe 'delete-button'
+        const deleteButtons = document.querySelectorAll('.delete-button');
+
+        // Adicionando o evento de clique para cada botão
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const itemId = this.getAttribute('data-id'); // Pegando o ID do item do atributo 'data-id'
+
+                // Criando a janela de confirmação
+                if (confirm("Você tem certeza que deseja deletar?")) {
+                    // Se o usuário confirmar, redirecionar para a rota com o ID
+                    window.location.href = `/admin/Cardapio/Delete${itemId}`;
+                }
+            });
         });
     </script>
 </div>
