@@ -20,42 +20,42 @@
 
     <!-- Conteúdo principal -->
     <div class="container mx-auto px-4 py-6">
-        <div class="bg-white p-8 rounded-2xl shadow-lg">
+        <div class="bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
             <!-- Título mais para cima -->
-            <h2 class="text-2xl font-bold text-left mb-9 text-[#A74A04]">Opção de Pagamento</h2>
+            <h2 class="text-2xl font-bold text-left mb-9 text-[#A74A04] transition-all duration-300 ease-in-out transform hover:scale-105">Opção de Pagamento</h2>
 
             <!-- Opções de pagamento -->
             <div class="space-y-6">
                 <!-- PIX -->
-                <div onclick="selecionarPagamento('pix')" class="flex items-center justify-between border rounded-lg p-6 cursor-pointer hover:bg-gray-50 transition-all">
+                <div onclick="selecionarPagamento('pix')" class="flex items-center justify-between border rounded-lg p-6 cursor-pointer hover:bg-gray-50 transition-all duration-300 ease-in-out transform hover:scale-105">
                     <div class="flex items-center space-x-4">
-                        <img src="{{ asset('Icons/pix.png') }}" alt="Pix" class="w-10 h-10">
+                        <img src="{{ asset('Icons/pix.png') }}" alt="Pix" class="w-10 h-10 transition-transform transform hover:scale-110">
                         <span class="text-xl font-semibold flex items-center">Pix</span>
                     </div>
-                    <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center" id="circle-pix">
+                    <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center transition-colors duration-300 ease-in-out" id="circle-pix">
                         <img id="check-pix" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado" class="w-6 h-6 hidden">
                     </div>
                 </div>
 
                 <!-- Cartão -->
-                <div onclick="selecionarPagamento('cartao')" class="flex items-center justify-between border rounded-lg p-6 cursor-pointer hover:bg-gray-50 transition-all">
+                <div onclick="selecionarPagamento('cartao')" class="flex items-center justify-between border rounded-lg p-6 cursor-pointer hover:bg-gray-50 transition-all duration-300 ease-in-out transform hover:scale-105">
                     <div class="flex items-center space-x-4">
-                        <img src="{{ asset('Icons/card.png') }}" alt="Cartão" class="w-10 h-10">
+                        <img src="{{ asset('Icons/card.png') }}" alt="Cartão" class="w-10 h-10 transition-transform transform hover:scale-110">
                         <span class="text-xl font-semibold flex items-center">Cartão</span>
                     </div>
-                    <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center" id="circle-cartao">
+                    <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center transition-colors duration-300 ease-in-out" id="circle-cartao">
                         <img id="check-cartao" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado" class="w-6 h-6 hidden">
                     </div>
                 </div>
 
                 <!-- Dinheiro -->
-                <div onclick="selecionarPagamento('dinheiro')" class="border rounded-lg p-6 cursor-pointer hover:bg-gray-50 transition-all">
+                <div onclick="selecionarPagamento('dinheiro')" class="border rounded-lg p-6 cursor-pointer hover:bg-gray-50 transition-all duration-300 ease-in-out transform hover:scale-105">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
-                            <img src="{{ asset('Icons/cash.png') }}" alt="Dinheiro" class="w-10 h-10">
+                            <img src="{{ asset('Icons/cash.png') }}" alt="Dinheiro" class="w-10 h-10 transition-transform transform hover:scale-110">
                             <span class="text-xl font-semibold flex items-center">Dinheiro</span>
                         </div>
-                        <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center" id="circle-dinheiro">
+                        <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center transition-colors duration-300 ease-in-out" id="circle-dinheiro">
                             <img id="check-dinheiro" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado" class="w-6 h-6 hidden">
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                     <!-- Campo de troco (só aparece quando selecionado) -->
                     <div id="troco-opcao" class="mt-4 hidden">
                         <label class="block text-sm font-semibold text-left mb-2">Troco para:</label>
-                        <input type="text" placeholder="EX: 50" class="w-full bg-gray-200 p-3 rounded-md text-center">
+                        <input type="text" placeholder="EX: 50" class="w-full bg-gray-200 p-3 rounded-md text-center transition-all duration-300 ease-in-out focus:ring-2 focus:ring-[#A74A04] focus:outline-none">
                     </div>
                 </div>
             </div>
@@ -71,11 +71,11 @@
     </div>
 
     <!-- Rodapé com valor total -->
-    <div class="bg-[#B7B7B7] flex justify-between items-center px-6 py-6 mt-12 fixed bottom-0 w-full">
+    <div class="bg-[#B7B7B7] flex justify-between items-center px-6 py-6 mt-12 fixed bottom-0 w-full transition-all duration-300 ease-in-out transform hover:scale-105">
         <span class="text-xl font-bold text-black">R$ 64,40</span>
         <span class="text-sm text-black">2 itens</span>
         <form action="{{ route('User.Pix') }}" method="get">
-        <button type="submit" class="bg-[#A74A04] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#8B3D03] transition-all">
+        <button type="submit" class="bg-[#A74A04] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#8B3D03] transition-all duration-300 ease-in-out transform hover:scale-105">
             Continuar
         </button>
         </form>

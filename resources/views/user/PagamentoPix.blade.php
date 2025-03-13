@@ -21,31 +21,31 @@
     </nav>
 
     <!-- Conteúdo principal -->
-    <div class="min-h-screen flex flex-col items-center p-4 pt-8"> <!-- Ajuste do padding-top -->
+    <div class="min-h-screen flex flex-col items-center p-4 pt-8">
         <!-- Título "Pagamento" -->
-        <h1 class="text-3xl font-bold text-[#2E2E2E] mb-8">Pagamento</h1> <!-- Texto maior e mais espaçamento -->
+        <h1 class="text-3xl font-bold text-[#2E2E2E] mb-8 transition-all duration-300 ease-in-out transform hover:scale-105">Pagamento</h1>
 
         <!-- Caixa do QR Code -->
-        <div class="w-full max-w-md bg-[#B7B7B7] rounded-2xl shadow-lg p-6 text-center">
+        <div class="w-full max-w-md bg-[#B7B7B7] rounded-2xl shadow-lg p-6 text-center transition-all duration-300 ease-in-out transform hover:scale-105">
             <!-- Valor -->
-            <p class="text-xl font-semibold text-[#2E2E2E] mb-6">Total: <span class="text-[#A74A04]">R$ 64,40</span></p> <!-- Texto maior -->
+            <p class="text-xl font-semibold text-[#2E2E2E] mb-6">Total: <span class="text-[#A74A04]">R$ 64,40</span></p>
 
             <!-- QR Code -->
-            <div class="mb-6"> <!-- Removido o fundo branco -->
-                <img src="{{ asset('Icons/qrcode.png') }}" alt="QR Code" class="mx-auto w-48 h-48"> <!-- Imagem maior -->
+            <div class="mb-6">
+                <img src="{{ asset('Icons/qrcode.png') }}" alt="QR Code" class="mx-auto w-48 h-48 transition-transform transform hover:scale-110">
             </div>
 
             <!-- Botão para copiar código -->
-            <button id="copyButton" class="w-full bg-[#A74A04] text-white font-semibold py-3 rounded-lg hover:bg-[#8B3D03] transition-colors">
+            <button id="copyButton" class="w-full bg-[#A74A04] text-white font-semibold py-3 rounded-lg hover:bg-[#8B3D03] transition-all duration-300 ease-in-out transform hover:scale-105">
                 Copiar Código
             </button>
 
             <!-- Código -->
-            <p id="code" class="text-lg text-gray-700 mt-6">a56c-4928-93be-9b7bf14beeab</p> <!-- Texto maior -->
+            <p id="code" class="text-lg text-gray-700 mt-6 transition-all duration-300 ease-in-out hover:text-gray-900">a56c-4928-93be-9b7bf14beeab</p>
         </div>
 
         <!-- Mensagem de tempo (fora da caixa cinza) -->
-        <p class="text-sm text-gray-600 mt-6">O pagamento deve ser efetuado em até 10 minutos.</p> <!-- Texto maior e fora da caixa -->
+        <p class="text-sm text-gray-600 mt-6 transition-all duration-300 ease-in-out hover:text-gray-800">O pagamento deve ser efetuado em até 10 minutos.</p>
     </div>
 
     <script>

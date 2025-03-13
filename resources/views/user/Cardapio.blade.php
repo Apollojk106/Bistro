@@ -14,10 +14,9 @@
 
     <!-- Navegação Principal -->
     <nav class="flex justify-center space-x-10 bg-[#2E2E2E] py-4">
-
-        <a href="#" class="text-white hover:text-orange-500 px-3 py-2 rounded-md text-lg font-medium" onclick="selectNavItem(this)">Pastel</a>
-        <a href="#" class="text-white hover:text-orange-500 px-3 py-2 rounded-md text-lg font-medium" onclick="selectNavItem(this)">Pratos do dia</a>
-        <a href="#" class="text-white hover:text-orange-500 px-3 py-2 rounded-md text-lg font-medium" onclick="selectNavItem(this)">Tapioca</a>
+        <a href="#" class="text-white hover:text-orange-500 px-3 py-2 rounded-md text-lg font-medium transition-all duration-300 ease-in-out transform hover:scale-105" onclick="selectNavItem(this)">Pastel</a>
+        <a href="#" class="text-white hover:text-orange-500 px-3 py-2 rounded-md text-lg font-medium transition-all duration-300 ease-in-out transform hover:scale-105" onclick="selectNavItem(this)">Pratos do dia</a>
+        <a href="#" class="text-white hover:text-orange-500 px-3 py-2 rounded-md text-lg font-medium transition-all duration-300 ease-in-out transform hover:scale-105" onclick="selectNavItem(this)">Tapioca</a>
     </nav>
 
     <main class="max-w-6xl mx-auto p-6 text-center">
@@ -25,7 +24,7 @@
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
                 <!-- Card 1 -->
-                <div class="swiper-slide bg-white shadow-lg rounded-lg overflow-hidden w-80 md:w-96">
+                <div class="swiper-slide bg-white shadow-lg rounded-lg overflow-hidden w-80 md:w-96 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl">
                     <img src="{{ asset('Icons/food.png') }}" alt="Bife com batata" class="w-full h-40 sm:h-48 md:h-52 lg:h-56 object-cover">
                     <div class="p-6 text-center">
                         <h3 class="text-xl font-semibold text-black">Bife com batata</h3>
@@ -35,7 +34,7 @@
                 </div>
 
                 <!-- Card 2 -->
-                <div class="swiper-slide bg-white shadow-lg rounded-lg overflow-hidden w-80 md:w-96">
+                <div class="swiper-slide bg-white shadow-lg rounded-lg overflow-hidden w-80 md:w-96 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl">
                     <img src="{{ asset('Icons/food.png') }}" alt="Bife com batata" class="w-full h-40 sm:h-48 md:h-52 lg:h-56 object-cover">
                     <div class="p-6 text-center">
                         <h3 class="text-xl font-semibold text-black">Bife com batata</h3>

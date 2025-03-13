@@ -18,8 +18,8 @@
   </nav>
 
   <main class="flex justify-center flex-1 items-start mt-8 w-full">
-    <section class="w-full max-w-md px-4">
-      <h2 class="text-center font-semibold text-2xl mb-6">Opções de entrega</h2>
+    <section class="w-full max-w-4xl px-4"> <!-- Aumentei o max-width para telas maiores -->
+      <h2 class="text-center font-semibold text-2xl mb-6 transition-all duration-300 ease-in-out transform hover:scale-105">Opções de entrega</h2>
 
       <div class="flex justify-between mb-10 space-x-6">
         <button id="localBtn" class="flex-1 py-3 rounded-2xl border border-orange-400 text-orange-600 text-lg font-semibold bg-gray-200 hover:bg-orange-100 focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95">

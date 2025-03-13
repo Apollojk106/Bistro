@@ -23,13 +23,13 @@
     <!-- Conteúdo principal -->
     <div class="min-h-screen flex flex-col items-center p-4 pt-8">
         <!-- Mensagem "Obrigado!" fora do card cinza -->
-        <div class="w-full max-w-md text-center mb-6">
+        <div class="w-full max-w-md text-center mb-6 transition-all duration-300 ease-in-out transform hover:scale-105">
             <h1 class="text-2xl font-bold text-[#2E2E2E]">Obrigado!</h1>
             <p class="text-lg text-[#2E2E2E]">Em breve, seu pedido estará pronto.</p>
         </div>
 
         <!-- Card cinza -->
-        <div class="w-full max-w-md bg-[#B7B7B7] rounded-2xl shadow-lg p-6">
+        <div class="w-full max-w-md bg-[#B7B7B7] rounded-2xl shadow-lg p-6 transition-all duration-300 ease-in-out transform hover:scale-105">
             <!-- Detalhes do pedido -->
             <div class="bg-gray p-6 rounded-xl">
                 <!-- ID mais à esquerda -->
@@ -50,12 +50,12 @@
 
                 <!-- Ícone de relógio -->
                 <div class="flex justify-center">
-                    <img src="{{ asset('Icons/cloack.png') }}" alt="Relógio" class="w-16 h-16">
+                    <img src="{{ asset('Icons/cloack.png') }}" alt="Relógio" class="w-16 h-16 transition-transform transform hover:scale-110">
                 </div>
             </div>
 
             <!-- Botão Voltar -->
-            <button class="w-full bg-[#A74A04] text-white font-semibold py-3 rounded-lg mt-6 hover:bg-[#8B3D03] transition-colors">
+            <button class="w-full bg-[#A74A04] text-white font-semibold py-3 rounded-lg mt-6 hover:bg-[#8B3D03] transition-all duration-300 ease-in-out transform hover:scale-105">
                 Voltar
             </button>
         </div>
