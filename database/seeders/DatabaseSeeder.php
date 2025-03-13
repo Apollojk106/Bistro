@@ -472,5 +472,56 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now()
             ]
         ]);
+
+        DB::table('Configuracoes')->insert([
+            [
+                'nome' => 'Pedido',
+                'status' => true,
+                'valores1' => 'Ligado',
+                'conector' => null,
+                'valores2' => null,
+                'type' => '1',
+            ],
+            [
+                'nome' => 'Agendamento',
+                'status' => true,
+                'valores1' => 'Ligado',
+                'conector' => null,
+                'valores2' => null,
+                'type' => '1',
+            ],
+            [
+                'nome' => 'Tempo minimo de Agendamento',
+                'status' => true,
+                'valores1' => '0:30',
+                'conector' => 'horas',
+                'valores2' => null,
+                'type' => '2',
+            ],
+            [
+                'nome' => 'Delivery',
+                'status' => true,
+                'valores1' => 'Ligado',
+                'conector' => null,
+                'valores2' => null,
+                'type' => '1',
+            ],
+            [
+                'nome' => 'Distancia Máxima',
+                'status' => true,
+                'valores1' => '10',
+                'conector' => 'Km',
+                'valores2' => null,
+                'type' => '2',
+            ],
+            [
+                'nome' => 'Horario de Funcionamento ',
+                'status' => true,
+                'valores1' => '9:00',
+                'conector' => 'Horas',
+                'valores2' => '21:00',
+                'type' => '3',
+            ]
+        ]);
     }
 }

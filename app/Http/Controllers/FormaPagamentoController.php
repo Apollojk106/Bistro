@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\FormaPagamento;
+
 
 class FormaPagamentoController extends Controller
 {
     public function GetPagamento()
     {
-        return null;
+        return FormaPagamento::get();
     }
 }

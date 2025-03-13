@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class FormaPagamento extends Model
 {
+    protected $table = 'Formas_de_pagamento';
+
     protected $fillable = [
         'nome',
         'taxa',

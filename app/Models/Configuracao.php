@@ -11,7 +11,10 @@ class Configuracao extends Model
     protected $fillable = [
         'nome',
         'status',
-        'valores',
+        'valores1',
+        'valores2',
+        'conector',
+        'type',
     ];
 
     public $timestamps = true;

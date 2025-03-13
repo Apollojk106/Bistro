@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('Configuracoes', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->boolean('status');
-            $table->string('valores1');
-            $table->string('conector');
-            $table->string('valores2');
+            $table->boolean('status')->nullable();
+            $table->string('valores1')->nullable();
+            $table->string('conector')->nullable();
+            $table->string('valores2')->nullable();
             $table->enum('type',['1','2','3']);
             $table->timestamps();
         });
