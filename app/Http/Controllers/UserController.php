@@ -9,10 +9,15 @@ use App\Http\Controllers\FormaPagamentoController;
 use App\Http\Controllers\ItensPedidoController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PixController;
+
+
+
 use App\Http\Requests\CardapioRequest;
 use App\Models\Cardapio;
 use Illuminate\Support\Facades\View;
 use App\Models\Categoria;
+use App\Models\Configuracao;
+use App\Models\FormaPagamento;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -155,7 +160,15 @@ class UserController extends Controller
 
     public function Configuracao()
     {
-        return view('admin.Configuracao');
+        $FormaPagamentos = new FormaPagamentoController();
+        $Categorias = new CategoriaController();
+        $Configuracoes = new ConfiguracaoController();
+
+        $FormaPagamentos = $FormaPagamentos->GetPagamento();
+        $Categorias = $Categorias->GetCategorias();
+        $Configuracoes =  $Configuracoes->GetConfiguracao();
+
+        return view('admin.Configuracao', compact('FormaPagamentos','Categorias','Configuracoes'));
     }
 
     public function Pedido()

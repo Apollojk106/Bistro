@@ -232,9 +232,9 @@ class DatabaseSeeder extends Seeder
                 'status_pedido' => 'Pendente',
                 'opcao_entrega' => 'Agendamento',
                 'status' => 'Pendente',
-                'horario' => now()->addHours(2), 
+                'horario' => now()->addHours(2),
                 'id_forma_pagamento' => 2,
-                'descricao' => 'Pedido com entrega programada', 
+                'descricao' => 'Pedido com entrega programada',
                 'frete' => 10.00,
                 'valor_total' => 80.00,
                 'valor_taxa' => 8.00,
@@ -308,8 +308,113 @@ class DatabaseSeeder extends Seeder
 
         // Itens dos Pedidos
         DB::table('Itens_pedidos')->insert([
+            // Pedido 1: João Silva (1 item)
             [
-                'id_pedido' => 1, // Pedido de João Silva
+                'id_pedido' => 1,
+                'id_cardapio' => 1, // Feijoada Completa
+                'quantidade' => 1,
+                'valor_unitario' => 29.99,
+                'subtotal' => 29.99,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+
+            // Pedido 2: Maria Oliveira (2 itens)
+            [
+                'id_pedido' => 2,
+                'id_cardapio' => 2, // Bife à Parmegiana
+                'quantidade' => 1,
+                'valor_unitario' => 24.50,
+                'subtotal' => 24.50,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id_pedido' => 2,
+                'id_cardapio' => 5, // Suco de Laranja
+                'quantidade' => 2,
+                'valor_unitario' => 7.50,
+                'subtotal' => 15.00,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+
+            // Pedido 3: Carlos Souza (1 item)
+            [
+                'id_pedido' => 3,
+                'id_cardapio' => 3, // Arroz de Brócolis
+                'quantidade' => 1,
+                'valor_unitario' => 10.00,
+                'subtotal' => 10.00,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+
+            // Pedido 4: Fernanda Lima (2 itens)
+            [
+                'id_pedido' => 4,
+                'id_cardapio' => 4, // Batata Frita
+                'quantidade' => 1,
+                'valor_unitario' => 8.50,
+                'subtotal' => 8.50,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id_pedido' => 4,
+                'id_cardapio' => 5, // Suco de Laranja
+                'quantidade' => 1,
+                'valor_unitario' => 7.50,
+                'subtotal' => 7.50,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+
+            // Pedido 5: Ricardo Mendes (1 item)
+            [
+                'id_pedido' => 5,
+                'id_cardapio' => 1, // Feijoada Completa
+                'quantidade' => 1,
+                'valor_unitario' => 29.99,
+                'subtotal' => 29.99,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+
+            // Pedido 6: Ana Clara (2 itens)
+            [
+                'id_pedido' => 6,
+                'id_cardapio' => 2, // Bife à Parmegiana
+                'quantidade' => 1,
+                'valor_unitario' => 24.50,
+                'subtotal' => 24.50,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id_pedido' => 6,
+                'id_cardapio' => 3, // Arroz de Brócolis
+                'quantidade' => 1,
+                'valor_unitario' => 10.00,
+                'subtotal' => 10.00,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+
+            // Pedido 7: Maria Oliveira (1 item)
+            [
+                'id_pedido' => 7,
+                'id_cardapio' => 4, // Batata Frita
+                'quantidade' => 1,
+                'valor_unitario' => 8.50,
+                'subtotal' => 8.50,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+
+            // Pedido 8: Carlos Souza (2 itens)
+            [
+                'id_pedido' => 8,
                 'id_cardapio' => 1, // Feijoada Completa
                 'quantidade' => 1,
                 'valor_unitario' => 29.99,
@@ -318,38 +423,51 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'id_pedido' => 2, // Pedido de Maria Oliveira
-                'id_cardapio' => 2, // Pizza Margherita
-                'quantidade' => 2,
-                'valor_unitario' => 35.00,
-                'subtotal' => 70.00,
+                'id_pedido' => 8,
+                'id_cardapio' => 5, // Suco de Laranja
+                'quantidade' => 1,
+                'valor_unitario' => 7.50,
+                'subtotal' => 7.50,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+
+            // Pedido 9: Fernanda Costa (1 item)
+            [
+                'id_pedido' => 9,
+                'id_cardapio' => 2, // Bife à Parmegiana
+                'quantidade' => 1,
+                'valor_unitario' => 24.50,
+                'subtotal' => 24.50,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+
+            // Pedido 10: Ricardo Almeida (2 itens)
+            [
+                'id_pedido' => 10,
+                'id_cardapio' => 3, // Arroz de Brócolis
+                'quantidade' => 1,
+                'valor_unitario' => 10.00,
+                'subtotal' => 10.00,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'id_pedido' => 3, // Pedido de Carlos Souza
-                'id_cardapio' => 3, // Prato Executivo
+                'id_pedido' => 10,
+                'id_cardapio' => 4, // Batata Frita
                 'quantidade' => 1,
-                'valor_unitario' => 45.00,
-                'subtotal' => 45.00,
+                'valor_unitario' => 8.50,
+                'subtotal' => 8.50,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'id_pedido' => 4, // Pedido de Fernanda Costa
-                'id_cardapio' => 4, // Café com Bolo
+                'id_pedido' => 10,
+                'id_cardapio' => 5, // Suco de Laranja
                 'quantidade' => 1,
-                'valor_unitario' => 20.00,
-                'subtotal' => 20.00,
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id_pedido' => 5, // Pedido de Ricardo Almeida
-                'id_cardapio' => 5, // Jantar Completo
-                'quantidade' => 1,
-                'valor_unitario' => 100.00,
-                'subtotal' => 100.00,
+                'valor_unitario' => 7.50,
+                'subtotal' => 7.50,
                 'created_at' => now(),
                 'updated_at' => now()
             ]

@@ -4,19 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Pedido;
 use Illuminate\Http\Request;
-use App\Models\Cardapio;
 use Carbon\Carbon;
 use App\Models\ItensPedido;
-use App\Http\Controllers\DB;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+
 
 class PedidoController extends Controller
 {
     public function GetPedidos()
     {
-        $TodosPedidos = Pedido::where('opcao_entrega', '!=', 'Agendamento')
-            ->where('status', 'Pendente')
-            ->with('itensPedido.cardapio') // Carregar o relacionamento
+        $TodosPedidos = Pedido::with('itensPedido.cardapio')
+            ->where('opcao_entrega', '!=', 'Agendamento')
+            ->where('status', 'Pendente') 
             ->get();
 
         return $this->GetItems($TodosPedidos);
@@ -24,9 +22,9 @@ class PedidoController extends Controller
 
     public function GetAgendados()
     {
-        $Agendados = Pedido::where('opcao_entrega', 'Agendamento')
+        $Agendados = Pedido::with('itensPedido.cardapio')
+            ->where('opcao_entrega', 'Agendamento')
             ->where('status', 'Pendente')
-            ->with('itensPedido.cardapio') // Carregar o relacionamento
             ->get();
 
         return $this->GetItems($Agendados);
@@ -34,8 +32,9 @@ class PedidoController extends Controller
 
     public function GetEmAndamento()
     {
-        $EmAndamento = Pedido::where('status', 'EmAndamento')
-            ->with('itensPedido.cardapio') // Carregar o relacionamento
+        $EmAndamento = Pedido::with('itensPedido.cardapio')
+            ->where('status', 'EmAndamento')
+            ->with('itensPedido.cardapio') 
             ->get();
 
         return $this->GetItems($EmAndamento);
@@ -93,12 +92,13 @@ class PedidoController extends Controller
 
     public function HistoricoFiltro(Request $request)
     {
-
         $PedidosFiltrado = Pedido::with('itensPedido.cardapio')
             ->where($request->categoria, 'like', '%' . $request->pesquisa . '%')
             ->where('status', 'Concluido')
             ->take(10)
             ->get();
+
+            dd($PedidosFiltrado);
 
         $PedidosFiltrado = $this->GetItems($PedidosFiltrado);
 

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('Formas_de_pagamento', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
+            $table->boolean('status')->default(true);
             $table->decimal('taxa', 5, 2);
             $table->timestamps();
         });

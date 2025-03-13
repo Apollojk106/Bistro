@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class FormaPagamentoController extends Controller
+class CategoriaController extends Controller
 {
-    public function GetPagamento()
+    public function GetCategorias()
     {
         return null;
     }
