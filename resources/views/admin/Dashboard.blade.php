@@ -1,25 +1,25 @@
-<div class="h-screen overflow-hidden"> <!-- Contêiner principal com altura da tela e overflow escondido -->
+<div class="min-h-screen"> <!-- Removido overflow-hidden -->
     <x-hotbar-admin />
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <div class="flex c"> <!-- Ajuste da altura para considerar a hotbar -->
+    <div class="flex flex-col md:flex-row">
         <!-- Coluna da esquerda -->
-        <div class="flex flex-1 bg-lightblue p-4 overflow-y-auto"> <!-- Adicionado overflow-y-auto -->
+        <div class="flex-1 bg-lightblue p-4 overflow-y-auto">
             <div class="flex flex-col w-full space-y-4">
                 <!-- Formulário de pesquisa -->
-                <form action="{{route('Dashboard.filtro')}}" method="post" class="bg-[#B7B7B7] p-4 rounded-lg w-full flex items-center space-x-2">
+                <form action="{{route('Dashboard.filtro')}}" method="post" class="bg-[#B7B7B7] p-4 rounded-lg w-full flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
                     @csrf
-                    <select id="filtro" name="filtro" class="shadow appearance-none border rounded w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <select id="filtro" name="filtro" class="shadow appearance-none border rounded w-full md:w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         <option value="Data">Data</option>
                         <option value="Ano">Ano</option>
                         <option value="Mes">Mes</option>
                         <option value="Dia">Dia</option>
                     </select>
 
-                    <input type="text" id="pesquisa" name="pesquisa" placeholder="Pesquisar..." class="p-2 outline-none flex-1 border rounded" />
+                    <input type="text" id="pesquisa" name="pesquisa" placeholder="Pesquisar..." class="p-2 outline-none flex-1 border rounded w-full md:w-auto" />
 
-                    <button class="bg-white p-2 rounded-lg flex items-center justify-center">
+                    <button class="bg-white p-2 rounded-lg flex items-center justify-center w-full md:w-auto">
                         <img src="{{ asset('Icons/search.png') }}" alt="Imagem Centralizada" class="object-contain" />
                     </button>
                 </form>
@@ -59,7 +59,7 @@
         </div>
 
         <!-- Coluna da direita -->
-        <div class="fflex flex-1 bg-lightblue p-4 overflow-y-full">
+        <div class="flex-1 bg-lightblue p-4 overflow-y-auto">
             <div class="flex flex-col w-full space-y-4">
                 <!-- Gráfico -->
                 <div class="bg-[#B7B7B7] p-4 w-full h-64">
@@ -112,7 +112,6 @@
                         <span class="flex items-center justify-center m-0">{{ $dados['total_pedidos'] }}</span>
                         <span class="flex items-center justify-center m-0">R$ {{ number_format($dados['valor_total'], 2, ',', '.') }}</span>
                         @endforeach
-
                     </div>
                 </div>
             </div>
