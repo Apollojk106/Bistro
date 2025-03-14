@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nome');
             $table->boolean('status')->default(true);
             $table->decimal('taxa', 5, 2);
+            $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
         });
     }

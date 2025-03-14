@@ -25,11 +25,20 @@ return new class extends Migration
             $table->enum('opcao_entrega', ['Agora', 'Viagem', 'Agendamento']);
             $table->enum('status', ['Pendente','EmAndamento','Concluido'])->default('Pendente')->nullable();
             $table->timestamp('horario')->nullable();
-            $table->foreignId('id_forma_pagamento')->constrained('Formas_de_pagamento');
             $table->text('descricao')->nullable();
             $table->decimal('frete', 8, 2);
             $table->decimal('valor_total', 8, 2);
             $table->decimal('valor_taxa', 8, 2);
+            
+            // Add the 'id_forma_pagamento' column before defining the foreign key
+            $table->unsignedBigInteger('id_forma_pagamento')->nullable();  // Add this line to define the column
+
+            // Define the foreign key constraint
+            $table->foreign('id_forma_pagamento')
+                ->references('id')
+                ->on('Formas_de_pagamento')
+                ->onDelete('cascade');
+
             $table->timestamps();
         });
     }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ItensPedido;
 
 class Pedido extends Model
 {
@@ -27,13 +28,16 @@ class Pedido extends Model
         'updated_at'
     ];
 
-    // Relacionamento com ItensPedido
+    public function itensPedidos()
+    {
+        return $this->hasMany(ItensPedido::class, 'id_pedido');
+    }
+
     public function itensPedido()
     {
         return $this->hasMany(ItensPedido::class, 'id_pedido');
     }
 
-    // Accessor para o campo 'itens'
     public function getItensAttribute()
     {
         return $this->itensPedido->map(function ($item) {

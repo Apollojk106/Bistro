@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\CardapioController;
+use App\Http\Controllers\ConfiguracaoController;
 
 Route::get('/', function () {
     return view('user.Cardapio');
@@ -39,6 +40,11 @@ Route::get('/pedidos/json', [PedidoController::class, 'getPedidosJson'])->name('
 Route::get('/admin/Pedidos/Avancar/{id}', [PedidoController::class, 'AvancarPedidos'])->name('Avancar.pedidos');
 
 Route::get('/admin/Configuracao', [UserController::class, 'Configuracao'])->name("Configuracao");
+Route::post('/Configuracao/update', [ConfiguracaoController::class, 'updateConfiguracoes'])->name('admin.configuracao.update');
+Route::post('/Configuracao/forma-pagamento', [ConfiguracaoController::class, 'gerenciarFormaPagamento'])->name('admin.configuracao.forma-pagamento');
+Route::put('/Configuracao/forma-pagamento', [ConfiguracaoController::class, 'gerenciarFormaPagamento'])->name('admin.configuracao.forma-pagamento');
+
+Route::put('/Configuracao/categoria/{id}', [ConfiguracaoController::class, 'atualizarCategoria'])->name('admin.configuracao.categoria.update');
 
 Route::get('/admin/Historico', [PedidoController::class, 'PedidosConcluidos'])->name("Historico");
 Route::post('/admin/Historico/Filtro', [PedidoController::class, 'HistoricoFiltro'])->name("Historico.filtro");

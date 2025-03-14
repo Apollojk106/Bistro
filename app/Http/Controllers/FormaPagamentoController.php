@@ -9,6 +9,6 @@ class FormaPagamentoController extends Controller
 {
     public function GetPagamento()
     {
-        return FormaPagamento::get();
+        return FormaPagamento::whereNull('deleted_at')->get();
     }
 }

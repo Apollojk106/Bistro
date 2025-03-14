@@ -9,9 +9,22 @@ class FormaPagamento extends Model
     protected $table = 'Formas_de_pagamento';
 
     protected $fillable = [
+        'id',
         'nome',
         'taxa',
+        'created_at',
+        'deleted_at',
     ];
+
+    public function itensPedidos()
+    {
+        return $this->hasMany(ItensPedido::class, 'id_forma_pagamento'); // Adjust the foreign key as needed
+    }
+
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class, 'id_forma_pagamento');
+    }
 
     protected $casts = [
         'taxa' => 'decimal:2',
