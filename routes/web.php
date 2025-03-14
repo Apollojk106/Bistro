@@ -5,10 +5,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\CardapioController;
 use App\Http\Controllers\ConfiguracaoController;
+use App\Http\Controllers\CarrinhoController;
 
-Route::get('/', function () {
-    return view('user.Cardapio');
-});
+Route::get('/', [UserController::class, 'UserCardapio']);
 Route::get('/admin', function () {
     return view('admin.Pedido');
 });
@@ -20,7 +19,11 @@ Route::get('/Login', [UserController::class, 'Login'])->name("User.Login");
 Route::get('/Cadastro', [UserController::class, 'Cadastro'])->name("User.Cadastro");
 //Cardapio
 Route::get('/Cardapio', [UserController::class, 'UserCardapio'])->name("User.Cardapio");
+
 Route::get('/Item', [UserController::class, 'Item'])->name("User.Item");
+Route::get('/Item/{id}', [CarrinhoController::class, 'show'])->name('item.get');
+
+
 Route::get('/PagamentoPix', [UserController::class, 'PagamentoPix'])->name("User.Pix");
 Route::get('/OpcaoPedido', [UserController::class, 'OpcaoPedido'])->name("User.OpcaoPedido");
 Route::get('/Pagamento', [UserController::class, 'FormaPagamento'])->name("User.Pagamento");

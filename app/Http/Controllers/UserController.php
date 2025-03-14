@@ -43,7 +43,12 @@ class UserController extends Controller
     //User
     public function UserCardapio()
     {
-        return view('user.Cardapio');
+        $Cardapio = new CardapioController();
+        $cardapioPorCategoria = $Cardapio->cardapioPorCategoria();
+
+        //dd($cardapioPorCategoria);
+
+        return view('user.Cardapio', compact('cardapioPorCategoria'));
     }
 
     public function Item()
@@ -98,16 +103,6 @@ class UserController extends Controller
         $top3dias,
         )
     {
-        /*dd(
-            $pratosVendidos, 
-            $pedidosAgendados,
-            $pedidosNormais,
-            $valorTotalAgendados,
-            $valorTotalNormais,
-            $categoriasMaisPedidas,
-            $itensMaisPedidos,
-            $top3dias,
-            );*/
 
         return view('admin.Dashboard', 
             compact(

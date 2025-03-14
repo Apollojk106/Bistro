@@ -9,6 +9,35 @@ use Illuminate\Support\Facades\View;
 
 class CardapioController extends Controller
 {
+    public function CardapioPorCategoria()
+    {
+        // Buscar todas as categorias e seus cardápios relacionados
+        $categorias = Categoria::with('cardapios')->get();
+
+        // Formatar a resposta, dividindo o cardápio por categoria
+        $cardapioPorCategoria = [];
+
+        foreach ($categorias as $categoria) {
+            // Adicionar o nome da categoria e seus cardápios ao array
+            $cardapioPorCategoria[] = [
+                'categoria' => $categoria->nome, // Nome da categoria
+                'itens' => $categoria->cardapios->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'nome' => $item->nome,
+                        'descricao' => $item->descricao,
+                        'valor' => $item->valor,
+                        'desconto' => $item->desconto,
+                        'disponibilidade' => $item->disponibilidade,
+                        'ingredientes' => $item->ingredientes,
+                    ];
+                }),
+            ];
+        }
+
+        return $cardapioPorCategoria;
+    }
+
     public function IndexCardapio()
     {
         $Items = Cardapio::take(10)

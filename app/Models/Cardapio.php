@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cardapio extends Model
 {
     protected $fillable = [
+        'id',
         'imagem',
         'nome',
         'descricao',
