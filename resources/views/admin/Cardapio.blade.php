@@ -1,10 +1,11 @@
 <div>
     <x-hotbar-admin />
 
-    <div class="flex flex-col w-full h-auto space-y-4">
+    <div class="flex flex-col w-full h-auto space-y-4 p-5">
 
-        <div class="flex items-center justify-center w-auto space-x-3 mt-5 mr-5 ml-5">
-            <form action="{{ route('Cardapio.Filtro') }}" method="post" class="bg-[#B7B7B7] p-4 rounded-lg w-full h-auto flex items-center space-x-2 m-auto">
+        <!-- Barra de pesquisa e botão de atualizar -->
+        <div class="flex flex-col md:flex-row items-center justify-between w-full space-y-4 md:space-y-0 md:space-x-4">
+            <form action="{{ route('Cardapio.Filtro') }}" method="post" class="bg-[#B7B7B7] p-4 rounded-lg w-full md:w-auto flex-grow flex items-center space-x-2">
                 @csrf
                 <select id="categoria" name="categoria" class="shadow appearance-none border rounded w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <option value="nome">Nome</option>
@@ -19,11 +20,14 @@
                 </button>
             </form>
 
-            <button type="button" onclick="window.location.href='/admin/Cardapio'" class="bg-[#B7B7B7]  p-2 rounded-lg flex items-center justify-center">
+            <button type="button" onclick="window.location.href='/admin/Cardapio'" class="bg-[#B7B7B7] p-2 rounded-lg flex items-center justify-center">
                 <img src="{{ asset('Icons/refresh.png') }}" alt="Imagem Centralizada" class="h-15 w-15 object-contain h-full" />
             </button>
+        </div>
 
-            <div class="bg-[#B7B7B7] p-4 rounded-lg flex items-center space-x-2 h-auto">
+        <!-- Botão "mais" e filtro de categoria -->
+        <div class="flex flex-col md:flex-row items-center justify-between w-full space-y-4 md:space-y-0 md:space-x-4">
+            <div class="bg-[#B7B7B7] p-4 rounded-lg flex items-center space-x-2 w-full md:w-auto">
                 <select id="categoria_eye" name="categoria_eye" class="shadow appearance-none border rounded w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     @foreach($Categorias as $Categoria)
                     <option value="{{ $Categoria }}">{{ $Categoria }}</option>
@@ -41,15 +45,15 @@
                 </button>
             </div>
 
-            <a href="{{ route('ItemCardapio') }}">
-                <button class="bg-[#B7B7B7] rounded-lg p-2 flex items-center justify-center m-auto">
+            <a href="{{ route('ItemCardapio') }}" class="w-full md:w-auto">
+                <button class="bg-[#B7B7B7] rounded-lg p-2 flex items-center justify-center w-full">
                     <img src="{{ asset('Icons/plus.png') }}" alt="Imagem Centralizada" class="h-full w-full object-contain" />
                 </button>
             </a>
         </div>
 
-
-        <div class="bg-[#B7B7B7] rounded-lg p-4 w-auto mt-5 ml-5 mr-5 flex justify-center overflow-x-auto">
+        <!-- Tabela de itens -->
+        <div class="bg-[#B7B7B7] rounded-lg p-4 w-full mt-5 overflow-x-auto">
             <table class="min-w-full table-auto text-center">
                 <thead>
                     <tr class="bg-white">
@@ -60,7 +64,6 @@
                     </tr>
                 </thead>
                 <tbody>
-
                     @foreach($Items as $Item)
                     <form action="{{ route('EditItemCardapio') }}" method="Post">
                         @csrf
@@ -80,7 +83,6 @@
                         </tr>
                     </form>
                     @endforeach
-
                 </tbody>
             </table>
         </div>
@@ -89,32 +91,20 @@
     <script>
         // Adicionar eventos de clique aos botões
         document.getElementById('eye-on').addEventListener('click', function() {
-            // Pega o valor da categoria selecionada
             const categoria = document.getElementById('categoria_eye').value;
-
-            // Redireciona para a rota "eye-on" passando o valor da categoria como parâmetro
             window.location.href = `/eye-on?categoria=${categoria}`;
         });
 
         document.getElementById('eye-off').addEventListener('click', function() {
-            // Pega o valor da categoria selecionada
             const categoria = document.getElementById('categoria_eye').value;
-
-            // Redireciona para a rota "eye-off" passando o valor da categoria como parâmetro
             window.location.href = `/eye-off?categoria=${categoria}`;
         });
 
-        // Selecionando todos os botões com a classe 'delete-button'
         const deleteButtons = document.querySelectorAll('.delete-button');
-
-        // Adicionando o evento de clique para cada botão
         deleteButtons.forEach(button => {
             button.addEventListener('click', function() {
-                const itemId = this.getAttribute('data-id'); // Pegando o ID do item do atributo 'data-id'
-
-                // Criando a janela de confirmação
+                const itemId = this.getAttribute('data-id');
                 if (confirm("Você tem certeza que deseja deletar?")) {
-                    // Se o usuário confirmar, redirecionar para a rota com o ID
                     window.location.href = `/admin/Cardapio/Delete${itemId}`;
                 }
             });
