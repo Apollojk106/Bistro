@@ -22,6 +22,10 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function sessionData(){
+        $sessionData = session()->all();
+        dd($sessionData['pedido']);
+    }
     //Esse controler é somente para a rota view
 
     //Login

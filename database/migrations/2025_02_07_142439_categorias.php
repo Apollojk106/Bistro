@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('nome'); // Campo para o nome da categoria
             $table->enum('nivel', ['Primaria', 'Secundaria', 'Terciaria'])->default('Primaria'); 
-            // Campo para o nível com valor default
             $table->timestamps();
         });
     }
