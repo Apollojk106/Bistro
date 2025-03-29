@@ -238,15 +238,15 @@
             <div class="bg-white border-2 border-black rounded-2xl p-6 w-80 shadow-lg text-center">
                 <p class="text-black text-lg font-semibold">E agora qual o próximo passo?</p>
                 <div class="flex justify-between mt-4">
-                    <button onclick="window.location.href='/Cardapio'" class="bg-[#a34702] text-white py-2 px-4 rounded-lg w-1/2 mr-2">Continuar Comprando</button>
-                    <button onclick="saveToSession(); return false;" class="bg-[#a34702] text-white py-2 px-4 rounded-lg w-1/2">Ir para o pagamento</button>
+                    <button onclick="saveToSession('/Cardapio'); return false;" class="bg-[#a34702] text-white py-2 px-4 rounded-lg w-1/2 mr-2">Continuar Comprando</button>
+                    <button onclick="saveToSession('/Sacola'); return false;" class="bg-[#a34702] text-white py-2 px-4 rounded-lg w-1/2">Ir para o pagamento</button>
                 </div>
             </div>
         </div>
 
         <script>
             //session
-            function saveToSession() {
+            function saveToSession($rota) {
                 const observacao = document.getElementById('observacao').value; // Captura a observação do usuário
 
                 const orderData = {
@@ -275,7 +275,7 @@
                         if (data.success) {
                             // Sucesso ao salvar o pedido
                             alert("Pedido salvo com sucesso!");
-                            window.location.href = "/Sacola"; // Redireciona para a página de pagamento
+                            window.location.href = $rota; // Redireciona para a página de pagamento
                         } else {
                             // Se ocorrer um erro ao salvar
                             alert("Erro ao salvar o pedido. Tente novamente.");

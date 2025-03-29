@@ -24,7 +24,7 @@ class UserController extends Controller
 {
     public function sessionData(){
         $sessionData = session()->all();
-        dd($sessionData['pedido']);
+        dd($sessionData['carrinho']);
     }
     //Esse controler é somente para a rota view
 

@@ -73,8 +73,6 @@ class ConfiguracaoController extends Controller
         return redirect()->route('Configuracao')->with('success', 'Formas de pagamento atualizadas com sucesso!');
     }
 
-
-
     public function atualizarCategoria(Request $request, $id)
     {
         $categoria = Categoria::find($id);

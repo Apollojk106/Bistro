@@ -8,6 +8,17 @@ use Illuminate\Http\Request;
 
 class CarrinhoController extends Controller
 {
+    public function IndexCarrinho()
+    {
+        $Carrinho = session('carrinho', []);
+        $ids = array_keys($Carrinho);
+
+        // Verifica quais IDs existem na tabela Cardapio
+        $Itens = Cardapio::whereIn('id', $ids)->get();
+
+        return view('User.Sacola', compact('Carrinho','Itens'));
+    }
+
     public function show($id)
     {
         $Item = Cardapio::where('id', $id)
@@ -54,10 +65,63 @@ class CarrinhoController extends Controller
 
     public function SalvarPedido(Request $request)
     {
-        $orderData = $request->input('orderData');
+        $dados = $request->all();
+        $carrinho = session('carrinho', []);
 
-        session(['pedido' => $request->all()]);
+        // Processa item principal
+        if (isset($dados['mainItem'])) {
+            $item = $dados['mainItem'];
+            $id = $item['id'];
 
-        return response()->json(['success' => true]); 
+            if (isset($carrinho[$id])) {
+                // Se já existe, soma a quantidade
+                $carrinho[$id]['quantidade'] += $item['quantity'];
+            } else {
+                // Se não existe, adiciona novo
+                $carrinho[$id] = [
+                    'quantidade' => $item['quantity'],
+                    'valor' => $item['price']
+                ];
+            }
+        }
+
+        // Processa itens adicionais
+        if (isset($dados['selectedItems'])) {
+            foreach ($dados['selectedItems'] as $id => $item) {
+                if (isset($carrinho[$id])) {
+                    $carrinho[$id]['quantidade'] += $item['quantity'];
+                } else {
+                    $carrinho[$id] = [
+                        'quantidade' => $item['quantity'],
+                        'valor' => $item['price']
+                    ];
+                }
+            }
+        }
+
+        // Processa bebidas (remove o prefixo 'bebida-')
+        if (isset($dados['selectedDrinks'])) {
+            foreach ($dados['selectedDrinks'] as $id => $item) {
+                $cleanId = str_replace('bebida-', '', $id);
+                if (isset($carrinho[$cleanId])) {
+                    $carrinho[$cleanId]['quantidade'] += $item['quantity'];
+                } else {
+                    $carrinho[$cleanId] = [
+                        'quantidade' => $item['quantity'],
+                        'valor' => $item['price']
+                    ];
+                }
+            }
+        }
+
+        // Salva observação separadamente se necessário
+        if (isset($dados['observacao'])) {
+            session(['observacao' => $dados['observacao']]);
+        }
+
+        // Atualiza a sessão
+        session(['carrinho' => $carrinho]);
+
+        return response()->json(['success' => true]);
     }
 }
