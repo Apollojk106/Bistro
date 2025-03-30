@@ -16,7 +16,7 @@ class CarrinhoController extends Controller
         // Verifica quais IDs existem na tabela Cardapio
         $Itens = Cardapio::whereIn('id', $ids)->get();
 
-        return view('User.Sacola', compact('Carrinho','Itens'));
+        return view('User.Sacola', compact('Carrinho', 'Itens'));
     }
 
     public function show($id)
@@ -61,6 +61,23 @@ class CarrinhoController extends Controller
         }
 
         return view("user.Item", compact('Item', 'Itens', 'Bebidas'));
+    }
+
+    public function SalvarSacola(Request $request)
+    {
+        $itens = $request->input('itens', []);
+
+        $carrinho = [];
+        foreach ($itens as $id => $item) {
+            $carrinho[$id] = [
+                'quantidade' => $item['quantidade'],
+                'valor' => $item['valor'],
+            ];
+        }
+
+        session(['carrinho' => $carrinho]);
+
+        return view("user.FormaDePagamento");
     }
 
     public function SalvarPedido(Request $request)

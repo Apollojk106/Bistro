@@ -33,8 +33,10 @@ Route::get('/Localizacao', [UserController::class, 'Localizacao'])->name("User.L
 
 Route::get('/Sacola', [CarrinhoController::class, 'IndexCarrinho'])->name("User.Sacola");
 Route::post('/Salvar/pedido', [CarrinhoController::class, 'SalvarPedido'])->name('salvar.pedido');
+Route::post('/Salvar/Sacola', [CarrinhoController::class, 'SalvarSacola'])->name('salvar.sacola');
 
-Route::post('/Salvar/pedido', [CarrinhoController::class, 'SalvarPedido'])->name('editar.item');
+
+Route::post('/Editar/pedido', [CarrinhoController::class, 'SalvarPedido'])->name('editar.item');
 
 Route::get('/sessionData', [UserController::class, 'sessionData'])->name("sessionData");
 

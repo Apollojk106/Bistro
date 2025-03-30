@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,9 +22,11 @@
             padding: 16px;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
         }
+
         .item-container {
             position: relative;
         }
+
         .remove-item {
             display: none;
             position: absolute;
@@ -33,11 +36,12 @@
             background: white;
             border-radius: 50%;
             padding: 2px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             z-index: 10;
         }
     </style>
 </head>
+
 <body class="bg-gray-100 text-white h-full">
     <x-hotbar-user />
     <nav class="flex justify-center relative bg-[#2E2E2E] py-6">
@@ -73,69 +77,65 @@
         </div>
     </div>
 
-    <div class="bg-gray-100 p-6 pb-24">
-        <!-- Item 1 -->
-        <div class="item-container flex items-center border-b pb-8 mb-12" id="item-1">
-            <button class="remove-item hidden" onclick="removerItem(1)">
-                <i class="ph ph-trash text-red-600 text-lg"></i>
-            </button>
-            <img src="{{ asset('Icons/food.png') }}" alt="Bife com batata" class="w-28 h-28 rounded transition-transform transform hover:scale-110">
-            <div class="ml-8 flex-1">
-                <h2 class="font-bold text-black">Bife com batata</h2><br>
-                <p class="text-green-600 font-semibold inline">R$ 49,40</p>
-                <span class="text-gray-400 line-through ml-2">R$ 54,40</span><br>
-                <p class="text-gray-500 text-sm flex items-center"><span class="bg-gray-200 px-2 py-1 rounded-full mr-2">1</span> Coca-Cola 0</p>
-                <p class="text-gray-500 text-sm flex items-center"><span class="bg-gray-200 px-2 py-1 rounded-full mr-2">1</span> Salada com filé de frango</p>
-                <a href="#" class="text-[#BE3816] font-semibold transition-all duration-300 ease-in-out hover:text-[#9c2c0e]">Editar o pedido</a>
-            </div>
-            <div class="flex items-center bg-gray-200 rounded-full px-2 py-1 transition-all duration-300 ease-in-out hover:bg-gray-300">
-                <button class="p-1 text-orange-500 hover:text-orange-600" onclick="decrementar(1)">
-                    <i id="icon-1" class="ph ph-minus"></i>
-                </button>
-                <span id="quantidade-1" class="px-3 font-bold text-orange-500 text-sm">1</span>
-                <button class="p-1 text-orange-500 hover:text-orange-600" onclick="incrementar(1)">
-                    <i class="ph ph-plus"></i>
-                </button>
-            </div>
-        </div>
-        
-        <div class="border-b border-[#C8C8C8] mt-2 w-full"></div>
+    <form id="form-pedido" action="{{ route('salvar.sacola') }}" method="POST">
+        @csrf
+        <div class="bg-gray-100 p-6 pb-24">
+            @if(isset($Carrinho) && !empty($Carrinho) && isset($Itens) && !empty($Itens))
+            @foreach($Itens as $item)
+            @php
+            $id = $item->id;
+            $quantidade = $Carrinho[$id]['quantidade'];
+            $valor = $Carrinho[$id]['valor'];
+            $subtotal = $quantidade * $valor;
+            @endphp
 
-        <!-- Item 2 -->
-        <div class="item-container flex items-center pt-8" id="item-2">
-            <button class="remove-item hidden" onclick="removerItem(2)">
-                <i class="ph ph-trash text-red-600 text-lg"></i>
-            </button>
-            <img src="{{ asset('Icons/food5.png') }}" alt="Salada com omelete" class="w-28 h-28 rounded transition-transform transform hover:scale-110">
-            <div class="ml-8 flex-1">
-                <h2 class="font-bold text-black">Salada com omelete</h2><br>
-                <p class="text-green-600 font-semibold">R$ 15,00</p><br>
-                <a href="#" class="text-[#BE3816] font-semibold transition-all duration-300 ease-in-out hover:text-[#9c2c0e]">Editar o pedido</a>
-            </div>
-            <div class="flex items-center bg-gray-200 rounded-full px-2 py-1 transition-all duration-300 ease-in-out hover:bg-gray-300">
-                <button class="p-1 text-orange-500 hover:text-orange-600" onclick="decrementar(2)">
-                    <i id="icon-2" class="ph ph-minus"></i>
-                </button>
-                <span id="quantidade-2" class="px-3 font-bold text-orange-500 text-sm">1</span>
-                <button class="p-1 text-orange-500 hover:text-orange-600" onclick="incrementar(2)">
-                    <i class="ph ph-plus"></i>
-                </button>
-            </div>
-        </div>
-    </div>
+            <!-- Inputs ocultos para envio -->
+            <input type="hidden" name="itens[{{ $id }}][id]" value="{{ $id }}">
+            <input type="hidden" name="itens[{{ $id }}][quantidade]" value="{{ $quantidade }}" id="input-quantidade-{{ $id }}">
+            <input type="hidden" name="itens[{{ $id }}][valor]" value="{{ $valor }}">
+            <input type="hidden" name="itens[{{ $id }}][subtotal]" value="{{ $subtotal }}" id="input-subtotal-{{ $id }}">
 
-    <!-- Botão "Continuar" fixo na parte inferior -->
-    <div class="fixed-bottom">
-        <div class="w-full bg-gray-300 rounded-2xl flex items-center justify-between px-4 py-3 transition-all duration-300 ease-in-out hover:shadow-lg">
-            <div class="flex items-center space-x-2">
-                <p class="text-black text-lg font-semibold">R$ 64,40</p>
-                <span class="text-sm text-gray-700 text-center">2 itens</span>
+            <div class="border-b border-[#C8C8C8] mb-2 w-full"></div>
+            <div class="item-container flex items-center border-b pb-8 mb-12" id="item-{{ $id }}">
+                <img src="{{ asset($item->imagem) }}" alt="{{ $item->nome }}" class="w-28 h-28 rounded transition-transform transform hover:scale-110">
+                <div class="ml-8 flex-1">
+                    <h2 class="font-bold text-black">{{ $item->nome }}</h2><br>
+                    <p class="text-green-600 font-semibold inline">R$ {{ number_format($valor, 2, ',', '.') }}</p>
+                    <br>
+                    <span class="text-gray-500 text-sm">Quantidade: <span id="quantidade-{{ $id }}">{{ $quantidade }}</span></span>
+                </div>
+                <div class="flex items-center bg-gray-200 rounded-full px-2 py-1 transition-all duration-300 ease-in-out hover:bg-gray-300">
+                    <button type="button" class="p-1 text-orange-500 hover:text-orange-600" onclick="decrementar({{ $id }})">
+                        <i id="icon-{{ $id }}" class="ph ph-minus"></i>
+                    </button>
+                    <span class="px-3 font-bold text-orange-500 text-sm" id="quantidade-span-{{ $id }}">{{ $quantidade }}</span>
+                    <button type="button" class="p-1 text-orange-500 hover:text-orange-600" onclick="incrementar({{ $id }})">
+                        <i class="ph ph-plus"></i>
+                    </button>
+                </div>
             </div>
-            <button onclick="window.location.href='/Selecao'" class="bg-orange-800 text-white text-base font-medium px-6 py-3 rounded-2xl hover:bg-orange-700 transition-all duration-300 ease-in-out transform hover:scale-105">
-                Continuar
-            </button>
+            <div class="border-b border-[#C8C8C8] mt-2 w-full"></div>
+            @endforeach
+            @else
+            <div class="text-center py-8">
+                <p class="text-gray-600">Seu carrinho está vazio</p>
+            </div>
+            @endif
         </div>
-    </div>
+
+        <!-- Botão "Continuar" fixo na parte inferior -->
+        <div class="fixed-bottom">
+            <div class="w-full bg-gray-300 rounded-2xl flex items-center justify-between px-4 py-3 transition-all duration-300 ease-in-out hover:shadow-lg">
+                <div class="flex items-center space-x-2">
+                    <p class="text-black text-lg font-semibold">R$ 64,40</p>
+                    <span class="text-sm text-gray-700 text-center">2 itens</span>
+                </div>
+                <button type="submit" id="btn-finalizar" class="bg-orange-800 text-white text-base font-medium px-6 py-3 rounded-2xl hover:bg-orange-700 transition-all duration-300 ease-in-out transform hover:scale-105">
+                    Continuar
+                </button>
+            </div>
+        </div>
+    </form>
 
     <script>
         // Função para mostrar/ocultar o ícone de lixeira
@@ -143,7 +143,7 @@
             const quantidade = parseInt(document.getElementById(`quantidade-${id}`).textContent);
             const icon = document.getElementById(`icon-${id}`);
             const removeBtn = document.querySelector(`#item-${id} .remove-item`);
-            
+
             if (quantidade === 1) {
                 icon.className = "ph ph-trash";
                 removeBtn.style.display = 'block';
@@ -154,22 +154,36 @@
         }
 
         function incrementar(id) {
-            let quantidade = document.getElementById(`quantidade-${id}`);
-            let valor = parseInt(quantidade.textContent);
-            quantidade.textContent = valor + 1;
-            toggleTrashIcon(id);
-            atualizarTotal();
+            let quantidadeSpan = document.getElementById(`quantidade-span-${id}`);
+            let inputQuantidade = document.getElementById(`input-quantidade-${id}`);
+            let inputSubtotal = document.getElementById(`input-subtotal-${id}`);
+
+            let quantidadeAtual = parseInt(quantidadeSpan.textContent);
+            let novoQuantidade = quantidadeAtual + 1;
+
+            quantidadeSpan.textContent = novoQuantidade;
+            inputQuantidade.value = novoQuantidade;
+
+            // Atualiza o subtotal (caso precise)
+            let valorUnitario = parseFloat(inputQuantidade.getAttribute('value'));
+            inputSubtotal.value = (novoQuantidade * valorUnitario).toFixed(2);
         }
 
         function decrementar(id) {
-            let quantidade = document.getElementById(`quantidade-${id}`);
-            let valor = parseInt(quantidade.textContent);
+            let quantidadeSpan = document.getElementById(`quantidade-span-${id}`);
+            let inputQuantidade = document.getElementById(`input-quantidade-${id}`);
+            let inputSubtotal = document.getElementById(`input-subtotal-${id}`);
 
-            if (valor > 1) {
-                quantidade.textContent = valor - 1;
+            let quantidadeAtual = parseInt(quantidadeSpan.textContent);
+            if (quantidadeAtual > 1) {
+                let novoQuantidade = quantidadeAtual - 1;
+                quantidadeSpan.textContent = novoQuantidade;
+                inputQuantidade.value = novoQuantidade;
+
+                // Atualiza o subtotal (caso precise)
+                let valorUnitario = parseFloat(inputQuantidade.getAttribute('value'));
+                inputSubtotal.value = (novoQuantidade * valorUnitario).toFixed(2);
             }
-            toggleTrashIcon(id);
-            atualizarTotal();
         }
 
         function removerItem(id) {
@@ -179,19 +193,27 @@
         }
 
         function atualizarTotal() {
-            // Implemente a lógica para atualizar o valor total aqui
-            // Exemplo simplificado:
-            const totalElement = document.querySelector('.fixed-bottom .text-lg');
-            const itensElement = document.querySelector('.fixed-bottom .text-sm');
-            
-            // Lógica para calcular o novo total e quantidade de itens
-            // ...
+            let total = 0;
+            let totalItens = 0;
+
+            document.querySelectorAll('.item-container').forEach(item => {
+                let id = item.id.replace('item-', '');
+                let quantidade = parseInt(document.getElementById(`quantidade-${id}`).textContent);
+                let preco = parseFloat(item.querySelector('.text-green-600').textContent.replace('R$ ', '').replace(',', '.'));
+
+                total += quantidade * preco;
+                totalItens += quantidade;
+            });
+
+            // Atualiza o total e a quantidade de itens exibidos na tela
+            document.querySelector('.fixed-bottom .text-lg').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            document.querySelector('.fixed-bottom .text-sm').textContent = `${totalItens} itens`;
         }
 
         document.getElementById("open-popup").addEventListener("click", function() {
             document.getElementById("popup").classList.remove("hidden");
         });
-        
+
         document.getElementById("close-popup").addEventListener("click", function() {
             document.getElementById("popup").classList.add("hidden");
         });
@@ -210,4 +232,5 @@
         toggleTrashIcon(2);
     </script>
 </body>
+
 </html>
