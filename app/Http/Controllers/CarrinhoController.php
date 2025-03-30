@@ -16,7 +16,7 @@ class CarrinhoController extends Controller
         // Verifica quais IDs existem na tabela Cardapio
         $Itens = Cardapio::whereIn('id', $ids)->get();
 
-        return view('User.Sacola', compact('Carrinho','Itens'));
+        return view('User.Sacola', compact('Carrinho', 'Itens'));
     }
 
     public function show($id)
@@ -61,6 +61,51 @@ class CarrinhoController extends Controller
         }
 
         return view("user.Item", compact('Item', 'Itens', 'Bebidas'));
+    }
+
+    public function SalvarSelecao($opcaoSelecionada, $tipoOpcao)
+    {
+        $Opcoes = [
+            'categoria' => $tipoOpcao,
+            'opcao_entrega' => $opcaoSelecionada,
+        ];
+
+        return $this->EditarSelecao($Opcoes);
+    }
+
+    public function SalvarSelecaoHorario($opcaoSelecionada, $tipoOpcao, $horario)
+    {
+        $Opcoes = [
+            'categoria' => $tipoOpcao,
+            'opcao_entrega' => $opcaoSelecionada,
+            'horario' => $horario,
+        ];
+
+        return $this->EditarSelecao($Opcoes);
+    }
+
+    public function EditarSelecao($Opcoes)
+    {
+        session(['Opcoes' => $Opcoes]);
+
+        return redirect()->route('User.OpcaoPedido');
+    }
+
+    public function SalvarSacola(Request $request)
+    {
+        $itens = $request->input('itens', []);
+
+        $carrinho = [];
+        foreach ($itens as $id => $item) {
+            $carrinho[$id] = [
+                'quantidade' => $item['quantidade'],
+                'valor' => $item['valor'],
+            ];
+        }
+
+        session(['carrinho' => $carrinho]);
+
+        return redirect()->route('User.Selecao');
     }
 
     public function SalvarPedido(Request $request)
@@ -123,5 +168,23 @@ class CarrinhoController extends Controller
         session(['carrinho' => $carrinho]);
 
         return response()->json(['success' => true]);
+    }
+
+    public function calcularPedido()
+    {
+        $carrinho = session('carrinho', []);
+
+        $totalItens = 0;
+        $valorTotal = 0;
+
+        foreach ($carrinho as $item) {
+            $totalItens += $item['quantidade'];
+            $valorTotal += $item['quantidade'] * $item['valor'];
+        }
+
+        return [
+            'valor' => $valorTotal,
+            'quantidade' => $totalItens
+        ];
     }
 }

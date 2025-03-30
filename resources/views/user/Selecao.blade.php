@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
   <x-hotbar-user />
 
@@ -128,14 +130,12 @@
   <footer class="w-full mt-10">
     <div class="flex justify-between items-center bg-gray-300 rounded-t-xl py-4 px-6 mx-auto max-w-md transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg">
       <div>
-        <span class="font-semibold text-lg">R$ 64,40</span>
-        <span class="text-sm text-gray-600 ml-2">2 itens</span>
+        <span class="font-semibold text-lg">R$ {{ $Pedido['valor'] ?? '0,00' }}</span>
+        <span class="text-sm text-gray-600 ml-2">{{ $Pedido['quantidade'] ?? '0' }} itens</span>
       </div>
-      <form action="{{route('User.Pagamento')}}" method="get">
-      <button type="submit" class="bg-orange-700 text-white text-lg font-semibold px-6 py-3 rounded-2xl hover:bg-orange-800 focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95">
+      <button id="continuarBtn" type="button" class="bg-orange-800 text-white text-base font-medium px-6 py-3 rounded-2xl hover:bg-orange-700 transition-all duration-300 ease-in-out transform hover:scale-105" onclick="enviarPedido()">
         Continuar
       </button>
-      </form>
     </div>
   </footer>
 
@@ -147,6 +147,7 @@
       document.getElementById('entregaBtn').classList.add('bg-gray-300', 'text-gray-600');
       document.getElementById('localContent').classList.remove('hidden');
       document.getElementById('entregaContent').classList.add('hidden');
+      tipoOpcao = 'local';
     });
 
     document.getElementById('entregaBtn').addEventListener('click', () => {
@@ -155,10 +156,12 @@
       document.getElementById('localBtn').classList.add('bg-gray-300', 'text-gray-600');
       document.getElementById('localContent').classList.add('hidden');
       document.getElementById('entregaContent').classList.remove('hidden');
+      tipoOpcao = 'entrega';
     });
 
     // Funções para seleção de opções de entrega
     function selecionarOpcao(opcao) {
+      opcaoSelecionada = opcao;
       if (opcao === 'agora') {
         document.getElementById('agoraCheck').classList.remove('hidden');
         document.getElementById('agendamentoEntregaCheck').classList.add('hidden');
@@ -174,6 +177,7 @@
 
     // Funções para seleção de opções de local
     function selectLocalOption(option) {
+      opcaoSelecionada = option;
       ['terraco', 'retirada'].forEach(opt => document.getElementById(`${opt}Check`).classList.add('hidden'));
       document.getElementById(`${option}Check`).classList.remove('hidden');
     }
@@ -217,8 +221,74 @@
       }
     }
 
+    // Variáveis globais
+    const btnContinuar = document.getElementById('continuarBtn');
+    let opcaoSelecionada = '';
+    let tipoOpcao = '';
+
+    document.getElementById('continuarBtn').addEventListener('click', function handleClick() {
+      if (validarSelecao()) {
+        enviarPedido();
+        // Remover o evento após o primeiro clique para evitar cliques múltiplos
+        this.removeEventListener('click', handleClick);
+      }
+    });
+
+    function enviarPedido() {
+      btnContinuar.disabled = true;
+      btnContinuar.textContent = 'Processando...';
+
+      
+     
+
+      // Definindo a variável de horário, dependendo do tipo de opção e se é agendamento
+      let horario = '';
+      if (opcaoSelecionada === 'agendamento') {
+        if (tipoOpcao === 'local') {
+          horario = document.getElementById('horarioInput').value;
+        } else if (tipoOpcao === 'entrega') {
+          horario = document.getElementById('horario').value;
+        }
+      }
+
+
+      // Exibindo o alerta com as informações, incluindo o horário, se for agendamento
+      if (horario) {
+        alert(`Opção Selecionada: ${opcaoSelecionada}\nTipo de Opção: ${tipoOpcao}\nHorário Agendado: ${horario}`);
+      } else {
+        window.location.href = `/${opcaoSelecionada}/${tipoOpcao}/Salvar/Selecao`;
+      }
+    }
+
+    function validarSelecao() {
+      console.log('validarSelecao chamada');
+      if (!tipoOpcao) {
+        alert('Por favor, selecione Local ou Entrega');
+        return false;
+      }
+
+      if (!opcaoSelecionada) {
+        alert('Por favor, selecione uma opção de ' + tipoOpcao);
+        return false;
+      }
+
+      if (opcaoSelecionada === 'agendamento') {
+        const horario = tipoOpcao === 'local' ?
+          document.getElementById('horarioInput').value :
+          document.getElementById('horario').value;
+
+        if (!horario) {
+          alert('Por favor, selecione um horário');
+          return false;
+        }
+      }
+
+      return true;
+    }
+
     // Inicialização
     selectLocalOption('retirada');
   </script>
 </body>
+
 </html>

@@ -10,8 +10,8 @@ use App\Http\Controllers\ItensPedidoController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PixController;
 
-
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\CardapioRequest;
 use App\Models\Cardapio;
 use Illuminate\Support\Facades\View;
@@ -19,28 +19,106 @@ use App\Models\Categoria;
 use App\Models\Configuracao;
 use App\Models\FormaPagamento;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserController extends Controller
 {
-    public function sessionData(){
+    public function sessionData()
+    {
         $sessionData = session()->all();
-        dd($sessionData['carrinho']);
+        dd($sessionData);
     }
-    //Esse controler é somente para a rota view
 
+    //Função de Login
+    public function PostLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'senha' => 'required|string|min:6', 
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && Hash::check($request->senha, $user->senha)) {
+            Auth::login($user);
+
+            return redirect()->route('User.Perfil')->with('success', 'Login realizado com sucesso!');
+        } else {
+            return back()->with('error', 'Credenciais inválidas. Tente novamente.');
+        }
+    }
+
+    public function PostCadastro(Request $request)
+    {
+        // Validação dos dados
+        $request->validate([
+            'email' => 'required|email',
+            'nome' => 'required|string|max:255',
+            'telefone' => 'required|string|max:15',
+            'cep' => 'required|string|max:10',
+            'rua' => 'required|string|max:255',
+            'bairro' => 'required|string|max:255',
+            'numero_residencia' => 'required|string|max:10',
+            'complemento' => 'nullable|string|max:255',
+            'senha' => 'required|string|min:6|confirmed',
+        ]);
+
+        $usuarioExistente = User::where('email', $request->email)->first();
+
+        if ($usuarioExistente) {
+            return redirect()->route('User.Login')->with('error', 'Já existe uma conta com esse e-mail. Faça login.');
+        }
+
+        $user = new User();
+        $user->email = $request->email;
+        $user->nome = $request->nome;
+        $user->telefone = $request->telefone;
+        $user->cep = $request->cep;
+        $user->rua = $request->rua;
+        $user->bairro = $request->bairro;
+        $user->numero_residencia = $request->numero_residencia;
+        $user->complemento = $request->complemento; // Campo complementar
+        $user->senha = Hash::make($request->senha); // Criptografando a senha
+        $user->salt = bin2hex(random_bytes(16)); // Gerando salt para maior segurança
+        $user->save();
+
+        Auth::login($user);
+
+        // Redirecionar após o cadastro
+        return redirect()->route('User.Perfil')->with('success', 'Cadastro realizado com sucesso!');
+    }
+
+    public function Logout() 
+    {
+        Auth::logout();
+
+        return redirect()->route('User.Login')->with('success', 'Você foi desconectado com sucesso!');
+    }
+
+
+    //Esse controler é somente para a rota view
     //Login
     public function Perfil()
     {
+        if (!Auth::check()) {
+            return redirect()->route("User.Login");
+        }
         return view('user.Perfil');
     }
 
     public function Login()
     {
+        if (Auth::check()) {
+            return redirect()->route("User.Perfil");
+        }
         return view('user.Login');
     }
 
     public function Cadastro()
     {
+        if (Auth::check()) {
+            return redirect()->route("User.Perfil");
+        }
         return view('user.Cadastro');
     }
 
@@ -92,7 +170,12 @@ class UserController extends Controller
 
     public function Selecao()
     {
-        return view('user.Selecao');
+        $Carrinho = new CarrinhoController();
+
+        $Pedido = $Carrinho->calcularPedido();
+        $Opcoes = session('opcoes', []);
+
+        return view('user.Selecao', compact('Opcoes', 'Pedido'));
     }
     
     public function PessoasDashboard()
@@ -102,7 +185,7 @@ class UserController extends Controller
 
     //Admin
     public function Dashboard(
-        $pratosVendidos, 
+        $pratosVendidos,
         $pedidosAgendados,
         $pedidosNormais,
         $valorTotalAgendados,
@@ -110,10 +193,10 @@ class UserController extends Controller
         $categoriasMaisPedidas,
         $itensMaisPedidos,
         $top3dias,
-        )
-    {
+    ) {
 
-        return view('admin.Dashboard', 
+        return view(
+            'admin.Dashboard',
             compact(
                 'pratosVendidos',
                 'pedidosAgendados',
@@ -123,7 +206,8 @@ class UserController extends Controller
                 'categoriasMaisPedidas',
                 'itensMaisPedidos',
                 'top3dias',
-            ));
+            )
+        );
     }
 
     public function Cardapio()
@@ -172,7 +256,7 @@ class UserController extends Controller
         $Categorias = $Categorias->GetCategorias();
         $Configuracoes =  $Configuracoes->GetConfiguracao();
 
-        return view('admin.Configuracao', compact('FormaPagamentos','Categorias','Configuracoes'));
+        return view('admin.Configuracao', compact('FormaPagamentos', 'Categorias', 'Configuracoes'));
     }
 
     public function Pedido()

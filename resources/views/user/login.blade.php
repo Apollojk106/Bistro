@@ -20,19 +20,20 @@
         <p class="text-black text-left text-xl font-semibold mb-4 transition-all duration-300 ease-in-out transform hover:scale-105">Seja bem-vindo</p>
 
         <!-- Formulário de Login -->
-        <form class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105" action="{{ route('User.Perfil') }}" method="get">
+        <form class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105" action="{{ route('User.Login.Post') }}" method="Post">
+            @csrf
             <!-- Campos de entrada -->
             <div class="space-y-6">
                 <!-- Campo de Email -->
                 <div>
                     <p class="text-black text-left text-lg font-medium mb-2">Login:</p>
-                    <input type="text" placeholder="Email..." class="w-full text-black bg-transparent p-2 outline-none border-0 border-b-2 border-black focus:border-[#A74A04] transition-all duration-300 ease-in-out" />
+                    <input id="email" name="email" type="text" placeholder="Email..." class="w-full text-black bg-transparent p-2 outline-none border-0 border-b-2 border-black focus:border-[#A74A04] transition-all duration-300 ease-in-out" />
                 </div>
 
                 <!-- Campo de Senha -->
                 <div>
                     <p class="text-black text-left text-lg font-medium mb-2">Senha:</p>
-                    <input type="password" placeholder="Senha..." class="w-full text-black bg-transparent p-2 outline-none border-0 border-b-2 border-black focus:border-[#A74A04] transition-all duration-300 ease-in-out" />
+                    <input id="senha" name="senha" type="password" placeholder="Senha..." class="w-full text-black bg-transparent p-2 outline-none border-0 border-b-2 border-black focus:border-[#A74A04] transition-all duration-300 ease-in-out" />
                 </div>
             </div>
 
