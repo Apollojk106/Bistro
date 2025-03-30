@@ -94,6 +94,11 @@ class UserController extends Controller
     {
         return view('user.Selecao');
     }
+    
+    public function PessoasDashboard()
+    {
+        return view('user.Pessoas');
+    }
 
     //Admin
     public function Dashboard(

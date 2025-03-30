@@ -29,5 +29,11 @@
             <img src="{{ asset('Icons/cog.png') }}" alt="Imagem Centralizada" class="h-10 w-10 object-contain">
             <p class="hidden sm:block">Configuração</p> <!-- Texto escondido em telas pequenas -->
         </a>
+
+        <a href="{{ route('Pessoas') }}" class="flex items-center m-1 cursor-pointer" style="color: B7B7B7;">
+            <img src="{{ asset('Icons/Person.png') }}" alt="Imagem Centralizada" class="h-10 w-10 object-contain">
+            <p class="hidden sm:block">Pessoas</p> <!-- Texto escondido em telas pequenas -->
+        </a>
+
     </div>
 </div>
