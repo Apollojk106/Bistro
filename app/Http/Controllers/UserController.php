@@ -144,7 +144,15 @@ class UserController extends Controller
 
     public function OpcaoPedido()
     {
-        return view('user.OpcaoPedido');
+        if (Auth::check()) {
+            $Carrinho = new CarrinhoController();
+            return $Carrinho->OpcaoPedidoLogin();
+        }
+
+        $Carrinho = new CarrinhoController();
+        $Pedido = $Carrinho->calcularPedido();
+
+        return view('user.OpcaoPedido', compact('Pedido'));
     }
 
     public function FormaPagamento()
@@ -175,6 +183,11 @@ class UserController extends Controller
         $Opcoes = session('opcoes', []);
 
         return view('user.Selecao', compact('Opcoes', 'Pedido'));
+    }
+    
+    public function PessoasDashboard()
+    {
+        return view('admin.Pessoas');
     }
 
     //Admin

@@ -63,6 +63,13 @@ class CarrinhoController extends Controller
         return view("user.Item", compact('Item', 'Itens', 'Bebidas'));
     }
 
+    public function OpcaoPedidoLogin()
+    {
+        //usar login para infos
+
+        return redirect()->route("User.Pagamento");
+    }
+
     public function SalvarSelecao($opcaoSelecionada, $tipoOpcao)
     {
         $Opcoes = [

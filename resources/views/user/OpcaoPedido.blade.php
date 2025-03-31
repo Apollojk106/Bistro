@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,17 +9,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <script src="https://cdn.tailwindcss.com"></script> <!-- Adicione o Tailwind CSS -->
 </head>
+
 <body class="bg-gray-100">
 
-    
+
     <x-hotbar-user />
     <nav class="flex justify-center relative bg-[#2E2E2E] py-6">
-    <a href="javascript:history.back()" class="absolute top-2 left-4 transition-transform transform hover:scale-110">
-      <img src="{{ asset('Icons/btn-back.png') }}" alt="Voltar" class="w-8 h-8">
-    </a>
-  </nav>
+        <a href="javascript:history.back()" class="absolute top-2 left-4 transition-transform transform hover:scale-110">
+            <img src="{{ asset('Icons/btn-back.png') }}" alt="Voltar" class="w-8 h-8">
+        </a>
+    </nav>
 
-  
+
 
     <!-- Quadro centralizado -->
     <div class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md mx-auto mt-10"> <!-- Ajustado mt-16 para mt-10 -->
@@ -71,8 +73,8 @@
 
     <!-- Rodapé com total e botão -->
     <div class="fixed bottom-0 left-0 w-full bg-[#B7B7B7] px-4 py-3 flex justify-between items-center"> <!-- Alterado para #B7B7B7 e fixo no rodapé -->
-        <span class="text-lg font-bold text-white">R$ 70,65</span> <!-- Texto branco para contraste -->
-        <span class="text-sm text-white">2 itens</span> <!-- Texto branco para contraste -->
+        <span class="font-semibold text-lg">R$ {{ $Pedido['valor'] ?? '0,00' }}</span>
+        <span class="text-sm text-gray-600 ml-2">{{ $Pedido['quantidade'] ?? '0' }} itens</span>
         <button type="submit" class="bg-[#A74A04] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#8B3D03] focus:ring-2 focus:ring-[#A74A04] focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95">
             Continuar
         </button>
@@ -142,6 +144,7 @@
             return re.test(String(cep));
         }
     </script>
-    
+
 </body>
+
 </html>
