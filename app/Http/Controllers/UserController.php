@@ -95,7 +95,6 @@ class UserController extends Controller
         return redirect()->route('User.Login')->with('success', 'Você foi desconectado com sucesso!');
     }
 
-
     //Esse controler é somente para a rota view
     //Login
     public function Perfil()
