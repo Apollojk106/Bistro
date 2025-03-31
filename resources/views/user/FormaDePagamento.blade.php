@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100">
 
     <!-- Hotbar -->
@@ -63,7 +65,7 @@
                     <!-- Campo de troco (só aparece quando selecionado) -->
                     <div id="troco-opcao" class="mt-4 hidden">
                         <label class="block text-sm font-semibold text-left mb-2">Troco para:</label>
-                        <input type="text" placeholder="EX: 50" class="w-full bg-gray-200 p-3 rounded-md text-center transition-all duration-300 ease-in-out focus:ring-2 focus:ring-[#A74A04] focus:outline-none">
+                        <input type="text" id="troco-input" placeholder="EX: 50" class="w-full bg-gray-200 p-3 rounded-md text-center transition-all duration-300 ease-in-out focus:ring-2 focus:ring-[#A74A04] focus:outline-none">
                     </div>
                 </div>
             </div>
@@ -72,12 +74,16 @@
 
     <!-- Rodapé com valor total -->
     <div class="bg-[#B7B7B7] flex justify-between items-center px-6 py-6 mt-12 fixed bottom-0 w-full transition-all duration-300 ease-in-out transform hover:scale-105">
-        <span class="text-xl font-bold text-black">R$ 64,40</span>
-        <span class="text-sm text-black">2 itens</span>
-        <form action="{{ route('User.Pix') }}" method="get">
-        <button type="submit" class="bg-[#A74A04] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#8B3D03] transition-all duration-300 ease-in-out transform hover:scale-105">
-            Continuar
-        </button>
+        <span class="font-semibold text-lg">R$ {{ $Pedido['valor'] ?? '0,00' }}</span>
+        <span class="text-sm text-gray-600 ml-2">{{ $Pedido['quantidade'] ?? '0' }} itens</span>
+        <form action="{{ route('User.Pagamento.Post') }}" method="post">
+            @csrf
+            <input type="hidden" name="metodo_pagamento" id="metodo-pagamento-input">
+            <input type="hidden" name="troco_para" id="troco-para-input">
+
+            <button type="submit" class="bg-[#A74A04] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#8B3D03] transition-all duration-300 ease-in-out transform hover:scale-105">
+                Continuar
+            </button>
         </form>
     </div>
 
@@ -86,21 +92,49 @@
             // Esconde todos os checkmarks e reseta os círculos
             ['pix', 'cartao', 'dinheiro'].forEach(opcao => {
                 document.getElementById('check-' + opcao).classList.add('hidden');
-                document.getElementById('circle-' + opcao).classList.replace('border-[#A74A04]', 'border-gray-400');
+                document.getElementById('circle-' + opcao).classList.remove('border-[#A74A04]');
+                document.getElementById('circle-' + opcao).classList.add('border-gray-400');
             });
 
             // Mostra apenas o checkmark da opção selecionada e muda a borda do círculo
             document.getElementById('check-' + tipo).classList.remove('hidden');
-            document.getElementById('circle-' + tipo).classList.replace('border-gray-400', 'border-[#A74A04]');
+            document.getElementById('circle-' + tipo).classList.remove('border-gray-400');
+            document.getElementById('circle-' + tipo).classList.add('border-[#A74A04]');
+
+            // Atualiza o valor do campo hidden para enviar a opção selecionada via POST
+            document.getElementById('metodo-pagamento-input').value = tipo;
 
             // Controla a exibição do campo de troco
+            const trocoOpcao = document.getElementById('troco-opcao');
+            const trocoInput = document.getElementById('troco-input');
+
             if (tipo === 'dinheiro') {
-                document.getElementById('troco-opcao').classList.remove('hidden');
+                trocoOpcao.classList.remove('hidden');
+                // Foca no campo de troco quando dinheiro é selecionado
+                setTimeout(() => trocoInput.focus(), 100);
             } else {
-                document.getElementById('troco-opcao').classList.add('hidden');
+                trocoOpcao.classList.add('hidden');
+                // Limpa o valor do troco se outro método for selecionado
+                trocoInput.value = '';
+                document.getElementById('troco-para-input').value = '';
             }
         }
+
+        // Atualiza o campo hidden do troco quando o usuário digita
+        document.getElementById('troco-input').addEventListener('input', function(e) {
+            document.getElementById('troco-para-input').value = e.target.value;
+        });
+
+        // Opcional: Formata o valor do troco para moeda
+        document.getElementById('troco-input').addEventListener('blur', function(e) {
+            const value = parseFloat(e.target.value.replace(',', '.'));
+            if (!isNaN(value)) {
+                e.target.value = value.toFixed(2).replace('.', ',');
+                document.getElementById('troco-para-input').value = value.toFixed(2);
+            }
+        });
     </script>
 
 </body>
+
 </html>

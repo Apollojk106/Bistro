@@ -34,7 +34,7 @@ class UserController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'senha' => 'required|string|min:6', 
+            'senha' => 'required|string|min:6',
         ]);
 
         $user = User::where('email', $request->email)->first();
@@ -88,7 +88,7 @@ class UserController extends Controller
         return redirect()->route('User.Perfil')->with('success', 'Cadastro realizado com sucesso!');
     }
 
-    public function Logout() 
+    public function Logout()
     {
         Auth::logout();
 
@@ -148,16 +148,16 @@ class UserController extends Controller
             $Carrinho = new CarrinhoController();
             return $Carrinho->OpcaoPedidoLogin();
         }
-
-        $Carrinho = new CarrinhoController();
-        $Pedido = $Carrinho->calcularPedido();
+        $Pedido = $this->GetCarrinho();
 
         return view('user.OpcaoPedido', compact('Pedido'));
     }
 
     public function FormaPagamento()
     {
-        return view('user.FormaDePagamento');
+        $Pedido = $this->GetCarrinho();
+
+        return view('user.FormaDePagamento', compact('Pedido'));
     }
 
     public function Localizacao()
@@ -177,14 +177,12 @@ class UserController extends Controller
 
     public function Selecao()
     {
-        $Carrinho = new CarrinhoController();
-
-        $Pedido = $Carrinho->calcularPedido();
+        $Pedido = $this->GetCarrinho();
         $Opcoes = session('opcoes', []);
 
         return view('user.Selecao', compact('Opcoes', 'Pedido'));
     }
-    
+
     public function PessoasDashboard()
     {
         return view('admin.Pessoas');
@@ -269,5 +267,11 @@ class UserController extends Controller
     public function Pedido()
     {
         return view('admin.Pedido',);
+    }
+
+    public function GetCarrinho()
+    {
+        $Carrinho = new CarrinhoController();
+        return $Carrinho->calcularPedido();
     }
 }

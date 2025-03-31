@@ -26,59 +26,85 @@
     <div class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md mx-auto mt-10"> <!-- Ajustado mt-16 para mt-10 -->
         <h2 class="text-2xl font-bold text-center mb-6 text-[#A74A04]">Opção do Pedido</h2>
 
-        <!-- Campos do formulário -->
-        <form class="space-y-6" onsubmit="return validateForm()"> <!-- Adicionado onsubmit para validação -->
+        <form class="space-y-6" method="POST" action="{{ route('User.OpcaoPedid.Post') }}" onsubmit="return validateForm()">
+            @csrf <!-- Token CSRF para segurança -->
             <!-- Nome -->
             <div>
                 <label class="block text-left text-sm font-semibold text-gray-700">Nome*</label>
-                <input type="text" id="nome" placeholder="Apollo" class="w-full bg-gray-200 p-3 rounded-md text-gray-700" required>
+                <input type="text" name="nome" id="nome" placeholder="Apollo" class="w-full bg-gray-200 p-3 rounded-md text-gray-700" required>
                 <span id="nomeError" class="text-red-500 text-sm hidden">Nome é obrigatório</span>
             </div>
 
             <!-- Telefone -->
             <div>
                 <label class="block text-left text-sm font-semibold text-gray-700">Telefone*</label>
-                <input type="tel" id="telefone" placeholder="11...." class="w-full bg-gray-200 p-3 rounded-md text-gray-700" required>
+                <input type="tel" name="telefone" id="telefone" placeholder="11...." class="w-full bg-gray-200 p-3 rounded-md text-gray-700" required>
                 <span id="telefoneError" class="text-red-500 text-sm hidden">Telefone é obrigatório</span>
             </div>
 
             <!-- E-mail -->
             <div>
                 <label class="block text-left text-sm font-semibold text-gray-700">E-mail</label>
-                <input type="email" id="email" placeholder="seuemail@exemplo.com" class="w-full bg-gray-200 p-3 rounded-md text-gray-700">
+                <input type="email" name="email" id="email" placeholder="seuemail@exemplo.com" class="w-full bg-gray-200 p-3 rounded-md text-gray-700">
                 <span id="emailError" class="text-red-500 text-sm hidden">E-mail inválido</span>
             </div>
 
             <!-- CEP -->
             <div>
                 <label class="block text-left text-sm font-semibold text-gray-700">CEP</label>
-                <input type="text" id="cep" placeholder="00000-000" class="w-full bg-gray-200 p-3 rounded-md text-gray-700">
+                <input type="text" name="cep" id="cep" placeholder="00000-000" class="w-full bg-gray-200 p-3 rounded-md text-gray-700">
                 <span id="cepError" class="text-red-500 text-sm hidden">CEP inválido</span>
+            </div>
+
+            <!-- Rua -->
+            <div>
+                <label class="block text-left text-sm font-semibold text-gray-700">Rua*</label>
+                <input type="text" name="rua" id="rua" placeholder="Rua Exemplo" class="w-full bg-gray-200 p-3 rounded-md text-gray-700" required>
+                <span id="ruaError" class="text-red-500 text-sm hidden">Rua é obrigatória</span>
+            </div>
+
+            <!-- Bairro -->
+            <div>
+                <label class="block text-left text-sm font-semibold text-gray-700">Bairro*</label>
+                <input type="text" name="bairro" id="bairro" placeholder="Bairro Exemplo" class="w-full bg-gray-200 p-3 rounded-md text-gray-700" required>
+                <span id="bairroError" class="text-red-500 text-sm hidden">Bairro é obrigatório</span>
             </div>
 
             <!-- Número da casa -->
             <div class="flex items-center justify-between">
-                <label class="text-sm font-semibold text-gray-700">Número da casa</label>
-                <input type="text" id="numero" placeholder="123" class="bg-gray-200 p-2 rounded-md w-14 text-center text-gray-700">
+                <label class="text-sm font-semibold text-gray-700">Número da casa*</label>
+                <input type="text" name="numero_residencia" id="numero" placeholder="123" class="bg-gray-200 p-2 rounded-md w-14 text-center text-gray-700" required>
                 <span id="numeroError" class="text-red-500 text-sm hidden">Número é obrigatório</span>
             </div>
 
-            <!-- Taxa de entrega -->
+            <!-- Complemento -->
+            <div>
+                <label class="block text-left text-sm font-semibold text-gray-700">Complemento</label>
+                <input type="text" name="complemento" id="complemento" placeholder="Apartamento 101" class="w-full bg-gray-200 p-3 rounded-md text-gray-700">
+            </div>
+
+            <!-- Botão de continuar -->
+            <div class="fixed-bottom">
+                <div class="w-full bg-gray-300 rounded-2xl flex items-center justify-between px-4 py-3 transition-all duration-300 ease-in-out hover:shadow-lg">
+                    <div class="flex items-center space-x-2">
+                        <span class="font-semibold text-lg">R$ {{ $Pedido['valor'] ?? '0,00' }}</span>
+                        <span class="text-sm text-gray-600 ml-2">{{ $Pedido['quantidade'] ?? '0' }} itens</span>
+                    </div>
+                    <button type="submit" class="bg-orange-800 text-white text-base font-medium px-6 py-3 rounded-2xl hover:bg-orange-700 transition-all duration-300 ease-in-out transform hover:scale-105">
+                        Continuar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Taxa de entrega 
             <div class="flex justify-between text-sm font-semibold mt-6 text-gray-700">
                 <span>Taxa da entrega</span>
                 <span>R$ 10,25</span>
-            </div>
+            </div> -->
         </form>
     </div>
 
-    <!-- Rodapé com total e botão -->
-    <div class="fixed bottom-0 left-0 w-full bg-[#B7B7B7] px-4 py-3 flex justify-between items-center"> <!-- Alterado para #B7B7B7 e fixo no rodapé -->
-        <span class="font-semibold text-lg">R$ {{ $Pedido['valor'] ?? '0,00' }}</span>
-        <span class="text-sm text-gray-600 ml-2">{{ $Pedido['quantidade'] ?? '0' }} itens</span>
-        <button type="submit" class="bg-[#A74A04] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#8B3D03] focus:ring-2 focus:ring-[#A74A04] focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95">
-            Continuar
-        </button>
-    </div>
+
 
     <script>
         function validateForm() {
@@ -87,12 +113,16 @@
             let email = document.getElementById('email').value;
             let cep = document.getElementById('cep').value;
             let numero = document.getElementById('numero').value;
+            let rua = document.getElementById('rua').value;
+            let bairro = document.getElementById('bairro').value;
 
             let nomeError = document.getElementById('nomeError');
             let telefoneError = document.getElementById('telefoneError');
             let emailError = document.getElementById('emailError');
             let cepError = document.getElementById('cepError');
             let numeroError = document.getElementById('numeroError');
+            let ruaError = document.getElementById('ruaError');
+            let bairroError = document.getElementById('bairroError');
 
             let isValid = true;
 
@@ -129,6 +159,20 @@
                 isValid = false;
             } else {
                 numeroError.classList.add('hidden');
+            }
+
+            if (rua.trim() === '') {
+                ruaError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                ruaError.classList.add('hidden');
+            }
+
+            if (bairro.trim() === '') {
+                bairroError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                bairroError.classList.add('hidden');
             }
 
             return isValid;

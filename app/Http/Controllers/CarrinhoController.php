@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cardapio;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CarrinhoController extends Controller
 {
@@ -65,7 +66,40 @@ class CarrinhoController extends Controller
 
     public function OpcaoPedidoLogin()
     {
-        //usar login para infos
+        $user = Auth::user();
+
+        $userData = [
+            'nome' => $user->nome,
+            'telefone' => $user->telefone,
+            'email' => $user->email,
+            'cep' => $user->cep,
+            'rua' => $user->rua,
+            'bairro' => $user->bairro,
+            'numero_residencia' => $user->numero_residencia,
+            'complemento' => $user->complemento,
+        ];
+
+        session(['user_data' => $userData]);
+
+        return redirect()->route("User.Pagamento");
+    }
+
+    public function SalvarOpcaoPedido(Request $request)
+    {
+        // Criando o array de dados do usuário
+        $userData = [
+            'nome' => $request->input('nome'),
+            'telefone' => $request->input('telefone'),
+            'email' => $request->input('email'),
+            'cep' => $request->input('cep'),
+            'rua' => $request->input('rua'),
+            'bairro' => $request->input('bairro'),
+            'numero_residencia' => $request->input('numero_residencia'),
+            'complemento' => $request->input('complemento'),
+        ];
+
+        // Armazenando os dados na sessão
+        session(['User' => $userData]);
 
         return redirect()->route("User.Pagamento");
     }
@@ -93,7 +127,7 @@ class CarrinhoController extends Controller
 
     public function EditarSelecao($Opcoes)
     {
-        session(['Opcoes' => $Opcoes]);
+        session(['opcoes' => $Opcoes]);
 
         return redirect()->route('User.OpcaoPedido');
     }

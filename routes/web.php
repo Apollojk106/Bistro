@@ -6,7 +6,8 @@ use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\CardapioController;
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\CarrinhoController;
-
+use App\Http\Controllers\FormaPagamentoController;
+use App\Models\FormaPagamento;
 
 Route::get('/sessionData', [UserController::class, 'sessionData'])->name("sessionData");
 Route::get('/', [UserController::class, 'UserCardapio']);
@@ -31,12 +32,18 @@ Route::get('/Cardapio', [UserController::class, 'UserCardapio'])->name("User.Car
 Route::get('/Item', [UserController::class, 'Item'])->name("User.Item");
 Route::get('/Item/{id}', [CarrinhoController::class, 'show'])->name('item.get');
 
-//Rotas Index
 Route::get('/PagamentoPix', [UserController::class, 'PagamentoPix'])->name("User.Pix");
+
 Route::get('/OpcaoPedido', [UserController::class, 'OpcaoPedido'])->name("User.OpcaoPedido");
+Route::post('/Salvar/OpcaoPedido', [CarrinhoController::class, 'SalvarOpcaoPedido'])->name("User.OpcaoPedid.Post");
+
 Route::get('/Pagamento', [UserController::class, 'FormaPagamento'])->name("User.Pagamento");
+Route::post('/Salvar/Pagamento', [FormaPagamentoController::class, 'SalvarFormaPagamento'])->name("User.Pagamento.Post");
+
 Route::get('/Selecao', [UserController::class, 'Selecao'])->name("User.Selecao");
+
 Route::get('/Localizacao', [UserController::class, 'Localizacao'])->name("User.Localizacao");
+
 Route::get('/Sacola', [CarrinhoController::class, 'IndexCarrinho'])->name("User.Sacola");
 
 //Rotas Json
