@@ -127,8 +127,8 @@
         <div class="fixed-bottom">
             <div class="w-full bg-gray-300 rounded-2xl flex items-center justify-between px-4 py-3 transition-all duration-300 ease-in-out hover:shadow-lg">
                 <div class="flex items-center space-x-2">
-                    <p class="text-black text-lg font-semibold">R$ 64,40</p>
-                    <span class="text-sm text-gray-700 text-center">2 itens</span>
+                    <p class="text-black text-lg font-semibold">R$ {{$Pedido['valor'] ?? 0}}</p>
+                    <span class="text-sm text-gray-700 text-center">{{$Pedido['quantidade'] ?? 0}} item</span>
                 </div>
                 <button type="submit" id="btn-finalizar" class="bg-orange-800 text-white text-base font-medium px-6 py-3 rounded-2xl hover:bg-orange-700 transition-all duration-300 ease-in-out transform hover:scale-105">
                     Continuar
@@ -157,33 +157,40 @@
             let quantidadeSpan = document.getElementById(`quantidade-span-${id}`);
             let inputQuantidade = document.getElementById(`input-quantidade-${id}`);
             let inputSubtotal = document.getElementById(`input-subtotal-${id}`);
+            let precoElemento = document.querySelector(`#item-${id} .text-green-600`);
+            let valorUnitario = parseFloat(precoElemento.textContent.replace('R$ ', '').replace(',', '.'));
 
             let quantidadeAtual = parseInt(quantidadeSpan.textContent);
             let novoQuantidade = quantidadeAtual + 1;
 
             quantidadeSpan.textContent = novoQuantidade;
             inputQuantidade.value = novoQuantidade;
-
-            // Atualiza o subtotal (caso precise)
-            let valorUnitario = parseFloat(inputQuantidade.getAttribute('value'));
             inputSubtotal.value = (novoQuantidade * valorUnitario).toFixed(2);
+
+            atualizarTotal();
         }
 
         function decrementar(id) {
             let quantidadeSpan = document.getElementById(`quantidade-span-${id}`);
             let inputQuantidade = document.getElementById(`input-quantidade-${id}`);
             let inputSubtotal = document.getElementById(`input-subtotal-${id}`);
+            let item = document.getElementById(`item-${id}`);
+            let precoElemento = document.querySelector(`#item-${id} .text-green-600`);
+            let valorUnitario = parseFloat(precoElemento.textContent.replace('R$ ', '').replace(',', '.'));
 
             let quantidadeAtual = parseInt(quantidadeSpan.textContent);
+
             if (quantidadeAtual > 1) {
                 let novoQuantidade = quantidadeAtual - 1;
                 quantidadeSpan.textContent = novoQuantidade;
                 inputQuantidade.value = novoQuantidade;
-
-                // Atualiza o subtotal (caso precise)
-                let valorUnitario = parseFloat(inputQuantidade.getAttribute('value'));
                 inputSubtotal.value = (novoQuantidade * valorUnitario).toFixed(2);
+            } else {
+                item.remove(); // Remove o item da tela
+                inputQuantidade.value = 0; // Atualiza o input hidden
             }
+
+            atualizarTotal();
         }
 
         function removerItem(id) {
@@ -198,14 +205,14 @@
 
             document.querySelectorAll('.item-container').forEach(item => {
                 let id = item.id.replace('item-', '');
-                let quantidade = parseInt(document.getElementById(`quantidade-${id}`).textContent);
+                let quantidade = parseInt(document.getElementById(`quantidade-span-${id}`).textContent);
                 let preco = parseFloat(item.querySelector('.text-green-600').textContent.replace('R$ ', '').replace(',', '.'));
 
                 total += quantidade * preco;
                 totalItens += quantidade;
             });
 
-            // Atualiza o total e a quantidade de itens exibidos na tela
+            // Atualiza o total e a quantidade de itens na sacola
             document.querySelector('.fixed-bottom .text-lg').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
             document.querySelector('.fixed-bottom .text-sm').textContent = `${totalItens} itens`;
         }
@@ -219,17 +226,8 @@
         });
 
         document.getElementById("confirm-clear").addEventListener("click", function() {
-            // Limpar todos os itens
-            document.querySelectorAll('.item-container').forEach(item => {
-                item.remove();
-            });
-            document.getElementById("popup").classList.add("hidden");
-            atualizarTotal();
+            window.location.href = "/Sacola/Limpar";
         });
-
-        // Inicializa os ícones
-        toggleTrashIcon(1);
-        toggleTrashIcon(2);
     </script>
 </body>
 

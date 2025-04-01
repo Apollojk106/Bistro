@@ -39,17 +39,6 @@
                     </div>
                 </div>
 
-                <!-- Cartão -->
-                <div onclick="selecionarPagamento('cartao')" class="flex items-center justify-between border rounded-lg p-6 cursor-pointer hover:bg-gray-50 transition-all duration-300 ease-in-out transform hover:scale-105">
-                    <div class="flex items-center space-x-4">
-                        <img src="{{ asset('Icons/card.png') }}" alt="Cartão" class="w-10 h-10 transition-transform transform hover:scale-110">
-                        <span class="text-xl font-semibold flex items-center">Cartão</span>
-                    </div>
-                    <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center transition-colors duration-300 ease-in-out" id="circle-cartao">
-                        <img id="check-cartao" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado" class="w-6 h-6 hidden">
-                    </div>
-                </div>
-
                 <!-- Dinheiro -->
                 <div onclick="selecionarPagamento('dinheiro')" class="border rounded-lg p-6 cursor-pointer hover:bg-gray-50 transition-all duration-300 ease-in-out transform hover:scale-105">
                     <div class="flex items-center justify-between">
@@ -68,6 +57,17 @@
                         <input type="text" id="troco-input" placeholder="EX: 50" class="w-full bg-gray-200 p-3 rounded-md text-center transition-all duration-300 ease-in-out focus:ring-2 focus:ring-[#A74A04] focus:outline-none">
                     </div>
                 </div>
+
+                <!-- Cartão -->
+                <div onclick="selecionarPagamento('cartao')" class="flex items-center justify-between border rounded-lg p-6 cursor-pointer hover:bg-gray-50 transition-all duration-300 ease-in-out transform hover:scale-105">
+                    <div class="flex items-center space-x-4">
+                        <img src="{{ asset('Icons/card.png') }}" alt="Cartão" class="w-10 h-10 transition-transform transform hover:scale-110">
+                        <span class="text-xl font-semibold flex items-center">Cartão</span>
+                    </div>
+                    <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center transition-colors duration-300 ease-in-out" id="circle-cartao">
+                        <img id="check-cartao" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado" class="w-6 h-6 hidden">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -76,7 +76,7 @@
     <div class="bg-[#B7B7B7] flex justify-between items-center px-6 py-6 mt-12 fixed bottom-0 w-full transition-all duration-300 ease-in-out transform hover:scale-105">
         <span class="font-semibold text-lg">R$ {{ $Pedido['valor'] ?? '0,00' }}</span>
         <span class="text-sm text-gray-600 ml-2">{{ $Pedido['quantidade'] ?? '0' }} itens</span>
-        <form action="{{ route('User.Pagamento.Post') }}" method="post">
+        <form action="{{ route('User.Pagamento.Post') }}" method="post" id="pagamento-form">
             @csrf
             <input type="hidden" name="metodo_pagamento" id="metodo-pagamento-input">
             <input type="hidden" name="troco_para" id="troco-para-input">
@@ -110,12 +110,26 @@
 
             if (tipo === 'dinheiro') {
                 trocoOpcao.classList.remove('hidden');
-                // Foca no campo de troco quando dinheiro é selecionado
-                setTimeout(() => trocoInput.focus(), 100);
+                // Foca no checkbox de troco quando dinheiro é selecionado
+                setTimeout(() => document.getElementById('precisa-troco').focus(), 100);
             } else {
                 trocoOpcao.classList.add('hidden');
                 // Limpa o valor do troco se outro método for selecionado
                 trocoInput.value = '';
+                document.getElementById('troco-para-input').value = '';
+            }
+        }
+
+        function toggleTrocoField() {
+            const precisaTroco = document.getElementById('precisa-troco').checked;
+            const trocoField = document.getElementById('troco-field');
+
+            if (precisaTroco) {
+                trocoField.classList.remove('hidden');
+                setTimeout(() => document.getElementById('troco-input').focus(), 100);
+            } else {
+                trocoField.classList.add('hidden');
+                document.getElementById('troco-input').value = '';
                 document.getElementById('troco-para-input').value = '';
             }
         }
@@ -132,6 +146,16 @@
                 e.target.value = value.toFixed(2).replace('.', ',');
                 document.getElementById('troco-para-input').value = value.toFixed(2);
             }
+        });
+
+        // Permite o envio do formulário mesmo sem troco preenchido
+        document.querySelector('form').addEventListener('submit', function(e) {
+            // Se o método for dinheiro e o checkbox de troco estiver marcado mas o campo vazio
+            if (document.getElementById('metodo-pagamento-input').value === 'dinheiro' &&
+                document.getElementById('troco-input').value.trim() === '') {
+                document.getElementById('troco-para-input').value = 0;
+            }
+            // O formulário será enviado normalmente
         });
     </script>
 

@@ -45,17 +45,19 @@ Route::get('/Selecao', [UserController::class, 'Selecao'])->name("User.Selecao")
 Route::get('/Localizacao', [UserController::class, 'Localizacao'])->name("User.Localizacao");
 
 Route::get('/Sacola', [CarrinhoController::class, 'IndexCarrinho'])->name("User.Sacola");
+Route::get('/Sacola/Limpar', [CarrinhoController::class, 'LimparCarrinho'])->name("User.Sacola.Limpar");
 
 //Rotas Json
 Route::post('/Salvar/pedido', [CarrinhoController::class, 'SalvarPedido'])->name('salvar.pedido');
 Route::post('/Salvar/Sacola', [CarrinhoController::class, 'SalvarSacola'])->name('salvar.sacola');
 
-Route::get('/{opcaoSelecionada}/{tipoOpcao}/Salvar/Selecao', [CarrinhoController::class, 'SalvarSelecao'])->name('salvar.selecao');
-Route::get('/{opcaoSelecionada}/{tipoOpcao}/{horario}/Salvar/Selecao', [CarrinhoController::class, 'SalvarSelecaoHorario'])->name('salvar.selecao.horario');
+Route::get('/Salvar/Selecao/{opcaoSelecionada}/{tipoOpcao}', [CarrinhoController::class, 'SalvarSelecao'])->name('salvar.selecao');
+Route::get('/Salvar/Selecao/{opcaoSelecionada}/{tipoOpcao}/{horario}', [CarrinhoController::class, 'SalvarSelecaoHorario'])->name('salvar.selecao.horario');
 
 Route::post('/Editar/pedido', [CarrinhoController::class, 'SalvarPedido'])->name('editar.item');
-Route::get('/VerPedido', [UserController::class, 'VerPedido'])->name("User.VerPedido");
 
+Route::get('/VerPedido', [UserController::class, 'VerPedido'])->name("User.VerPedido");
+Route::get('/Gerar/Pedido', [PedidoController::class, 'GerarPedido'])->name("Gerar.Pedido");
 
 
 //admin

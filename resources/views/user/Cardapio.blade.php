@@ -17,42 +17,42 @@
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
         }
-        
+
         .scroll-container::-webkit-scrollbar {
             height: 6px;
         }
-        
+
         .scroll-container::-webkit-scrollbar-track {
             background: rgba(0, 0, 0, 0.05);
             border-radius: 10px;
         }
-        
+
         .scroll-container::-webkit-scrollbar-thumb {
             background: rgba(0, 0, 0, 0.2);
             border-radius: 10px;
         }
-        
+
         .scroll-container::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 0, 0, 0.3);
         }
-        
+
         .card {
             min-width: 260px;
             flex: 0 0 auto;
             transition: all 0.3s ease;
         }
-        
+
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
-        
+
         .card-image {
             height: 160px;
             object-fit: cover;
             width: 100%;
         }
-        
+
         .category-title {
             color: #2E2E2E;
             font-size: 1.75rem;
@@ -60,9 +60,10 @@
             text-align: center;
             width: 100%;
         }
-        
+
         .category-section {
-            scroll-margin-top: 80px; /* Espaço para a hotbar fixa */
+            scroll-margin-top: 80px;
+            /* Espaço para a hotbar fixa */
         }
     </style>
 </head>
@@ -74,9 +75,13 @@
     <!-- Navegação Principal com fundo preto -->
     <nav class="flex justify-center py-4 sticky top-0 z-10 bg-[#2E2E2E]">
         <div class="flex space-x-6">
-            <a href="#pastel" class="text-white hover:text-orange-500 px-4 py-2 text-lg font-medium transition-all duration-300" onclick="selectNavItem(this)">Pastel</a>
-            <a href="#pratos-do-dia" class="text-white hover:text-orange-500 px-4 py-2 text-lg font-medium transition-all duration-300" onclick="selectNavItem(this)">Pratos do dia</a>
-            <a href="#tapioca" class="text-white hover:text-orange-500 px-4 py-2 text-lg font-medium transition-all duration-300" onclick="selectNavItem(this)">Tapioca</a>
+            @foreach ($cardapioPorCategoria as $categoria)
+            <a href="#{{ Str::slug($categoria['categoria']) }}"
+                class="text-white hover:text-orange-500 px-4 py-2 text-lg font-medium transition-all duration-300"
+                onclick="selectNavItem(this, event)">
+                {{ $categoria['categoria'] }}
+            </a>
+            @endforeach
         </div>
     </nav>
 
@@ -90,9 +95,9 @@
                 <div class="card">
                     <a href="{{ route('item.get', $cardapio['id']) }}" class="block h-full">
                         <div class="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col border border-gray-200">
-                            <img src="{{ asset($cardapio['imagem'] ?? 'Icons/food.png') }}" 
-                                 alt="{{ $cardapio['nome'] }}" 
-                                 class="card-image">
+                            <img src="{{ asset($cardapio['imagem'] ?? 'Icons/food.png') }}"
+                                alt="{{ $cardapio['nome'] }}"
+                                class="card-image">
                             <div class="p-4 flex flex-col flex-grow">
                                 <h3 class="text-lg font-semibold text-gray-800 text-center">{{ $cardapio['nome'] }}</h3>
                                 <p class="text-gray-600 text-sm mt-2 text-center flex-grow">{{ $cardapio['descricao'] }}</p>
@@ -108,23 +113,17 @@
     </main>
 
     <script>
-        // Seleção de item no menu - apenas cor laranja e scroll para seção
-        function selectNavItem(element) {
-            // Remove a classe de todos os itens
-            document.querySelectorAll('nav a').forEach(a => {
-                a.classList.remove('text-orange-500');
-            });
-            
-            // Adiciona a classe apenas no item clicado
+        // Destaca o item do menu ao clicar e faz scroll para a seção correspondente
+        function selectNavItem(element, event) {
+            event.preventDefault(); 
+
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('text-orange-500'));
+
             element.classList.add('text-orange-500');
-            
-            // Obtém o ID da seção a partir do href
+
             const sectionId = element.getAttribute('href').substring(1);
-            
-            // Encontra a seção correspondente
             const section = document.getElementById(sectionId);
-            
-            // Se a seção existir, faz o scroll suave até ela
+
             if (section) {
                 section.scrollIntoView({
                     behavior: 'smooth',
@@ -133,7 +132,29 @@
             }
         }
 
-        // Ativa a primeira categoria por padrão
+        // Destaca automaticamente a categoria visível ao rolar a página
+        document.addEventListener('scroll', function() {
+            let sections = document.querySelectorAll('.category-section');
+            let scrollPosition = window.scrollY + 100; 
+
+            sections.forEach(section => {
+                let sectionTop = section.offsetTop;
+                let sectionHeight = section.offsetHeight;
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    let id = section.getAttribute('id');
+                    let activeLink = document.querySelector(`nav a[href="#${id}"]`);
+
+                    document.querySelectorAll('nav a').forEach(a => a.classList.remove('text-orange-500'));
+
+                    if (activeLink) {
+                        activeLink.classList.add('text-orange-500');
+                    }
+                }
+            });
+        });
+
+        // Destaca a primeira categoria ao carregar a página
         document.addEventListener('DOMContentLoaded', function() {
             const firstNavItem = document.querySelector('nav a');
             if (firstNavItem) {
@@ -145,4 +166,5 @@
     <script src="js/app.js"></script>
 
 </body>
+
 </html>

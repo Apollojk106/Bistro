@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 text-white">
 
     <!-- Hotbar -->
@@ -22,30 +24,41 @@
 
     <!-- Conteúdo principal -->
     <div class="min-h-screen flex flex-col items-center p-4 pt-8">
-        <!-- Mensagem "Obrigado!" fora do card cinza -->
-        <div class="w-full max-w-md text-center mb-6 transition-all duration-300 ease-in-out transform hover:scale-105">
-            <h1 class="text-2xl font-bold text-[#2E2E2E]">Obrigado!</h1>
-            <p class="text-lg text-[#2E2E2E]">Em breve, seu pedido estará pronto.</p>
-        </div>
-
         <!-- Card cinza -->
         <div class="w-full max-w-md bg-[#B7B7B7] rounded-2xl shadow-lg p-6 transition-all duration-300 ease-in-out transform hover:scale-105">
-            <!-- Detalhes do pedido -->
             <div class="bg-gray p-6 rounded-xl">
-                <!-- ID mais à esquerda -->
-                <p class="text-lg font-bold text-[#2E2E2E] mb-2 ml-0">Nº<span class="text-sm align-top">14</span></p>
+                <!-- ID do Pedido -->
+                <p class="text-lg font-bold text-[#2E2E2E] mb-2">Pedido Nº<span class="text-sm align-top">14</span></p>
 
-                <!-- Nome centralizado -->
+                <!-- Nome do Cliente -->
                 <div class="text-center">
-                    <p class="text-xl font-semibold text-[#2E2E2E] mb-2">Apollo</p>
+                    <p class="text-xl font-semibold text-[#2E2E2E] mb-2">{{ $dadosPedido['User']['nome'] ?? 'Cliente' }}</p>
                 </div>
 
-                <!-- Restante dos dados alinhados à esquerda, mas com margem maior -->
+                <!-- Iterando os Itens do Pedido -->
                 <div class="ml-4">
-                    <p class="text-lg text-[#2E2E2E] mb-2">Bife com batata</p>
-                    <p class="text-lg text-[#2E2E2E] mb-2">Para: 17:50</p>
-                    <p class="text-lg text-[#2E2E2E] mb-2">Status: Pago</p>
-                    <p class="text-lg text-[#2E2E2E] mb-4">Bife com batata, Coca 1L</p>
+                    @foreach($dadosPedido['carrinho'] as $id => $item)
+                    @php
+                    $produto = $produtos[$id] ?? null; // Verifica se o produto existe
+                    @endphp
+
+                    @if($produto)
+                    <p class="text-lg text-[#2E2E2E]">
+                        <strong>{{ $produto->nome }}</strong><br>Qtd: {{ $item['quantidade'] }} -
+                        R$ {{ number_format($item['valor'], 2, ',', '.') }}
+                    </p>
+                    @endif
+                    @endforeach
+
+                    <p class="text-lg font-bold text-[#2E2E2E] mt-4">Total: R$ {{ number_format($valorTotal, 2, ',', '.') }}</p>
+
+                    <p class="text-lg text-[#2E2E2E] mt-2">Forma de Pagamento: {{ ucfirst($dadosPedido['pagamento']['metodo'] ?? 'não informado') }}</p>
+
+                    <p class="text-lg text-[#2E2E2E] mt-2">Entrega: {{ $dadosPedido['opcoes']['categoria'] ?? 'local' }}</p>
+                    @if(isset($dadosPedido['opcoes']['horario']) )
+                    <p class="text-lg text-[#2E2E2E] mb-2">Para: {{ $dadosPedido['opcoes']['horario']}}</p>
+                    @endif
+                    <p class="text-lg text-[#2E2E2E] mb-2">Status do pagamento: Pendente</p>
                 </div>
 
                 <!-- Ícone de relógio -->
@@ -54,12 +67,41 @@
                 </div>
             </div>
 
-            <!-- Botão Voltar -->
-            <button class="w-full bg-[#A74A04] text-white font-semibold py-3 rounded-lg mt-6 hover:bg-[#8B3D03] transition-all duration-300 ease-in-out transform hover:scale-105">
-                Voltar
+            <!-- Botão Pedir -->
+            <button onclick="mostrarPopup()" class="w-full bg-[#A74A04] text-white font-semibold py-3 rounded-lg mt-6 hover:bg-[#8B3D03] transition-all duration-300 ease-in-out transform hover:scale-105">
+                Pedir
             </button>
+
+            <!-- Popup de Confirmação -->
+            <div id="popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                <div class="bg-white border-2 border-black rounded-2xl p-6 w-80 shadow-lg text-center">
+                    <p class="text-black text-lg font-semibold">Deseja confirmar seu pedido?</p>
+                    <div class="flex justify-between mt-4">
+                        <!-- Botão para Fechar o Popup -->
+                        <button onclick="fecharPopup()" class="bg-gray-500 text-white py-2 px-4 rounded-lg w-1/2 mr-2">Não</button>
+
+                        <!-- Botão para Confirmar o Pedido -->
+                        <button onclick="confirmarPedido()" class="bg-[#a34702] text-white py-2 px-4 rounded-lg w-1/2">Confirmar</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
 </body>
+
+<script>
+    function mostrarPopup() {
+        document.getElementById("popup").classList.remove("hidden");
+    }
+
+    function fecharPopup() {
+        document.getElementById("popup").classList.add("hidden");
+    }
+
+    function confirmarPedido() {
+        window.location.href = "{{ route('Gerar.Pedido') }}";
+    }
+</script>
+
 </html>

@@ -172,7 +172,17 @@ class UserController extends Controller
 
     public function VerPedido()
     {
-        return view('user.VerPedido');
+        $dadosPedido = session()->all(); 
+
+        $produtoIds = array_keys($dadosPedido['carrinho'] ?? []);
+        $produtos = Cardapio::whereIn('id', $produtoIds)->get()->keyBy('id');
+
+        $valorTotal = 0;
+        foreach ($dadosPedido['carrinho'] as $id => $item) {
+            $valorTotal += $item['quantidade'] * $item['valor'];
+        }
+
+        return view('user.VerPedido', compact('dadosPedido', 'produtos', 'valorTotal'));
     }
 
     public function Selecao()

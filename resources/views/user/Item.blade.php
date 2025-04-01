@@ -62,7 +62,7 @@
                 <span class="quantity-display text-lg">1</span>
                 <button class="increase-btn text-2xl font-bold">+</button>
             </div>
-
+    
             <!-- Checkbox -->
             <div class="item-checkbox w-8 h-8 border-2 border-gray-900 rounded-full flex items-center justify-center ml-4 cursor-pointer">
                 <img class="checkbox-icon w-6 h-6 hidden" src="{{ asset('Icons/checkbox-empty.png') }}" alt="Checkbox">
@@ -189,8 +189,9 @@
                 <textarea id="observacao"
                     class="w-full p-3 mt-2 border rounded-lg border-[#c49a6c] text-gray-500 text-lg focus:outline-none focus:border-[#a6784c]"
                     rows="4"
+                    placeholder="Quero o prato sem feijão..."
                     onfocus="limparTexto()"
-                    onblur="restaurarTexto()">Sem feijão.</textarea>
+                    onblur="restaurarTexto()"></textarea>
             </div>
         </div>
 
@@ -210,7 +211,7 @@
             function restaurarTexto() {
                 let campo = document.getElementById("observacao");
                 if (campo.value.trim() === "") {
-                    campo.value = "Sem feijão.";
+                    campo.value = "Nada";
                     campo.classList.remove("text-gray-800");
                     campo.classList.add("text-gray-500");
                 }
@@ -224,6 +225,8 @@
                 <span class="text-black font-semibold">R$ <span id="total-price">{{ number_format($Item->valor, 2, ',', '.') }}</span></span>
             </div>
             <div class="flex justify-between items-center p-4 bg-gray-300 rounded-b-lg">
+                <span class="text-black font-medium">Item Principal</span>
+            
                 <div class="flex items-center space-x-4">
                     <button id="decrease" class="text-xl">−</button>
                     <span id="quantity" class="text-black font-medium">1</span>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Pedido;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -10,11 +11,60 @@ use App\Models\ItensPedido;
 
 class PedidoController extends Controller
 {
+    public function gerarPedido()
+    {
+        $dadosPedido = session()->all(); // Pega todos os dados da sessão
+
+        // Inicia uma transação para garantir a integridade dos dados
+        DB::beginTransaction();
+        try {
+            // Criando o Pedido
+            $pedido = Pedido::create([
+                'nome'              => ucfirst(strtolower($dadosPedido['User']['nome'])),
+                'email'             => strtolower($dadosPedido['User']['email']),
+                'telefone'          => $dadosPedido['User']['telefone'],
+                'rua'               => $dadosPedido['User']['rua'] ?? null,
+                'bairro'            => ucfirst(strtolower($dadosPedido['User']['bairro'] ?? '')),
+                'numero_residencia' => $dadosPedido['User']['numero_residencia'] ?? null,
+                'complemento'       => ucfirst(strtolower($dadosPedido['User']['complemento'] ?? '')),
+                'categoria_pedido'  => ucfirst(strtolower($dadosPedido['opcoes']['categoria'])), // 'Local' ou 'Entrega'
+                'status_pedido'     => ucfirst(strtolower('Pendente')), // 'Pago' ou 'Pendente'
+                'opcao_entrega'     => ucfirst(strtolower($dadosPedido['opcoes']['opcao_entrega'])), // 'Agora', 'Viagem' ou 'Agendamento'
+                'horario'           => isset($dadosPedido['opcoes']['horario']) ? date('Y-m-d H:i:s', strtotime($dadosPedido['opcoes']['horario'])) : null, // Se tiver horário, converte para o formato de timestamp
+                'id_forma_pagamento' => $dadosPedido['pagamento']['metodo'],
+                'descricao'         => $dadosPedido['observacao'] ?? '',
+                'valor_total'       => collect($dadosPedido['carrinho'])->sum(fn($item) => $item['quantidade'] * $item['valor']), // Calcula o total
+                'frete'             => 0,
+                'valor_taxa'        => 0,
+            ]);
+
+            // Salvando os Itens do Pedido
+            foreach ($dadosPedido['carrinho'] as $id_cardapio => $item) {
+                ItensPedido::create([
+                    'id_pedido'     => $pedido->id,
+                    'id_cardapio'   => $id_cardapio,
+                    'quantidade'    => $item['quantidade'],
+                    'valor_unitario' => $item['valor'],
+                    'subtotal'      => $item['quantidade'] * $item['valor'],
+                ]);
+            }
+
+            DB::commit();
+
+            session()->forget(['carrinho', 'opcoes', 'pagamento', 'observacao']);
+
+            return redirect()->route('pedido.confirmado')->with('success', 'Pedido realizado com sucesso!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Erro ao gerar o pedido. Tente novamente.');
+        }
+    }
+
     public function GetPedidos()
     {
         $TodosPedidos = Pedido::with('itensPedido.cardapio')
             ->where('opcao_entrega', '!=', 'Agendamento')
-            ->where('status', 'Pendente') 
+            ->where('status', 'Pendente')
             ->get();
 
         return $this->GetItems($TodosPedidos);
@@ -34,7 +84,7 @@ class PedidoController extends Controller
     {
         $EmAndamento = Pedido::with('itensPedido.cardapio')
             ->where('status', 'EmAndamento')
-            ->with('itensPedido.cardapio') 
+            ->with('itensPedido.cardapio')
             ->get();
 
         return $this->GetItems($EmAndamento);
@@ -98,7 +148,7 @@ class PedidoController extends Controller
             ->take(10)
             ->get();
 
-            dd($PedidosFiltrado);
+        dd($PedidosFiltrado);
 
         $PedidosFiltrado = $this->GetItems($PedidosFiltrado);
 
@@ -206,16 +256,15 @@ class PedidoController extends Controller
             case 'Data':
                 // Filtra por data específica (formato d/m/Y)
                 try {
-                    $dataFormatada = Carbon::createFromFormat("d/m/Y", $pesquisa)->format( "Y-m-d");
-            
+                    $dataFormatada = Carbon::createFromFormat("d/m/Y", $pesquisa)->format("Y-m-d");
+
                     $Pedidos = Pedido::whereRaw('DATE(created_at) = ?', [$dataFormatada])->get();
 
                     $ItemPedido = ItensPedido::with('cardapio.categoria')
                         ->whereDate('created_at', $dataFormatada)
                         ->get();
-
                 } catch (\Exception $e) {
-                    
+
                     return response()->json(['error' => 'Erro ao processar a data: ' . $e->getMessage()], 400);
                 }
         }

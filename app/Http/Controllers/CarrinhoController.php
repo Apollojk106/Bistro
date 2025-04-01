@@ -14,10 +14,19 @@ class CarrinhoController extends Controller
         $Carrinho = session('carrinho', []);
         $ids = array_keys($Carrinho);
 
-        // Verifica quais IDs existem na tabela Cardapio
+        $User = new UserController();
+        $Pedido = $User->GetCarrinho();
+
         $Itens = Cardapio::whereIn('id', $ids)->get();
 
-        return view('User.Sacola', compact('Carrinho', 'Itens'));
+        return view('User.Sacola', compact('Carrinho', 'Itens', 'Pedido'));
+    }
+
+    public function LimparCarrinho()
+    {
+        session()->put('carrinho', []);
+
+        return $this->IndexCarrinho();
     }
 
     public function show($id)
@@ -138,10 +147,12 @@ class CarrinhoController extends Controller
 
         $carrinho = [];
         foreach ($itens as $id => $item) {
-            $carrinho[$id] = [
-                'quantidade' => $item['quantidade'],
-                'valor' => $item['valor'],
-            ];
+            if ($item['quantidade'] > 0) { // Verifica se a quantidade é maior que 0
+                $carrinho[$id] = [
+                    'quantidade' => $item['quantidade'],
+                    'valor' => $item['valor'],
+                ];
+            }
         }
 
         session(['carrinho' => $carrinho]);

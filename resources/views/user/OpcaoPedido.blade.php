@@ -31,7 +31,7 @@
             <!-- Nome -->
             <div>
                 <label class="block text-left text-sm font-semibold text-gray-700">Nome*</label>
-                <input type="text" name="nome" id="nome" placeholder="Apollo" class="w-full bg-gray-200 p-3 rounded-md text-gray-700" required>
+                <input type="text" name="nome" id="nome" placeholder="Nome..." class="w-full bg-gray-200 p-3 rounded-md text-gray-700" required>
                 <span id="nomeError" class="text-red-500 text-sm hidden">Nome é obrigatório</span>
             </div>
 
@@ -49,6 +49,7 @@
                 <span id="emailError" class="text-red-500 text-sm hidden">E-mail inválido</span>
             </div>
 
+            @if(session('opcoes.categoria') === 'entrega')
             <!-- CEP -->
             <div>
                 <label class="block text-left text-sm font-semibold text-gray-700">CEP</label>
@@ -73,7 +74,7 @@
             <!-- Número da casa -->
             <div class="flex items-center justify-between">
                 <label class="text-sm font-semibold text-gray-700">Número da casa*</label>
-                <input type="text" name="numero_residencia" id="numero" placeholder="123" class="bg-gray-200 p-2 rounded-md w-14 text-center text-gray-700" required>
+                <input type="text" name="numero_residencia" id="numero residencial" placeholder="123" class="bg-gray-200 p-2 rounded-md w-14 text-center text-gray-700" required>
                 <span id="numeroError" class="text-red-500 text-sm hidden">Número é obrigatório</span>
             </div>
 
@@ -82,6 +83,8 @@
                 <label class="block text-left text-sm font-semibold text-gray-700">Complemento</label>
                 <input type="text" name="complemento" id="complemento" placeholder="Apartamento 101" class="w-full bg-gray-200 p-3 rounded-md text-gray-700">
             </div>
+
+            @endif
 
             <!-- Botão de continuar -->
             <div class="fixed-bottom">
@@ -101,6 +104,7 @@
                 <span>Taxa da entrega</span>
                 <span>R$ 10,25</span>
             </div> -->
+            
         </form>
     </div>
 

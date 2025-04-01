@@ -20,7 +20,7 @@
   </nav>
 
   <main class="flex justify-center flex-1 items-start mt-8 w-full">
-    <section class="w-full max-w-4xl px-4"> <!-- Aumentei o max-width para telas maiores -->
+    <section class="w-full max-w-4xl px-4">
       <h2 class="text-center font-semibold text-2xl mb-6 transition-all duration-300 ease-in-out transform hover:scale-105">Opções de entrega</h2>
 
       <div class="flex justify-between mb-10 space-x-6">
@@ -36,7 +36,7 @@
       <div id="localContent">
         <div class="space-y-6">
           <!-- Bloco: No terraço -->
-          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="selectLocalOption('terraco')">
+          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="selectLocalOption('Viagem')">
             <div class="flex justify-between items-center">
               <span class="text-lg font-medium">No terraço</span>
               <div class="w-7 h-7 rounded-full border border-gray-500 flex items-center justify-center transition-colors duration-300 hover:bg-gray-200">
@@ -46,7 +46,7 @@
           </div>
 
           <!-- Bloco: Retirada -->
-          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="selectLocalOption('retirada')">
+          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="selectLocalOption('Agora')">
             <div class="flex justify-between items-center">
               <span class="text-lg font-medium">Retirada</span>
               <div class="w-7 h-7 rounded-full border border-gray-500 flex items-center justify-center transition-colors duration-300 hover:bg-gray-200">
@@ -70,21 +70,6 @@
                 <span class="text-lg font-medium">Horário</span>
                 <input type="time" id="horarioInput" class="bg-gray-300 text-gray-700 rounded-lg px-3 py-1 text-sm font-semibold focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-300 ease-in-out">
               </div>
-              <div class="space-y-4">
-                <div class="flex justify-between items-center cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg" onclick="selectAgendamentoOption('terraco')">
-                  <span class="text-lg font-medium">No terraço</span>
-                  <div class="w-7 h-7 rounded-full border border-gray-500 flex items-center justify-center transition-colors duration-300 hover:bg-gray-200">
-                    <img id="agendamentoTerracoCheck" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado" class="hidden w-5 h-5" />
-                  </div>
-                </div>
-
-                <div class="flex justify-between items-center cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg" onclick="selectAgendamentoOption('retirada')">
-                  <span class="text-lg font-medium">Retirada</span>
-                  <div class="w-7 h-7 rounded-full border border-gray-500 flex items-center justify-center transition-colors duration-300 hover:bg-gray-200">
-                    <img id="agendamentoRetiradaCheck" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado" class="hidden w-5 h-5" />
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -94,7 +79,7 @@
       <div id="entregaContent" class="hidden">
         <div class="space-y-6">
           <!-- Bloco: Peça agora -->
-          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="selecionarOpcao('agora')">
+          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="selecionarOpcao('Agora')">
             <div class="flex justify-between items-center">
               <span class="text-lg font-medium">Peça agora</span>
               <div class="w-7 h-7 rounded-full border border-gray-500 flex items-center justify-center transition-colors duration-300 hover:bg-gray-200">
@@ -104,7 +89,7 @@
           </div>
 
           <!-- Bloco: Agendamento -->
-          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="selecionarOpcao('agendamento')">
+          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="selecionarOpcao('Agendamento')">
             <div class="flex justify-between items-center">
               <span class="text-lg font-medium">Agendamento</span>
               <div class="w-7 h-7 rounded-full border border-gray-500 flex items-center justify-center transition-colors duration-300 hover:bg-gray-200">
@@ -140,6 +125,10 @@
   </footer>
 
   <script>
+    document.getElementById('horarioInput').addEventListener('click', (event) => {
+      event.stopPropagation();
+    });
+
     // Funções para alternar entre Local e Entrega
     document.getElementById('localBtn').addEventListener('click', () => {
       document.getElementById('localBtn').classList.add('bg-gray-200', 'text-orange-600');
@@ -147,7 +136,7 @@
       document.getElementById('entregaBtn').classList.add('bg-gray-300', 'text-gray-600');
       document.getElementById('localContent').classList.remove('hidden');
       document.getElementById('entregaContent').classList.add('hidden');
-      tipoOpcao = 'local';
+      tipoOpcao = 'Local';
     });
 
     document.getElementById('entregaBtn').addEventListener('click', () => {
@@ -156,13 +145,13 @@
       document.getElementById('localBtn').classList.add('bg-gray-300', 'text-gray-600');
       document.getElementById('localContent').classList.add('hidden');
       document.getElementById('entregaContent').classList.remove('hidden');
-      tipoOpcao = 'entrega';
+      tipoOpcao = 'Entrega';
     });
 
     // Funções para seleção de opções de entrega
     function selecionarOpcao(opcao) {
       opcaoSelecionada = opcao;
-      if (opcao === 'agora') {
+      if (opcao === 'Agora') {
         document.getElementById('agoraCheck').classList.remove('hidden');
         document.getElementById('agendamentoEntregaCheck').classList.add('hidden');
         document.getElementById('aviso').classList.add('hidden');
@@ -175,31 +164,60 @@
       }
     }
 
+    // Variáveis para controle das opções de local
+    let opcaoLocalSelecionada = 'Agora'; // Armazena a opção de local selecionada (Viagem ou Agora)
+    let agendamentoAtivo = false; // Controla se o agendamento está ativo
+
     // Funções para seleção de opções de local
     function selectLocalOption(option) {
-      opcaoSelecionada = option;
+      opcaoLocalSelecionada = option;
+      agendamentoAtivo = false;
+
+      // Esconde a seção de agendamento se estiver visível
+      document.getElementById('agendamentoSection').classList.add('hidden');
+      document.getElementById('agendamentoCheck').classList.add('hidden');
+
+      // Mostra o check correspondente
       ['terraco', 'retirada'].forEach(opt => document.getElementById(`${opt}Check`).classList.add('hidden'));
-      document.getElementById(`${option}Check`).classList.remove('hidden');
+
+      if (option === 'Viagem') {
+        document.getElementById('terracoCheck').classList.remove('hidden');
+      } else if (option === 'Agora') {
+        document.getElementById('retiradaCheck').classList.remove('hidden');
+      }
+
+      // Define a opção selecionada para envio
+      opcaoSelecionada = option;
     }
 
     // Funções para agendamento no local
     function toggleAgendamento() {
       const agendamentoSection = document.getElementById('agendamentoSection');
       const agendamentoCheck = document.getElementById('agendamentoCheck');
-      if (agendamentoCheck.classList.contains('hidden')) {
-        agendamentoCheck.classList.remove('hidden');
+
+      if (agendamentoSection.classList.contains('hidden')) {
+        // Ativar agendamento
         agendamentoSection.classList.remove('hidden');
+        agendamentoCheck.classList.remove('hidden');
+        agendamentoAtivo = true;
+
+        // Mantém a opção de local selecionada (Viagem ou Agora) visível
+        if (opcaoLocalSelecionada === 'Viagem') {
+          document.getElementById('terracoCheck').classList.remove('hidden');
+        } else {
+          document.getElementById('retiradaCheck').classList.remove('hidden');
+        }
+
         setMinHorario();
       } else {
-        agendamentoCheck.classList.add('hidden');
+        // Desativar agendamento
         agendamentoSection.classList.add('hidden');
-        ['agendamentoTerracoCheck', 'agendamentoRetiradaCheck'].forEach(opt => document.getElementById(opt).classList.add('hidden'));
-      }
-    }
+        agendamentoCheck.classList.add('hidden');
+        agendamentoAtivo = false;
 
-    function selectAgendamentoOption(option) {
-      ['agendamentoTerracoCheck', 'agendamentoRetiradaCheck'].forEach(opt => document.getElementById(opt).classList.add('hidden'));
-      document.getElementById(`agendamento${option.charAt(0).toUpperCase() + option.slice(1)}Check`).classList.remove('hidden');
+        // Volta para a opção de local selecionada
+        selectLocalOption(opcaoLocalSelecionada);
+      }
     }
 
     function setMinHorario() {
@@ -223,13 +241,12 @@
 
     // Variáveis globais
     const btnContinuar = document.getElementById('continuarBtn');
-    let opcaoSelecionada = '';
-    let tipoOpcao = '';
+    let opcaoSelecionada = 'Agora'; // Valor padrão
+    let tipoOpcao = 'Local'; // Valor padrão
 
     document.getElementById('continuarBtn').addEventListener('click', function handleClick() {
       if (validarSelecao()) {
         enviarPedido();
-        // Remover o evento após o primeiro clique para evitar cliques múltiplos
         this.removeEventListener('click', handleClick);
       }
     });
@@ -238,47 +255,66 @@
       btnContinuar.disabled = true;
       btnContinuar.textContent = 'Processando...';
 
-      
-     
-
-      // Definindo a variável de horário, dependendo do tipo de opção e se é agendamento
       let horario = '';
-      if (opcaoSelecionada === 'agendamento') {
-        if (tipoOpcao === 'local') {
-          horario = document.getElementById('horarioInput').value;
-        } else if (tipoOpcao === 'entrega') {
-          horario = document.getElementById('horario').value;
+      let opcaoParaEnvio = opcaoSelecionada;
+
+      // Se for Local e agendamento estiver ativo, mantemos a opção de local (Viagem/Agora) mas enviamos o horário
+      if (tipoOpcao === 'Local' && agendamentoAtivo) {
+        opcaoParaEnvio = opcaoLocalSelecionada;
+        horario = document.getElementById('horarioInput').value;
+
+        if (!horario) {
+          alert('Por favor, selecione um horário para o agendamento');
+          btnContinuar.disabled = false;
+          btnContinuar.textContent = 'Continuar';
+          return;
+        }
+      }
+      // Se for Entrega e agendamento selecionado
+      else if (tipoOpcao === 'Entrega' && opcaoSelecionada === 'Agendamento') {
+        horario = document.getElementById('horario').value;
+
+        if (!horario) {
+          alert('Por favor, selecione um horário para o agendamento');
+          btnContinuar.disabled = false;
+          btnContinuar.textContent = 'Continuar';
+          return;
         }
       }
 
+      let url = `/Salvar/Selecao/${opcaoParaEnvio}/${tipoOpcao}`;
 
-      // Exibindo o alerta com as informações, incluindo o horário, se for agendamento
       if (horario) {
-        alert(`Opção Selecionada: ${opcaoSelecionada}\nTipo de Opção: ${tipoOpcao}\nHorário Agendado: ${horario}`);
-      } else {
-        window.location.href = `/${opcaoSelecionada}/${tipoOpcao}/Salvar/Selecao`;
+        url += `/${encodeURIComponent(horario)}`;
       }
+
+      window.location.href = url;
     }
 
     function validarSelecao() {
-      console.log('validarSelecao chamada');
       if (!tipoOpcao) {
         alert('Por favor, selecione Local ou Entrega');
         return false;
       }
 
-      if (!opcaoSelecionada) {
-        alert('Por favor, selecione uma opção de ' + tipoOpcao);
-        return false;
-      }
+      if (tipoOpcao === 'Local') {
+        if (!opcaoLocalSelecionada && !agendamentoAtivo) {
+          alert('Por favor, selecione uma opção de Local');
+          return false;
+        }
 
-      if (opcaoSelecionada === 'agendamento') {
-        const horario = tipoOpcao === 'local' ?
-          document.getElementById('horarioInput').value :
-          document.getElementById('horario').value;
+        if (agendamentoAtivo && !document.getElementById('horarioInput').value) {
+          alert('Por favor, selecione um horário para o agendamento');
+          return false;
+        }
+      } else if (tipoOpcao === 'Entrega') {
+        if (!opcaoSelecionada) {
+          alert('Por favor, selecione uma opção de Entrega');
+          return false;
+        }
 
-        if (!horario) {
-          alert('Por favor, selecione um horário');
+        if (opcaoSelecionada === 'Agendamento' && !document.getElementById('horario').value) {
+          alert('Por favor, selecione um horário para o agendamento');
           return false;
         }
       }
@@ -287,7 +323,7 @@
     }
 
     // Inicialização
-    selectLocalOption('retirada');
+    selectLocalOption('Agora'); // Definir retirada como padrão
   </script>
 </body>
 

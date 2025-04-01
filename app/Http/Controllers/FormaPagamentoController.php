@@ -29,14 +29,17 @@ class FormaPagamentoController extends Controller
         if ($request->metodo_pagamento === 'dinheiro') {
             $pagamento['troco_para'] = $request->troco_para;
         } else {
-            // Remove o troco se existir e não for dinheiro
             unset($pagamento['troco_para']);
         }
 
-        // Atualizar a sessão
         session()->put('pagamento', $pagamento);
 
-        // Redirecionar para a visualização do pedido
-        return redirect()->route("User.VerPedido");
+        if ($request->metodo_pagamento === 'pix') {
+            return redirect()->route("User.Pix");
+        } else
+        {      
+            return redirect()->route("User.VerPedido");
+        }
+
     }
 }
