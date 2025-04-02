@@ -9,6 +9,8 @@
 </head>
 
 <body class="bg-gray-100">
+    <x-sweet-alert />
+
     <!-- Header -->
     <header class="bg-[#B7B7B7] h-40 p-4 flex justify-between items-center relative">
         <!-- Ícone do menu hambúrguer -->

@@ -87,7 +87,6 @@ Route::get('/admin/Cardapio/Delete{id}', [CardapioController::class, 'DeleteItem
 
 Route::get('/admin/Pessoas', [UserController::class, 'PessoasDashboard'])->name("Pessoas");
 
-
 Route::get('/admin/ItemCardapio', [UserController::class, 'GetItemCardapio'])->name("ItemCardapio");
 Route::post('/admin/ItemCardapio', [UserController::class, 'EditItemCardapio'])->name("EditItemCardapio");
 Route::post('/admin/ItemCardapio/Save', [UserController::class, 'SaveItem'])->name("SaveItem");

@@ -20,6 +20,7 @@ use App\Models\Configuracao;
 use App\Models\FormaPagamento;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Exception;
 
 class UserController extends Controller
 {
@@ -172,17 +173,43 @@ class UserController extends Controller
 
     public function VerPedido()
     {
-        $dadosPedido = session()->all(); 
+        try {
+            $dadosPedido = session()->all();
+            $pedidoIncompleto = false;
+            $mensagemIncompleto = '';
 
-        $produtoIds = array_keys($dadosPedido['carrinho'] ?? []);
-        $produtos = Cardapio::whereIn('id', $produtoIds)->get()->keyBy('id');
+            // Verificar campos obrigatórios
+            if (empty($dadosPedido['User']['nome'])) {
+                $pedidoIncompleto = true;
+                $mensagemIncompleto = 'Nome do cliente não informado';
+            } elseif (empty($dadosPedido['carrinho'])) {
+                $pedidoIncompleto = true;
+                $mensagemIncompleto = 'Carrinho vazio';
+            } elseif (empty($dadosPedido['pagamento']['metodo'])) {
+                $pedidoIncompleto = true;
+                $mensagemIncompleto = 'Forma de pagamento não selecionada';
+            } elseif ($dadosPedido['opcoes']['categoria'] === 'delivery' && empty($dadosPedido['endereco'])) {
+                $pedidoIncompleto = true;
+                $mensagemIncompleto = 'Endereço não informado para delivery';
+            }
 
-        $valorTotal = 0;
-        foreach ($dadosPedido['carrinho'] as $id => $item) {
-            $valorTotal += $item['quantidade'] * $item['valor'];
+            $produtoIds = array_keys($dadosPedido['carrinho'] ?? []);
+            $produtos = Cardapio::whereIn('id', $produtoIds)->get()->keyBy('id');
+
+            $valorTotal = 0;
+            foreach ($dadosPedido['carrinho'] as $id => $item) {
+                $valorTotal += $item['quantidade'] * $item['valor'];
+            }
+        } catch (Exception $X) {
+            $dadosPedido = [];
+            $produtoIds = [];
+            $produtos = [];
+            $valorTotal = 0;
+            $pedidoIncompleto = true;
+            $mensagemIncompleto = 'Erro ao processar pedido';
         }
 
-        return view('user.VerPedido', compact('dadosPedido', 'produtos', 'valorTotal'));
+        return view('user.VerPedido', compact('dadosPedido', 'produtos', 'valorTotal', 'pedidoIncompleto', 'mensagemIncompleto'));
     }
 
     public function Selecao()

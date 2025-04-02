@@ -2,6 +2,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <div>  
+    <x-sweet-alert />
+
    <!-- Imagem Centralizada com Tamanho Fixo -->
     <div class="w-full h-32 bg-[#B7B7B7] flex justify-center items-center shadow-lg">
         <img src="{{ asset('Logo.png') }}" alt="Imagem Centralizada" class="h-200 w-200 object-contain">

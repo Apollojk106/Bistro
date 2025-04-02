@@ -12,7 +12,6 @@
 
 <body class="bg-gray-100 text-white">
 
-    <!-- Hotbar -->
     <x-hotbar-user />
 
     <!-- Navbar com botão de voltar -->
@@ -27,8 +26,12 @@
         <!-- Card cinza -->
         <div class="w-full max-w-md bg-[#B7B7B7] rounded-2xl shadow-lg p-6 transition-all duration-300 ease-in-out transform hover:scale-105">
             <div class="bg-gray p-6 rounded-xl">
-                <!-- ID do Pedido -->
-                <p class="text-lg font-bold text-[#2E2E2E] mb-2">Pedido Nº<span class="text-sm align-top">14</span></p>
+                @if($pedidoIncompleto ?? false)
+                <div class="bg-red-500 text-white p-4 rounded-lg mb-4">
+                    <p class="font-bold">PEDIDO INCOMPLETO!</p>
+                    <p>{{ $mensagemIncompleto }}</p>
+                </div>
+                @endif
 
                 <!-- Nome do Cliente -->
                 <div class="text-center">
@@ -37,7 +40,7 @@
 
                 <!-- Iterando os Itens do Pedido -->
                 <div class="ml-4">
-                    @foreach($dadosPedido['carrinho'] as $id => $item)
+                    @foreach($dadosPedido['carrinho'] ?? [] as $id => $item)
                     @php
                     $produto = $produtos[$id] ?? null; // Verifica se o produto existe
                     @endphp
@@ -54,9 +57,9 @@
 
                     <p class="text-lg text-[#2E2E2E] mt-2">Forma de Pagamento: {{ ucfirst($dadosPedido['pagamento']['metodo'] ?? 'não informado') }}</p>
 
-                    <p class="text-lg text-[#2E2E2E] mt-2">Entrega: {{ $dadosPedido['opcoes']['categoria'] ?? 'local' }}</p>
+                    <p class="text-lg text-[#2E2E2E] mt-2">Categoria: {{ $dadosPedido['opcoes']['categoria'] ?? 'local' }}</p>
                     @if(isset($dadosPedido['opcoes']['horario']) )
-                    <p class="text-lg text-[#2E2E2E] mb-2">Para: {{ $dadosPedido['opcoes']['horario']}}</p>
+                    <p class="text-lg text-[#2E2E2E] mb-2">Agendado Para: {{ $dadosPedido['opcoes']['horario']}}</p>
                     @endif
                     <p class="text-lg text-[#2E2E2E] mb-2">Status do pagamento: Pendente</p>
                 </div>
@@ -67,10 +70,22 @@
                 </div>
             </div>
 
-            <!-- Botão Pedir -->
-            <button onclick="mostrarPopup()" class="w-full bg-[#A74A04] text-white font-semibold py-3 rounded-lg mt-6 hover:bg-[#8B3D03] transition-all duration-300 ease-in-out transform hover:scale-105">
+            @if($pedidoIncompleto ?? false)
+            <button onclick="window.location.href='/'"
+                class="w-full bg-[#A74A04] text-white font-semibold py-3 rounded-lg mt-6 hover:bg-[#8B3D03] transition-all duration-300 ease-in-out transform hover:scale-105">
+                Pedido incompleto
+            </button>
+            @else
+            <button onclick="mostrarPopup()" class="w-full bg-[#A74A04] text-white font-semibold py-3 rounded-lg mt-6 hover:bg-[#8B3D03] transition-all duration-300 ease-in-out transform hover:scale-105" @if($pedidoIncompleto ?? false) disabled @endif>
                 Pedir
             </button>
+            @endif
+
+            @if($pedidoIncompleto ?? false)
+            <div class="mt-4 text-center text-red-500 font-bold">
+                Complete todas as informações do pedido para continuar
+            </div>
+            @endif
 
             <!-- Popup de Confirmação -->
             <div id="popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use App\Models\FormaPagamento;
 use App\Models\Pedido;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -13,12 +14,17 @@ class PedidoController extends Controller
 {
     public function gerarPedido()
     {
-        $dadosPedido = session()->all(); // Pega todos os dados da sessão
+        $dadosPedido = session()->all();
 
-        // Inicia uma transação para garantir a integridade dos dados
         DB::beginTransaction();
         try {
-            // Criando o Pedido
+            $NomePagamento = $dadosPedido['pagamento']['metodo'];
+            $formaPagamento = FormaPagamento::where('nome', 'like', "%{$NomePagamento}%")->first();
+
+            $valorTotalItens = collect($dadosPedido['carrinho'])->sum(fn($item) => $item['quantidade'] * $item['valor']);
+
+            $valorTaxa = $valorTotalItens * ($formaPagamento->taxa / 100);
+
             $pedido = Pedido::create([
                 'nome'              => ucfirst(strtolower($dadosPedido['User']['nome'])),
                 'email'             => strtolower($dadosPedido['User']['email']),
@@ -27,18 +33,17 @@ class PedidoController extends Controller
                 'bairro'            => ucfirst(strtolower($dadosPedido['User']['bairro'] ?? '')),
                 'numero_residencia' => $dadosPedido['User']['numero_residencia'] ?? null,
                 'complemento'       => ucfirst(strtolower($dadosPedido['User']['complemento'] ?? '')),
-                'categoria_pedido'  => ucfirst(strtolower($dadosPedido['opcoes']['categoria'])), // 'Local' ou 'Entrega'
-                'status_pedido'     => ucfirst(strtolower('Pendente')), // 'Pago' ou 'Pendente'
-                'opcao_entrega'     => ucfirst(strtolower($dadosPedido['opcoes']['opcao_entrega'])), // 'Agora', 'Viagem' ou 'Agendamento'
-                'horario'           => isset($dadosPedido['opcoes']['horario']) ? date('Y-m-d H:i:s', strtotime($dadosPedido['opcoes']['horario'])) : null, // Se tiver horário, converte para o formato de timestamp
-                'id_forma_pagamento' => $dadosPedido['pagamento']['metodo'],
+                'categoria_pedido'  => ucfirst(strtolower($dadosPedido['opcoes']['categoria'])),
+                'status_pedido'     => ucfirst(strtolower('Pendente')),
+                'opcao_entrega'     => ucfirst(strtolower($dadosPedido['opcoes']['opcao_entrega'])),
+                'horario'           => isset($dadosPedido['opcoes']['horario']) ? date('Y-m-d H:i:s', strtotime($dadosPedido['opcoes']['horario'])) : null,
+                'id_forma_pagamento' => $formaPagamento->id, 
                 'descricao'         => $dadosPedido['observacao'] ?? '',
-                'valor_total'       => collect($dadosPedido['carrinho'])->sum(fn($item) => $item['quantidade'] * $item['valor']), // Calcula o total
+                'valor_total'       => $valorTotalItens, 
                 'frete'             => 0,
-                'valor_taxa'        => 0,
+                'valor_taxa'        => $valorTaxa, 
             ]);
 
-            // Salvando os Itens do Pedido
             foreach ($dadosPedido['carrinho'] as $id_cardapio => $item) {
                 ItensPedido::create([
                     'id_pedido'     => $pedido->id,
@@ -51,12 +56,14 @@ class PedidoController extends Controller
 
             DB::commit();
 
-            session()->forget(['carrinho', 'opcoes', 'pagamento', 'observacao']);
+            //session()->forget(['carrinho', 'opcoes', 'pagamento', 'observacao']);
 
-            return redirect()->route('pedido.confirmado')->with('success', 'Pedido realizado com sucesso!');
+            return redirect()->back()->with([
+                'success' => 'Pedido realizado com sucesso!'
+            ]);
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Erro ao gerar o pedido. Tente novamente.');
+            return redirect()->back()->with('error', 'Erro ao gerar o pedido. Tente novamente.' . $e->getMessage());
         }
     }
 
