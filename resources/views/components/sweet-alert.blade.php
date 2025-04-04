@@ -24,4 +24,18 @@
         });
     </script>
     @endif
+
+    @if ($errors->any())
+    <script>
+        let errorMessage = "{{ implode('\n', $errors->all()) }}";
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Erro de Validação!',
+            text: errorMessage,
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Corrigir'
+        });
+    </script>
+    @endif
 </div>

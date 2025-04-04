@@ -12,6 +12,30 @@ use App\Models\ItensPedido;
 
 class PedidoController extends Controller
 {
+    public function GetPedido(Request $request)
+    {
+        $PedidosUser = Pedido::with('itensPedido.cardapio')
+            ->where('id', $request->id)
+            ->first();
+
+        $carrinho = [];
+
+        // Preenche o carrinho com os itens do pedido
+        foreach ($PedidosUser->itensPedido as $item) {
+            $carrinho[$item->id_cardapio] = [
+                'quantidade' => $item->quantidade,
+                'valor' => $item->valor_unitario
+            ];
+        }
+
+        // Armazena na sessão
+        session(['carrinho' => $carrinho]);
+
+        return redirect()->route("User.Sacola")->with([
+            'success' => 'Pedido resgatado com sucesso!'
+        ]);
+    }
+
     public function gerarPedido()
     {
         $dadosPedido = session()->all();
@@ -37,11 +61,11 @@ class PedidoController extends Controller
                 'status_pedido'     => ucfirst(strtolower('Pendente')),
                 'opcao_entrega'     => ucfirst(strtolower($dadosPedido['opcoes']['opcao_entrega'])),
                 'horario'           => isset($dadosPedido['opcoes']['horario']) ? date('Y-m-d H:i:s', strtotime($dadosPedido['opcoes']['horario'])) : null,
-                'id_forma_pagamento' => $formaPagamento->id, 
-                'descricao'         => $dadosPedido['observacao'] ?? '',
-                'valor_total'       => $valorTotalItens, 
+                'id_forma_pagamento' => $formaPagamento->id,
+                'descricao'         => $dadosPedido['observacao'] ?? "",
+                'valor_total'       => $valorTotalItens,
                 'frete'             => 0,
-                'valor_taxa'        => $valorTaxa, 
+                'valor_taxa'        => $valorTaxa,
             ]);
 
             foreach ($dadosPedido['carrinho'] as $id_cardapio => $item) {
@@ -54,11 +78,12 @@ class PedidoController extends Controller
                 ]);
             }
 
+            session(['pedido_id' => $pedido->id]);
             DB::commit();
 
-            //session()->forget(['carrinho', 'opcoes', 'pagamento', 'observacao']);
+            session()->forget(['carrinho', 'opcoes', 'pagamento', 'observacao']);
 
-            return redirect()->back()->with([
+            return redirect()->route("User.Cardapio")->with([
                 'success' => 'Pedido realizado com sucesso!'
             ]);
         } catch (\Exception $e) {
@@ -167,14 +192,14 @@ class PedidoController extends Controller
         foreach ($Pedidos as $Pedido) {
             // Verifica se o relacionamento "itensPedido" foi carregado
             if (!$Pedido->relationLoaded('itensPedido')) {
-                \Log::error('Relacionamento itensPedido não carregado para o pedido: ' . $Pedido->id);
+                //\Log::error('Relacionamento itensPedido não carregado para o pedido: ' . $Pedido->id);
                 $Pedido->Items = ''; // Garante que o campo Items seja vazio
                 continue;
             }
 
             // Verifica se há itens no pedido
             if ($Pedido->itensPedido->isEmpty()) {
-                \Log::info('Pedido ' . $Pedido->id . ' não possui itens.');
+                //\Log::info('Pedido ' . $Pedido->id . ' não possui itens.');
                 $Pedido->Items = ''; // Garante que o campo Items seja vazio
                 continue;
             }
@@ -192,7 +217,7 @@ class PedidoController extends Controller
                     // Concatena a quantidade e o nome do item
                     $itensDescricao[] = $item->quantidade . "x " . $cardapio->nome;
                 } else {
-                    \Log::warning('Cardápio não encontrado para o item: ' . $item->id_cardapio);
+                    //\Log::warning('Cardápio não encontrado para o item: ' . $item->id_cardapio);
                 }
             }
 

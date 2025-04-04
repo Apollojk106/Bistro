@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         // Pagamento
         DB::table('Formas_de_pagamento')->insert([
-            ['nome' => 'Cartão de Crédito', 'taxa' => 3.00, 'created_at' => now(), 'updated_at' => now()],
-            ['nome' => 'Dinheiro', 'taxa' => 0.00, 'created_at' => now(), 'updated_at' => now()],
-            ['nome' => 'PIX', 'taxa' => 2.50, 'created_at' => now(), 'updated_at' => now()],
+            ['nome' => 'cartao', 'taxa' => 3.00, 'created_at' => now(), 'updated_at' => now()],
+            ['nome' => 'dinheiro', 'taxa' => 0.00, 'created_at' => now(), 'updated_at' => now()],
+            ['nome' => 'pix', 'taxa' => 2.50, 'created_at' => now(), 'updated_at' => now()],
         ]);
 
         // Categoria
