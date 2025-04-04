@@ -77,7 +77,7 @@ class CarrinhoController extends Controller
     {
         $user = Auth::user();
 
-        $userData = [
+        $User = [
             'nome' => $user->nome,
             'telefone' => $user->telefone,
             'email' => $user->email,
@@ -88,7 +88,7 @@ class CarrinhoController extends Controller
             'complemento' => $user->complemento,
         ];
 
-        session(['user_data' => $userData]);
+        session(['User' => $User]);
 
         return redirect()->route("User.Pagamento");
     }

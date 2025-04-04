@@ -10,6 +10,8 @@ use App\Http\Controllers\ItensPedidoController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PixController;
 
+use App\Http\Requests\UpdatePerfilRequest;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\CardapioRequest;
@@ -18,6 +20,7 @@ use Illuminate\Support\Facades\View;
 use App\Models\Categoria;
 use App\Models\Configuracao;
 use App\Models\FormaPagamento;
+use App\Models\Pedido;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Exception;
@@ -93,7 +96,7 @@ class UserController extends Controller
     {
         Auth::logout();
 
-        return redirect()->route('User.Login')->with('success', 'Você foi desconectado com sucesso!');
+        return redirect()->back()->with('success', 'Você foi desconectado com sucesso!');
     }
 
     //Esse controler é somente para a rota view
@@ -103,7 +106,36 @@ class UserController extends Controller
         if (!Auth::check()) {
             return redirect()->route("User.Login");
         }
-        return view('user.Perfil');
+        $usuario = Auth::user();
+
+        $PedidosUser = Pedido::with('itensPedido.cardapio')
+        //->where('status', 'Concluido')
+        ->where('email', $usuario->email) 
+        ->take(10)
+        ->get();
+
+        return view('user.Perfil', compact('usuario','PedidosUser'));
+    }
+
+    public function SavePerfil(UpdatePerfilRequest $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route("User.Login");
+        }
+
+        $usuario = User::find(Auth::id());
+
+        $usuario->update([
+            'nome' => $request->nome,
+            'telefone' => $request->telefone,
+            'cep' => $request->cep,
+            'rua' => $request->rua,
+            'bairro' => $request->bairro,
+            'numero_residencia' => $request->numero_residencia,
+            'complemento' => $request->complemento
+        ]);
+
+        return redirect()->route('User.Perfil')->with('success', 'Perfil atualizado com sucesso!');
     }
 
     public function Login()

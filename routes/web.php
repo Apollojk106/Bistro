@@ -25,6 +25,8 @@ Route::get('/Cadastro', [UserController::class, 'Cadastro'])->name("User.Cadastr
 Route::post('/Cadastro/Post', [UserController::class, 'PostCadastro'])->name("User.Cadastro.Post");
 
 Route::get('/Perfil', [UserController::class, 'Perfil'])->name("User.Perfil");
+Route::post('/Save/Perfil', [UserController::class, 'SavePerfil'])->name("User.Save.Perfil");
+Route::post('/Historico/id', [PedidoController::class, 'GetPedido'])->name("Pedido.Historico");
 Route::get('/Logout', [UserController::class, 'Logout'])->name("User.Logout");
 
 //Cardapio

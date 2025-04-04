@@ -2,6 +2,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <div>  
+    
     <x-sweet-alert />
 
    <!-- Imagem Centralizada com Tamanho Fixo -->
