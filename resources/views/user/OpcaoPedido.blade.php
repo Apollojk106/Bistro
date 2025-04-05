@@ -7,11 +7,10 @@
     <title>Item</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    <script src="https://cdn.tailwindcss.com"></script> <!-- Adicione o Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-100">
-
 
     <x-hotbar-user />
     <nav class="flex justify-center relative bg-[#2E2E2E] py-6">
@@ -20,14 +19,11 @@
         </a>
     </nav>
 
-
-
-    <!-- Quadro centralizado -->
-    <div class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md mx-auto mt-10"> <!-- Ajustado mt-16 para mt-10 -->
+    <div class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md mx-auto mt-10">
         <h2 class="text-2xl font-bold text-center mb-6 text-[#A74A04]">Opção do Pedido</h2>
 
-        <form class="space-y-6" method="POST" action="{{ route('User.OpcaoPedid.Post') }}" onsubmit="return validateForm()">
-            @csrf <!-- Token CSRF para segurança -->
+        <form class="space-y-6" method="POST" action="{{ route('User.OpcaoPedido.Post') }}" onsubmit="return validateForm()" id="pedidoForm">
+            @csrf
             <!-- Nome -->
             <div>
                 <label class="block text-left text-sm font-semibold text-gray-700">Nome*</label>
@@ -49,12 +45,16 @@
                 <span id="emailError" class="text-red-500 text-sm hidden">E-mail inválido</span>
             </div>
 
-            @if(session('opcoes.categoria') === 'entrega')
+            @if(session('opcoes.categoria') === 'Entrega')
             <!-- CEP -->
             <div>
-                <label class="block text-left text-sm font-semibold text-gray-700">CEP</label>
-                <input type="text" name="cep" id="cep" placeholder="00000-000" class="w-full bg-gray-200 p-3 rounded-md text-gray-700">
-                <span id="cepError" class="text-red-500 text-sm hidden">CEP inválido</span>
+                <label class="block text-left text-sm font-semibold text-gray-700">CEP*</label>
+                <input type="text" name="cep" id="cep" placeholder="00000-000" class="w-full bg-gray-200 p-3 rounded-md text-gray-700" 
+                       required
+                       oninput="formatCEP(this)"
+                       onblur="validateCEPOnBlur(this.value)">
+                <span id="cepError" class="text-red-500 text-sm hidden">CEP inválido. Formato correto: 00000-000</span>
+                <span id="cepNotFoundError" class="text-red-500 text-sm hidden">CEP não encontrado</span>
             </div>
 
             <!-- Rua -->
@@ -74,7 +74,7 @@
             <!-- Número da casa -->
             <div class="flex items-center justify-between">
                 <label class="text-sm font-semibold text-gray-700">Número da casa*</label>
-                <input type="text" name="numero_residencia" id="numero residencial" placeholder="123" class="bg-gray-200 p-2 rounded-md w-14 text-center text-gray-700" required>
+                <input type="text" name="numero_residencia" id="numero" placeholder="123" class="bg-gray-200 p-2 rounded-md w-14 text-center text-gray-700" required>
                 <span id="numeroError" class="text-red-500 text-sm hidden">Número é obrigatório</span>
             </div>
 
@@ -98,85 +98,128 @@
                     </button>
                 </div>
             </div>
-
-            <!-- Taxa de entrega 
-            <div class="flex justify-between text-sm font-semibold mt-6 text-gray-700">
-                <span>Taxa da entrega</span>
-                <span>R$ 10,25</span>
-            </div> -->
-            
         </form>
     </div>
 
-
-
     <script>
+        // Variável global para controlar se o CEP é válido
+        let cepValido = false;
+
+        // Formata o CEP enquanto o usuário digita
+        function formatCEP(input) {
+            let value = input.value.replace(/\D/g, '');
+            
+            if (value.length > 5) {
+                value = value.substring(0, 5) + '-' + value.substring(5, 8);
+            }
+            
+            input.value = value;
+        }
+
+        // Valida o CEP quando o campo perde o foco
+        function validateCEPOnBlur(cepValue) {
+            const cepError = document.getElementById('cepError');
+            const cepNotFoundError = document.getElementById('cepNotFoundError');
+            
+            // Resetar estados
+            cepError.classList.add('hidden');
+            cepNotFoundError.classList.add('hidden');
+            cepValido = false;
+            
+            // Verificar se o campo está vazio (se for obrigatório)
+            if (cepValue.trim() === '') {
+                cepError.textContent = 'CEP é obrigatório';
+                cepError.classList.remove('hidden');
+                return false;
+            }
+            
+            // Validar formato
+            if (!validateCEPFormat(cepValue)) {
+                cepError.textContent = 'CEP inválido. Formato correto: 00000-000';
+                cepError.classList.remove('hidden');
+                return false;
+            }
+            
+            // Se chegou aqui, o formato é válido
+            cepValido = true;
+            return true;
+        }
+
+        // Valida apenas o formato do CEP
+        function validateCEPFormat(cep) {
+            const re = /^\d{5}-?\d{3}$/;
+            return re.test(String(cep));
+        }
+
+        // Função principal de validação do formulário
         function validateForm() {
-            let nome = document.getElementById('nome').value;
-            let telefone = document.getElementById('telefone').value;
-            let email = document.getElementById('email').value;
-            let cep = document.getElementById('cep').value;
-            let numero = document.getElementById('numero').value;
-            let rua = document.getElementById('rua').value;
-            let bairro = document.getElementById('bairro').value;
-
-            let nomeError = document.getElementById('nomeError');
-            let telefoneError = document.getElementById('telefoneError');
-            let emailError = document.getElementById('emailError');
-            let cepError = document.getElementById('cepError');
-            let numeroError = document.getElementById('numeroError');
-            let ruaError = document.getElementById('ruaError');
-            let bairroError = document.getElementById('bairroError');
-
             let isValid = true;
-
+            const nome = document.getElementById('nome').value;
+            const telefone = document.getElementById('telefone').value;
+            const email = document.getElementById('email').value;
+            
+            // Validar campos básicos
             if (nome.trim() === '') {
-                nomeError.classList.remove('hidden');
+                document.getElementById('nomeError').classList.remove('hidden');
                 isValid = false;
             } else {
-                nomeError.classList.add('hidden');
+                document.getElementById('nomeError').classList.add('hidden');
             }
 
             if (telefone.trim() === '') {
-                telefoneError.classList.remove('hidden');
+                document.getElementById('telefoneError').classList.remove('hidden');
                 isValid = false;
             } else {
-                telefoneError.classList.add('hidden');
+                document.getElementById('telefoneError').classList.add('hidden');
             }
 
             if (email.trim() !== '' && !validateEmail(email)) {
-                emailError.classList.remove('hidden');
+                document.getElementById('emailError').classList.remove('hidden');
                 isValid = false;
             } else {
-                emailError.classList.add('hidden');
+                document.getElementById('emailError').classList.add('hidden');
             }
 
-            if (cep.trim() !== '' && !validateCEP(cep)) {
-                cepError.classList.remove('hidden');
-                isValid = false;
-            } else {
-                cepError.classList.add('hidden');
-            }
+            // Se for entrega, validar campos de endereço
+            @if(session('opcoes.categoria') === 'Entrega')
+                const cep = document.getElementById('cep').value;
+                const rua = document.getElementById('rua').value;
+                const bairro = document.getElementById('bairro').value;
+                const numero = document.getElementById('numero').value;
 
-            if (numero.trim() === '') {
-                numeroError.classList.remove('hidden');
-                isValid = false;
-            } else {
-                numeroError.classList.add('hidden');
-            }
+                // Validar CEP
+                if (!validateCEPOnBlur(cep)) {
+                    isValid = false;
+                }
 
-            if (rua.trim() === '') {
-                ruaError.classList.remove('hidden');
-                isValid = false;
-            } else {
-                ruaError.classList.add('hidden');
-            }
+                if (rua.trim() === '') {
+                    document.getElementById('ruaError').classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    document.getElementById('ruaError').classList.add('hidden');
+                }
 
-            if (bairro.trim() === '') {
-                bairroError.classList.remove('hidden');
-                isValid = false;
-            } else {
-                bairroError.classList.add('hidden');
+                if (bairro.trim() === '') {
+                    document.getElementById('bairroError').classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    document.getElementById('bairroError').classList.add('hidden');
+                }
+
+                if (numero.trim() === '') {
+                    document.getElementById('numeroError').classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    document.getElementById('numeroError').classList.add('hidden');
+                }
+            @endif
+
+            // Se não for válido, rolar até o primeiro erro
+            if (!isValid) {
+                const firstError = document.querySelector('[class*="Error"]:not(.hidden)');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
             }
 
             return isValid;
@@ -186,13 +229,7 @@
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return re.test(String(email).toLowerCase());
         }
-
-        function validateCEP(cep) {
-            const re = /^\d{5}-\d{3}$/;
-            return re.test(String(cep));
-        }
     </script>
 
 </body>
-
 </html>

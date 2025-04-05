@@ -52,7 +52,7 @@
                 <a href="{{ route('User.Sacola') }}" class="text-lg flex items-center gap-2 text-black menu-item hover:text-orange-600 transition-colors">Carrinho</a>
             </li>
             <li class="p-4 border-b border-black-300">
-                <a href="{{ route('User.VerPedido') }}" class="text-lg flex items-center gap-2 text-black menu-item hover:text-orange-600 transition-colors">Meu Pedido</a>
+                <a href="{{ route('User.Ultimo.Pedido') }}" class="text-lg flex items-center gap-2 text-black menu-item hover:text-orange-600 transition-colors">Meu Pedido</a>
             </li>
             <li class="p-4 border-b border-black-300">
                 <a href="{{ route('User.Localizacao') }}" class="text-lg flex items-center gap-2 text-black menu-item hover:text-orange-600 transition-colors">Localização</a>

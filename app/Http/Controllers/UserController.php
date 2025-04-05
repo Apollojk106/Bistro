@@ -109,12 +109,12 @@ class UserController extends Controller
         $usuario = Auth::user();
 
         $PedidosUser = Pedido::with('itensPedido.cardapio')
-        //->where('status', 'Concluido')
-        ->where('email', $usuario->email) 
-        ->take(10)
-        ->get();
+            //->where('status', 'Concluido')
+            ->where('email', $usuario->email)
+            ->take(10)
+            ->get();
 
-        return view('user.Perfil', compact('usuario','PedidosUser'));
+        return view('user.Perfil', compact('usuario', 'PedidosUser'));
     }
 
     public function SavePerfil(UpdatePerfilRequest $request)
@@ -159,8 +159,6 @@ class UserController extends Controller
     {
         $Cardapio = new CardapioController();
         $cardapioPorCategoria = $Cardapio->cardapioPorCategoria();
-
-        //dd($cardapioPorCategoria);
 
         return view('user.Cardapio', compact('cardapioPorCategoria'));
     }
@@ -244,6 +242,44 @@ class UserController extends Controller
         return view('user.VerPedido', compact('dadosPedido', 'produtos', 'valorTotal', 'pedidoIncompleto', 'mensagemIncompleto'));
     }
 
+    public function PedidoSolicitado()
+    {
+        $id = session('pedido_id');
+
+        if (!$id) {
+            return redirect()->route('User.Login')->with('error', 
+            'Sua sessão expirou ou o pedido não foi iniciado.
+            Por favor, registre-se ou faça login para continuar.');
+        }
+
+        $pedido = Pedido::with('itensPedido.cardapio')
+            ->where('id', $id)
+            ->first();
+
+        return $this->IndexPedido($pedido);
+    }
+
+    public function UltimoPedido()
+    {
+        if (!Auth::check()) {
+            return $this->PedidoSolicitado();
+        }
+
+        $email = Auth::user()->email;
+
+        $pedido = Pedido::with('itensPedido.cardapio')
+            ->where('email', $email)
+            ->orderBy('created_at', 'desc') 
+            ->first();
+
+        return $this->IndexPedido($pedido);
+    }
+
+    public function IndexPedido($Pedido)
+    {
+        return view('user.PedidoAntigo', ['pedido' => $Pedido]);
+    }
+
     public function Selecao()
     {
         $Pedido = $this->GetCarrinho();
@@ -291,7 +327,6 @@ class UserController extends Controller
 
     public function GetItemCardapio()
     {
-
         $Categorias = Categoria::pluck('nome', 'id');
 
         return view('admin.ItemCardapio', compact('Categorias'));

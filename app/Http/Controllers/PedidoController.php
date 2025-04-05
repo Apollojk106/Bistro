@@ -83,7 +83,7 @@ class PedidoController extends Controller
 
             session()->forget(['carrinho', 'opcoes', 'pagamento', 'observacao']);
 
-            return redirect()->route("User.Cardapio")->with([
+            return redirect()->route("User.Pedido")->with([
                 'success' => 'Pedido realizado com sucesso!'
             ]);
         } catch (\Exception $e) {
@@ -228,7 +228,6 @@ class PedidoController extends Controller
         return $Pedidos;
     }
 
-    //Dashboard
     public function IndexDashboard()
     {
         $Pedidos = Pedido::where('created_at', '>=', Carbon::now()->subDays(30))
