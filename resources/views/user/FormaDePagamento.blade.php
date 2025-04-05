@@ -28,44 +28,55 @@
 
             <!-- Opções de pagamento -->
             <div class="space-y-6">
-                <!-- PIX -->
-                <div onclick="selecionarPagamento('pix')" class="flex items-center justify-between border rounded-lg p-6 cursor-pointer hover:bg-gray-50 transition-all duration-300 ease-in-out transform hover:scale-105">
+                <!-- PIX (estático) -->
+                <div onclick="selecionarPagamento('pix')" class="flex items-center justify-between border rounded-lg p-6 cursor-pointer hover:bg-gray-50">
                     <div class="flex items-center space-x-4">
-                        <img src="{{ asset('Icons/pix.png') }}" alt="Pix" class="w-10 h-10 transition-transform transform hover:scale-110">
-                        <span class="text-xl font-semibold flex items-center">Pix</span>
+                        <img src="{{ asset('Icons/pix.png') }}" alt="Pix" class="w-10 h-10">
+                        <span class="text-xl font-semibold">Pix</span>
                     </div>
-                    <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center transition-colors duration-300 ease-in-out" id="circle-pix">
-                        <img id="check-pix" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado" class="w-6 h-6 hidden">
+                    <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center" id="circle-pix">
+                        <img id="check-pix" src="{{ asset('Icons/check-green.png') }}" class="w-6 h-6 hidden">
                     </div>
                 </div>
 
-                <!-- Dinheiro -->
-                <div onclick="selecionarPagamento('dinheiro')" class="border rounded-lg p-6 cursor-pointer hover:bg-gray-50 transition-all duration-300 ease-in-out transform hover:scale-105">
+                <!-- Dinheiro (estático) -->
+                <div onclick="selecionarPagamento('dinheiro')" class="border rounded-lg p-6 cursor-pointer hover:bg-gray-50">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
-                            <img src="{{ asset('Icons/cash.png') }}" alt="Dinheiro" class="w-10 h-10 transition-transform transform hover:scale-110">
-                            <span class="text-xl font-semibold flex items-center">Dinheiro</span>
+                            <img src="{{ asset('Icons/cash.png') }}" alt="Dinheiro" class="w-10 h-10">
+                            <span class="text-xl font-semibold">Dinheiro</span>
                         </div>
-                        <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center transition-colors duration-300 ease-in-out" id="circle-dinheiro">
-                            <img id="check-dinheiro" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado" class="w-6 h-6 hidden">
+                        <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center" id="circle-dinheiro">
+                            <img id="check-dinheiro" src="{{ asset('Icons/check-green.png') }}" class="w-6 h-6 hidden">
                         </div>
                     </div>
-
-                    <!-- Campo de troco (só aparece quando selecionado) -->
                     <div id="troco-opcao" class="mt-4 hidden">
                         <label class="block text-sm font-semibold text-left mb-2">Troco para:</label>
-                        <input type="text" id="troco-input" placeholder="EX: 50" class="w-full bg-gray-200 p-3 rounded-md text-center transition-all duration-300 ease-in-out focus:ring-2 focus:ring-[#A74A04] focus:outline-none">
+                        <input type="text" id="troco-input" placeholder="EX: 50" class="w-full bg-gray-200 p-3 rounded-md text-center">
                     </div>
                 </div>
 
-                <!-- Cartão -->
-                <div onclick="selecionarPagamento('cartao')" class="flex items-center justify-between border rounded-lg p-6 cursor-pointer hover:bg-gray-50 transition-all duration-300 ease-in-out transform hover:scale-105">
-                    <div class="flex items-center space-x-4">
-                        <img src="{{ asset('Icons/card.png') }}" alt="Cartão" class="w-10 h-10 transition-transform transform hover:scale-110">
-                        <span class="text-xl font-semibold flex items-center">Cartão</span>
+                <!-- Cartão (estático) com opções dinâmicas -->
+                <div class="border rounded-lg p-6 hover:bg-gray-50">
+                    <div onclick="selecionarPagamento('cartao')" class="flex items-center justify-between cursor-pointer">
+                        <div class="flex items-center space-x-4">
+                            <img src="{{ asset('Icons/card.png') }}" alt="Cartão" class="w-10 h-10">
+                            <span class="text-xl font-semibold">Cartão</span>
+                        </div>
+                        <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center" id="circle-cartao">
+                            <img id="check-cartao" src="{{ asset('Icons/check-green.png') }}" class="w-6 h-6 hidden">
+                        </div>
                     </div>
-                    <div class="w-8 h-8 border-2 border-gray-400 rounded-full flex justify-center items-center transition-colors duration-300 ease-in-out" id="circle-cartao">
-                        <img id="check-cartao" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado" class="w-6 h-6 hidden">
+
+                    <!-- Opções de cartão (dinâmicas) -->
+                    <div id="opcoes-cartao" class="mt-4 hidden space-y-3 pl-4">
+                        @foreach($opcoesCartao as $opcao)
+                        <div onclick="selecionarOpcaoCartao(event, '{{ $opcao->id }}', '{{ $opcao->nome }}')"
+                            class="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-100">
+                            <span>{{ $opcao->nome }}</span>
+                            <div class="w-6 h-6 border-2 border-gray-300 rounded-full" id="circle-opcao-{{ $opcao->id }}"></div>
+                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -79,6 +90,7 @@
         <form action="{{ route('User.Pagamento.Post') }}" method="post" id="pagamento-form">
             @csrf
             <input type="hidden" name="metodo_pagamento" id="metodo-pagamento-input">
+            <input type="hidden" name="opcao_cartao" id="opcao-cartao-input">
             <input type="hidden" name="troco_para" id="troco-para-input">
 
             <button type="submit" class="bg-[#A74A04] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#8B3D03] transition-all duration-300 ease-in-out transform hover:scale-105">
@@ -87,37 +99,60 @@
         </form>
     </div>
 
+
     <script>
+        let metodoSelecionado = null;
+        let opcaoCartaoSelecionada = null;
+
         function selecionarPagamento(tipo) {
-            // Esconde todos os checkmarks e reseta os círculos
-            ['pix', 'cartao', 'dinheiro'].forEach(opcao => {
-                document.getElementById('check-' + opcao).classList.add('hidden');
-                document.getElementById('circle-' + opcao).classList.remove('border-[#A74A04]');
-                document.getElementById('circle-' + opcao).classList.add('border-gray-400');
+            // Resetar seleções
+            document.querySelectorAll('[id^="circle-"]').forEach(el => {
+                el.classList.remove('border-[#A74A04]', 'bg-[#A74A04]');
+            });
+            document.querySelectorAll('[id^="check-"]').forEach(el => {
+                el.classList.add('hidden');
             });
 
-            // Mostra apenas o checkmark da opção selecionada e muda a borda do círculo
-            document.getElementById('check-' + tipo).classList.remove('hidden');
-            document.getElementById('circle-' + tipo).classList.remove('border-gray-400');
-            document.getElementById('circle-' + tipo).classList.add('border-[#A74A04]');
+            // Marcar como selecionado
+            document.getElementById(`check-${tipo}`).classList.remove('hidden');
+            document.getElementById(`circle-${tipo}`).classList.add('border-[#A74A04]');
 
-            // Atualiza o valor do campo hidden para enviar a opção selecionada via POST
-            document.getElementById('metodo-pagamento-input').value = tipo;
-
-            // Controla a exibição do campo de troco
-            const trocoOpcao = document.getElementById('troco-opcao');
-            const trocoInput = document.getElementById('troco-input');
-
+            // Gerenciar exibição
             if (tipo === 'dinheiro') {
-                trocoOpcao.classList.remove('hidden');
-                // Foca no checkbox de troco quando dinheiro é selecionado
-                setTimeout(() => document.getElementById('precisa-troco').focus(), 100);
+                document.getElementById('troco-opcao').classList.remove('hidden');
+                document.getElementById('opcoes-cartao').classList.add('hidden');
+            } else if (tipo === 'cartao') {
+                document.getElementById('opcoes-cartao').classList.remove('hidden');
+                document.getElementById('troco-opcao').classList.add('hidden');
             } else {
-                trocoOpcao.classList.add('hidden');
-                // Limpa o valor do troco se outro método for selecionado
-                trocoInput.value = '';
-                document.getElementById('troco-para-input').value = '';
+                document.getElementById('opcoes-cartao').classList.add('hidden');
+                document.getElementById('troco-opcao').classList.add('hidden');
             }
+
+            // Atualizar formulário
+            metodoSelecionado = tipo;
+            opcaoCartaoSelecionada = null;
+            document.getElementById('metodo-pagamento-input').value = tipo;
+            document.getElementById('opcao-cartao-input').value = '';
+        }
+
+        function selecionarOpcaoCartao(event, id, nome) {
+            event.stopPropagation();
+
+            // Resetar seleções de opções
+            document.querySelectorAll('[id^="circle-opcao-"]').forEach(el => {
+                el.classList.remove('bg-[#A74A04]');
+            });
+
+            // Marcar opção selecionada
+            document.getElementById(`circle-opcao-${id}`).classList.add('bg-[#A74A04]');
+
+            // Atualizar formulário
+            opcaoCartaoSelecionada = {
+                id,
+                nome
+            };
+            document.getElementById('opcao-cartao-input').value = id;
         }
 
         function toggleTrocoField() {
@@ -155,7 +190,6 @@
                 document.getElementById('troco-input').value.trim() === '') {
                 document.getElementById('troco-para-input').value = 0;
             }
-            // O formulário será enviado normalmente
         });
     </script>
 

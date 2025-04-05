@@ -17,19 +17,26 @@ class FormaPagamentoController extends Controller
         // Validar os dados recebidos
         $request->validate([
             'metodo_pagamento' => 'required|in:pix,cartao,dinheiro',
-            'troco_para' => 'nullable|numeric|required_if:metodo_pagamento,dinheiro'
+            'troco_para' => 'nullable|numeric|required_if:metodo_pagamento,dinheiro',
+            'opcao_cartao' => 'nullable|numeric',
         ]);
 
-        // Recuperar ou inicializar a sessão de pagamento
         $pagamento = session()->get('pagamento', []);
 
-        // Armazenar os dados na sessão
         $pagamento['metodo'] = $request->metodo_pagamento;
 
         if ($request->metodo_pagamento === 'dinheiro') {
             $pagamento['troco_para'] = $request->troco_para;
         } else {
             unset($pagamento['troco_para']);
+        }
+
+        if($request->opcao_cartao != null)
+        {
+            $opcao = FormaPagamento::where('id', $request->opcao_cartao)
+            ->first();
+
+            $pagamento['metodo'] = $opcao->nome;
         }
 
         session()->put('pagamento', $pagamento);
@@ -40,6 +47,5 @@ class FormaPagamentoController extends Controller
         {      
             return redirect()->route("User.VerPedido");
         }
-
     }
 }

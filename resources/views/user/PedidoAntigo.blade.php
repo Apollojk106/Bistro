@@ -59,14 +59,7 @@
                         Frete: R$ {{ number_format($pedido->frete, 2, ',', '.') }}
                     </p>
                     <p class="text-lg text-[#2E2E2E] mt-2">
-                        Forma de Pagamento: 
-                        @if($pedido->id_forma_pagamento == 2)
-                            Cartão de Crédito
-                        @elseif($pedido->id_forma_pagamento == 1)
-                            Dinheiro
-                        @else
-                            Não informado
-                        @endif
+                        Forma de Pagamento: {{ $pagamento }}
                     </p>
                     <p class="text-lg text-[#2E2E2E] mt-2">
                         Categoria: {{ ucfirst($pedido->categoria_pedido) }}

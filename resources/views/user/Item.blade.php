@@ -276,8 +276,6 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Sucesso ao salvar o pedido
-                            alert("Pedido salvo com sucesso!");
                             window.location.href = $rota; // Redireciona para a página de pagamento
                         } else {
                             // Se ocorrer um erro ao salvar

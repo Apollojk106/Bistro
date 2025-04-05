@@ -187,8 +187,12 @@ class UserController extends Controller
     public function FormaPagamento()
     {
         $Pedido = $this->GetCarrinho();
+        $opcoesCartao = (new FormaPagamento())->getOpcoesCartao();
 
-        return view('user.FormaDePagamento', compact('Pedido'));
+        return view('user.FormaDePagamento', [
+            'Pedido' => $Pedido,
+            'opcoesCartao' => $opcoesCartao
+        ]);
     }
 
     public function Localizacao()
@@ -218,9 +222,17 @@ class UserController extends Controller
             } elseif (empty($dadosPedido['pagamento']['metodo'])) {
                 $pedidoIncompleto = true;
                 $mensagemIncompleto = 'Forma de pagamento não selecionada';
-            } elseif ($dadosPedido['opcoes']['categoria'] === 'delivery' && empty($dadosPedido['endereco'])) {
+            } elseif ($dadosPedido['opcoes']['categoria'] === 'entrega' && empty($dadosPedido['User']['cep'])) {
                 $pedidoIncompleto = true;
                 $mensagemIncompleto = 'Endereço não informado para delivery';
+            }elseif ($dadosPedido['opcoes']['categoria'] === 'Entrega'){
+                $Frete = new FreteController();
+
+                $cepOrigem = '06754-140';
+                $cepDestino = $dadosPedido['User']['cep'];
+                $valorKm = null ?? 0.5;
+
+                session(['Frete' => $Frete->calcularFretePorDistancia($cepOrigem, $cepDestino, $valorKm)] ?? 5);
             }
 
             $produtoIds = array_keys($dadosPedido['carrinho'] ?? []);
@@ -277,7 +289,10 @@ class UserController extends Controller
 
     public function IndexPedido($Pedido)
     {
-        return view('user.PedidoAntigo', ['pedido' => $Pedido]);
+        $formapagamento = FormaPagamento::where('id', $Pedido->id_forma_pagamento)
+        ->first();
+
+        return view('user.PedidoAntigo', ['pedido' => $Pedido, 'pagamento' => $formapagamento->nome]);
     }
 
     public function Selecao()
