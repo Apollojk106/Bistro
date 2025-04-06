@@ -37,7 +37,7 @@
                     <p class="text-lg text-[#2E2E2E]"><strong>Telefone:</strong> {{ $pedido->telefone }}</p>
                     <p class="text-lg text-[#2E2E2E]"><strong>Endereço:</strong> {{ $pedido->rua }}, {{ $pedido->numero_residencia }} - {{ $pedido->bairro }}</p>
                     @if($pedido->complemento)
-                        <p class="text-lg text-[#2E2E2E]"><strong>Complemento:</strong> {{ $pedido->complemento }}</p>
+                    <p class="text-lg text-[#2E2E2E]"><strong>Complemento:</strong> {{ $pedido->complemento }}</p>
                     @endif
                 </div>
 
@@ -46,7 +46,7 @@
                     @foreach($pedido->itensPedido as $item)
                     <p class="text-lg text-[#2E2E2E]">
                         <strong>{{ $item->cardapio->nome }}</strong><br>
-                        Qtd: {{ $item->quantidade }} - 
+                        Qtd: {{ $item->quantidade }} -
                         R$ {{ number_format($item->valor_unitario, 2, ',', '.') }}<br>
                         Subtotal: R$ {{ number_format($item->subtotal, 2, ',', '.') }}
                     </p>
@@ -55,18 +55,13 @@
                     <p class="text-lg font-bold text-[#2E2E2E] mt-4">
                         Total: R$ {{ number_format($pedido->valor_total, 2, ',', '.') }}
                     </p>
+                    @if($pedido->frete != 0)
                     <p class="text-lg text-[#2E2E2E]">
                         Frete: R$ {{ number_format($pedido->frete, 2, ',', '.') }}
                     </p>
+                    @endif
                     <p class="text-lg text-[#2E2E2E] mt-2">
-                        Forma de Pagamento: 
-                        @if($pedido->id_forma_pagamento == 2)
-                            Cartão de Crédito
-                        @elseif($pedido->id_forma_pagamento == 1)
-                            Dinheiro
-                        @else
-                            Não informado
-                        @endif
+                        Forma de Pagamento: {{ $pagamento }}
                     </p>
                     <p class="text-lg text-[#2E2E2E] mt-2">
                         Categoria: {{ ucfirst($pedido->categoria_pedido) }}

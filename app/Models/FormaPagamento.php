@@ -16,6 +16,13 @@ class FormaPagamento extends Model
         'deleted_at',
     ];
 
+    public function getOpcoesCartao()
+    {
+        return self::whereNull('deleted_at')
+                  ->whereNotIn('nome', ['Pix', 'Dinheiro', 'Cartão'])
+                  ->get();
+    }
+
     public function itensPedidos()
     {
         return $this->hasMany(ItensPedido::class, 'id_forma_pagamento'); // Adjust the foreign key as needed
