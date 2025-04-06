@@ -189,7 +189,7 @@
                 <textarea id="observacao"
                     class="w-full p-3 mt-2 border rounded-lg border-[#c49a6c] text-gray-500 text-lg focus:outline-none focus:border-[#a6784c]"
                     rows="4"
-                    placeholder="Quero o prato sem feijão..."
+                    placeholder="Quero um dos pratos sem feijão..."
                     onfocus="limparTexto()"
                     onblur="restaurarTexto()"></textarea>
             </div>
