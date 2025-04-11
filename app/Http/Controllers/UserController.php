@@ -385,7 +385,10 @@ class UserController extends Controller
 
     public function Pedido()
     {
-        return view('admin.Pedido',);
+        $pagamento = new FormaPagamentoController();
+        $pagamentos = $pagamento->GetPagamento();
+        
+        return view('admin.Pedido', compact('pagamentos'));
     }
 
     public function GetCarrinho()

@@ -71,6 +71,8 @@ Route::post('/admin/Dashboard/Filtro', [PedidoController::class, 'FilterDashboar
 Route::get('/admin/Pedido', [UserController::class, 'Pedido'])->name("Pedidos");
 Route::get('/pedidos/json', [PedidoController::class, 'getPedidosJson'])->name('pedidos.json');
 Route::get('/admin/Pedidos/Avancar/{id}', [PedidoController::class, 'AvancarPedidos'])->name('Avancar.pedidos');
+Route::post('/Atualizar/Pedidos', [PedidoController::class, 'AtualizarPedidos'])->name('pedidos.confirmar-pagamento');
+
 
 Route::get('/admin/Configuracao', [UserController::class, 'Configuracao'])->name("Configuracao");
 Route::post('/Configuracao/update', [ConfiguracaoController::class, 'updateConfiguracoes'])->name('admin.configuracao.update');

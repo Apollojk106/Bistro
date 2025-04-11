@@ -99,6 +99,7 @@ class PedidoController extends Controller
             ->where('status', 'Pendente')
             ->get();
 
+        $TodosPedidos = $this->GetPagamento($TodosPedidos);
         return $this->GetItems($TodosPedidos);
     }
 
@@ -109,6 +110,7 @@ class PedidoController extends Controller
             ->where('status', 'Pendente')
             ->get();
 
+        $Agendados = $this->GetPagamento($Agendados);
         return $this->GetItems($Agendados);
     }
 
@@ -116,10 +118,20 @@ class PedidoController extends Controller
     {
         $EmAndamento = Pedido::with('itensPedido.cardapio')
             ->where('status', 'EmAndamento')
-            ->with('itensPedido.cardapio')
             ->get();
 
+        $EmAndamento = $this->GetPagamento($EmAndamento);
         return $this->GetItems($EmAndamento);
+    }
+
+    public function GetPagamento($TodosPedidos)
+    {
+        foreach ($TodosPedidos as $pedido) {
+            $forma = FormaPagamento::find($pedido->id_forma_pagamento);
+            $pedido->formapagamento = $forma ? $forma->nome : 'Não informado';
+        }
+
+        return $TodosPedidos;
     }
 
     public function getPedidosJson()
@@ -153,6 +165,39 @@ class PedidoController extends Controller
         }
 
         return redirect()->route('Pedidos');
+    }
+
+    public function AtualizarPedidos(Request $request)
+    {
+        $request->validate([
+            'pedido_id' => 'required|integer',
+            'forma_pagamento' => 'required|string',
+            'valor_ajuste' => 'required|numeric',
+            'valor_pago' => 'required|numeric',
+        ]);
+
+        // Busca a forma de pagamento usando LIKE (case insensitive)
+        $forma = FormaPagamento::where('nome', 'LIKE', '%' . $request->forma_pagamento . '%')->first();
+
+        if (!$forma) {
+            return redirect()->back()->with('error' , 'Forma de pagamento não encontrada.');
+        }
+
+        // Busca o pedido
+        $pedido = Pedido::find($request->pedido_id);
+
+        if (!$pedido) {
+            return redirect()->back()->with('error' , 'Pedido não encontrado.');
+        }
+
+        // Atualiza os valores do pedido
+        $pedido->id_forma_pagamento = $forma->id;
+        $pedido->valor_total = floatval($pedido->valor_total) + floatval($request->valor_ajuste);
+        $pedido->valor_pago = $request->valor_pago;
+        $pedido->status = 'Concluido';
+        $pedido->save();
+
+        return redirect()->back()->with('sucess' , 'Pedido atualizado com sucesso.');
     }
 
     public function Historico($Pedidos)
