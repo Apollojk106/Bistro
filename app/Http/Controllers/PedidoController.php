@@ -40,13 +40,35 @@ class PedidoController extends Controller
     {
         $dadosPedido = session()->all();
 
+        // Verificação prévia do status dos itens do carrinho
+        $carrinho = $dadosPedido['carrinho'] ?? [];
+        $produtoIds = array_keys($carrinho);
+
+        // Buscar os produtos com status 'ligado'
+        $produtos = \App\Models\Cardapio::whereIn('id', $produtoIds)->get()->keyBy('id');
+        $carrinhoValido = [];
+        $removidos = false;
+
+        foreach ($carrinho as $id => $item) {
+            if (isset($produtos[$id]) && $produtos[$id]->status === 'ligado') {
+                $carrinhoValido[$id] = $item;
+            } else {
+                $removidos = true;
+            }
+        }
+
+        // Se houve remoção, não prosseguir com o pedido
+        if ($removidos) {
+            session(['carrinho' => $carrinhoValido]);
+            return redirect()->route('User.VerPedido')->with('error', 'Alguns itens estavam indisponíveis e foram removidos. Por favor, revise seu pedido.');
+        }
+
         DB::beginTransaction();
         try {
             $NomePagamento = $dadosPedido['pagamento']['metodo'];
             $formaPagamento = FormaPagamento::where('nome', 'like', "%{$NomePagamento}%")->first();
 
-            $valorTotalItens = collect($dadosPedido['carrinho'])->sum(fn($item) => $item['quantidade'] * $item['valor']);
-
+            $valorTotalItens = collect($carrinhoValido)->sum(fn($item) => $item['quantidade'] * $item['valor']);
             $valorTaxa = $valorTotalItens * ($formaPagamento->taxa / 100);
 
             $pedido = Pedido::create([
@@ -58,7 +80,7 @@ class PedidoController extends Controller
                 'numero_residencia' => $dadosPedido['User']['numero_residencia'] ?? null,
                 'complemento'       => ucfirst(strtolower($dadosPedido['User']['complemento'] ?? '')),
                 'categoria_pedido'  => ucfirst(strtolower($dadosPedido['opcoes']['categoria'])),
-                'status_pedido'     => ucfirst(strtolower('Pendente')),
+                'status_pedido'     => 'Pendente',
                 'opcao_entrega'     => ucfirst(strtolower($dadosPedido['opcoes']['opcao_entrega'])),
                 'horario'           => isset($dadosPedido['opcoes']['horario']) ? date('Y-m-d H:i:s', strtotime($dadosPedido['opcoes']['horario'])) : null,
                 'id_forma_pagamento' => $formaPagamento->id,
@@ -68,7 +90,7 @@ class PedidoController extends Controller
                 'valor_taxa'        => $valorTaxa,
             ]);
 
-            foreach ($dadosPedido['carrinho'] as $id_cardapio => $item) {
+            foreach ($carrinhoValido as $id_cardapio => $item) {
                 ItensPedido::create([
                     'id_pedido'     => $pedido->id,
                     'id_cardapio'   => $id_cardapio,
@@ -83,12 +105,10 @@ class PedidoController extends Controller
 
             session()->forget(['carrinho', 'opcoes', 'pagamento', 'observacao']);
 
-            return redirect()->route("User.Pedido")->with([
-                'success' => 'Pedido realizado com sucesso!'
-            ]);
+            return redirect()->route("User.Pedido")->with('success', 'Pedido realizado com sucesso!');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Erro ao gerar o pedido. Tente novamente.' . $e->getMessage());
+            return redirect()->back()->with('error', 'Erro ao gerar o pedido. Tente novamente. ' . $e->getMessage());
         }
     }
 
@@ -180,14 +200,14 @@ class PedidoController extends Controller
         $forma = FormaPagamento::where('nome', 'LIKE', '%' . $request->forma_pagamento . '%')->first();
 
         if (!$forma) {
-            return redirect()->back()->with('error' , 'Forma de pagamento não encontrada.');
+            return redirect()->back()->with('error', 'Forma de pagamento não encontrada.');
         }
 
         // Busca o pedido
         $pedido = Pedido::find($request->pedido_id);
 
         if (!$pedido) {
-            return redirect()->back()->with('error' , 'Pedido não encontrado.');
+            return redirect()->back()->with('error', 'Pedido não encontrado.');
         }
 
         // Atualiza os valores do pedido
@@ -197,7 +217,7 @@ class PedidoController extends Controller
         $pedido->status = 'Concluido';
         $pedido->save();
 
-        return redirect()->back()->with('sucess' , 'Pedido atualizado com sucesso.');
+        return redirect()->back()->with('sucess', 'Pedido atualizado com sucesso.');
     }
 
     public function Historico($Pedidos)

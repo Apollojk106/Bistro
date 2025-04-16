@@ -217,50 +217,64 @@
     function abrirModalPagamento(pedidoId, formasDePagamento, formaPagamentoAtual, valorPagoAtual, valorBrutoAtual) {
         const modalHTML = `
         <div id="modal-pagamento" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white p-4 rounded-lg w-full max-w-md">
-                <h3 class="font-bold text-lg mb-4">Confirmar Conclusão - Pedido #${pedidoId}</h3>
+        <div class="bg-white p-4 rounded-lg w-full max-w-md">
+            <h3 class="font-bold text-lg mb-4">Confirmar Conclusão - Pedido #${pedidoId}</h3>
+            
+            <form id="form-pagamento" action="/Atualizar/Pedidos" method="POST">
+                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
+                <input type="hidden" name="pedido_id" value="${pedidoId}">
+
+                <div class="mb-4">
+                    <label for="forma_pagamento_input" class="block text-sm font-medium mb-2">Forma de Pagamento:</label>
+                    <input type="text" 
+                        id="forma_pagamento_input"
+                        name="forma_pagamento" 
+                        value="${(formaPagamentoAtual || '').replace(/"/g, '&quot;')}"
+                        class="w-full p-2 border rounded"
+                        placeholder="Ex: Cartão, PIX, Dinheiro..."
+                        required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Ajuste (Adicional/Desconto)</label>
+                    <input type="number" id="valor_ajuste" name="valor_ajuste" step="0.01" value="0.00" class="w-full p-2 border rounded" required 
+                           oninput="calcularValorPago(${valorBrutoAtual})">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Valor Total Atualizado</label>
+                    <input type="text" id="valor_total_atualizado" class="w-full p-2 border rounded bg-gray-100" value="R$ ${valorBrutoAtual.toFixed(2)}" readonly>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Valor Pago</label>
+                    <input type="number" id="valor_pago" name="valor_pago" step="0.01" value="${valorBrutoAtual.toFixed(2)}" class="w-full p-2 border rounded" required>
+                </div>
+
+                <p class="mb-4">Deseja marcar este pedido como concluído?</p>
                 
-                <form id="form-pagamento" action="/Atualizar/Pedidos" method="POST">
-                    <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
-                    <input type="hidden" name="pedido_id" value="${pedidoId}">
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium mb-1">Valor Total Anterior de: ${valorBrutoAtual}</label>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="forma_pagamento_input" class="block text-sm font-medium mb-2">Forma de Pagamento:</label>
-                        <input type="text" 
-                            id="forma_pagamento_input"
-                            name="forma_pagamento" 
-                            value="${(formaPagamentoAtual || '').replace(/"/g, '&quot;')}"
-                            class="w-full p-2 border rounded"
-                            placeholder="Ex: Cartão, PIX, Dinheiro..."
-                            required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium mb-1">Ajuste (Adicional/Desconto)</label>
-                        <input type="number" name="valor_ajuste" step="0.01" value="0.00" class="w-full p-2 border rounded" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium mb-1">Valor Pago</label>
-                        <input type="number" name="valor_pago" step="0.01" value="${valorBrutoAtual}" class="w-full p-2 border rounded" required>
-                    </div>
-
-                    <p class="mb-4">Deseja marcar este pedido como concluído?</p>
-                    
-                    <div class="flex justify-end space-x-2">
-                        <button type="button" onclick="fecharModal()" class="px-4 py-2 bg-gray-300 rounded">Cancelar</button>
-                        <button type="submit" class="px-4 py-2 bg-[#A74A04] text-white rounded">Confirmar</button>
-                    </div>
-                </form>
-            </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="fecharModal()" class="px-4 py-2 bg-gray-300 rounded">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-[#A74A04] text-white rounded">Confirmar</button>
+                </div>
+            </form>
         </div>
+    </div>
     `;
 
         document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    // Função para calcular o valor pago com base no ajuste
+    function calcularValorPago(valorBruto) {
+        const ajuste = parseFloat(document.getElementById('valor_ajuste').value) || 0;
+        const valorTotalAtualizado = valorBruto + ajuste;
+
+        // Atualiza o campo de valor total atualizado
+        document.getElementById('valor_total_atualizado').value = `R$ ${valorTotalAtualizado.toFixed(2)}`;
+
+        // Atualiza o campo de valor pago com o novo valor
+        document.getElementById('valor_pago').value = valorTotalAtualizado.toFixed(2);
     }
 
     // Função para fechar o modal

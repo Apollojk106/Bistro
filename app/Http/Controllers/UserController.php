@@ -225,7 +225,7 @@ class UserController extends Controller
             } elseif ($dadosPedido['opcoes']['categoria'] === 'entrega' && empty($dadosPedido['User']['cep'])) {
                 $pedidoIncompleto = true;
                 $mensagemIncompleto = 'Endereço não informado para delivery';
-            }elseif ($dadosPedido['opcoes']['categoria'] === 'Entrega'){
+            } elseif ($dadosPedido['opcoes']['categoria'] === 'Entrega') {
                 $Frete = new FreteController();
 
                 $cepOrigem = '06754-140';
@@ -235,11 +235,34 @@ class UserController extends Controller
                 session(['Frete' => $Frete->calcularFretePorDistancia($cepOrigem, $cepDestino, $valorKm)] ?? 5);
             }
 
-            $produtoIds = array_keys($dadosPedido['carrinho'] ?? []);
-            $produtos = Cardapio::whereIn('id', $produtoIds)->get()->keyBy('id');
+            // Verificação dos itens com status = 'ligado'
+            $carrinho = $dadosPedido['carrinho'] ?? [];
+            $produtoIds = array_keys($carrinho);
 
+            $produtos = \App\Models\Cardapio::whereIn('id', $produtoIds)->get()->keyBy('id');
+            $carrinhoAtualizado = [];
+            $removidos = false;
+
+            foreach ($carrinho as $id => $item) {
+                if (isset($produtos[$id]) && $produtos[$id]->status === 'ligado') {
+                    $carrinhoAtualizado[$id] = $item;
+                } else {
+                    $removidos = true;
+                }
+            }
+
+            if ($removidos) {
+                $pedidoIncompleto = true;
+                $mensagemIncompleto = 'Alguns itens foram removidos do pedido por estarem indisponíveis.';
+            }
+
+            // Atualiza a sessão com o novo carrinho
+            session(['carrinho' => $carrinhoAtualizado]);
+            $dadosPedido['carrinho'] = $carrinhoAtualizado;
+
+            // Recalcular valor total
             $valorTotal = 0;
-            foreach ($dadosPedido['carrinho'] as $id => $item) {
+            foreach ($carrinhoAtualizado as $id => $item) {
                 $valorTotal += $item['quantidade'] * $item['valor'];
             }
         } catch (Exception $X) {
@@ -259,9 +282,11 @@ class UserController extends Controller
         $id = session('pedido_id');
 
         if (!$id) {
-            return redirect()->route('User.Login')->with('error', 
-            'Sua sessão expirou ou o pedido não foi iniciado.
-            Por favor, registre-se ou faça login para continuar.');
+            return redirect()->route('User.Login')->with(
+                'error',
+                'Sua sessão expirou ou o pedido não foi iniciado.
+            Por favor, registre-se ou faça login para continuar.'
+            );
         }
 
         $pedido = Pedido::with('itensPedido.cardapio')
@@ -281,7 +306,7 @@ class UserController extends Controller
 
         $pedido = Pedido::with('itensPedido.cardapio')
             ->where('email', $email)
-            ->orderBy('created_at', 'desc') 
+            ->orderBy('created_at', 'desc')
             ->first();
 
         return $this->IndexPedido($pedido);
@@ -290,7 +315,7 @@ class UserController extends Controller
     public function IndexPedido($Pedido)
     {
         $formapagamento = FormaPagamento::where('id', $Pedido->id_forma_pagamento)
-        ->first();
+            ->first();
 
         return view('user.PedidoAntigo', ['pedido' => $Pedido, 'pagamento' => $formapagamento->nome]);
     }
@@ -387,7 +412,7 @@ class UserController extends Controller
     {
         $pagamento = new FormaPagamentoController();
         $pagamentos = $pagamento->GetPagamento();
-        
+
         return view('admin.Pedido', compact('pagamentos'));
     }
 

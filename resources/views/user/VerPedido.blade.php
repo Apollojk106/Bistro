@@ -28,7 +28,6 @@
             <div class="bg-gray p-6 rounded-xl">
                 @if($pedidoIncompleto ?? false)
                 <div class="bg-red-500 text-white p-4 rounded-lg mb-4">
-                    <p class="font-bold">PEDIDO INCOMPLETO!</p>
                     <p>{{ $mensagemIncompleto }}</p>
                 </div>
                 @endif

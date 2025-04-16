@@ -11,28 +11,35 @@ class CardapioController extends Controller
 {
     public function CardapioPorCategoria()
     {
-        // Buscar todas as categorias e seus cardápios relacionados
-        $categorias = Categoria::with('cardapios')->get();
+        // Buscar todas as categorias e seus cardápios relacionados com status 'ligado'
+        $categorias = Categoria::with(['cardapios' => function ($query) {
+            $query->where('status', 'ligado');
+        }])->get();
 
         // Formatar a resposta, dividindo o cardápio por categoria
         $cardapioPorCategoria = [];
 
         foreach ($categorias as $categoria) {
-            // Adicionar o nome da categoria e seus cardápios ao array
-            $cardapioPorCategoria[] = [
-                'categoria' => $categoria->nome, // Nome da categoria
-                'itens' => $categoria->cardapios->map(function ($item) {
-                    return [
-                        'id' => $item->id,
-                        'nome' => $item->nome,
-                        'descricao' => $item->descricao,
-                        'valor' => $item->valor,
-                        'desconto' => $item->desconto,
-                        'disponibilidade' => $item->disponibilidade,
-                        'ingredientes' => $item->ingredientes,
-                    ];
-                }),
-            ];
+            // Filtrar novamente para garantir (embora o with já tenha filtrado)
+            $cardapiosAtivos = $categoria->cardapios->where('status', 'ligado');
+
+            // Só adiciona a categoria se tiver itens ativos
+            if ($cardapiosAtivos->count() > 0) {
+                $cardapioPorCategoria[] = [
+                    'categoria' => $categoria->nome, // Nome da categoria
+                    'itens' => $cardapiosAtivos->map(function ($item) {
+                        return [
+                            'id' => $item->id,
+                            'nome' => $item->nome,
+                            'descricao' => $item->descricao,
+                            'valor' => $item->valor,
+                            'desconto' => $item->desconto,
+                            'disponibilidade' => $item->disponibilidade,
+                            'ingredientes' => $item->ingredientes,
+                        ];
+                    }),
+                ];
+            }
         }
 
         return $cardapioPorCategoria;
@@ -49,17 +56,25 @@ class CardapioController extends Controller
     public function CardapioFiltro(Request $request)
     {
         if ($request->categoria == "id_categoria") {
+            try {
+                $conteudo = Categoria::where('nome', $request->conteudo)
+                    ->first();
 
-            $conteudo = Categoria::where('nome', $request->conteudo)
-                ->first();
-
-            $Items = Cardapio::where($request->categoria, 'like', '%' . $conteudo->id . '%')
-                ->take(10)
-                ->get();
+                $Items = Cardapio::where($request->categoria, 'like', '%' . $conteudo->id . '%')
+                    ->take(10)
+                    ->get();
+            } catch (\Exception $e) {
+                $Items = collect(); 
+            }
         } else {
             $Items = Cardapio::where($request->categoria, 'like', '%' . $request->conteudo . '%')
                 ->take(10)
                 ->get();
+        }
+
+        if($Items->isEmpty())
+        {
+            return redirect()->route("Cardapio")->with('error', 'Item não encontrado!');
         }
 
         return $this->GetCardapio($Items);

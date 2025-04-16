@@ -32,6 +32,7 @@ class CarrinhoController extends Controller
     public function show($id)
     {
         $Item = Cardapio::where('id', $id)
+            ->where('status', 'ligado')
             ->first();
 
         if ($Item) {
@@ -43,23 +44,31 @@ class CarrinhoController extends Controller
                 if ($categoria->nivel === 'Primaria') {
                     $Itens = Cardapio::whereHas('categoria', function ($query) {
                         $query->where('nivel', 'Secundaria');
-                    })->limit(10)->get();
+                    })
+                        ->where('status', 'ligado')
+                        ->limit(10)
+                        ->get();
 
-                    $Bebidas = Cardapio::where('id_categoria', '3')->get();
+                    $Bebidas = Cardapio::where('id_categoria', '3')
+                        ->where('status', 'ligado')
+                        ->get();
                 }
                 // Se a categoria for 'Secundaria', retorna todos os itens dessa categoria
                 elseif ($categoria->nivel === 'Secundaria') {
                     $Itens = Cardapio::where('id_categoria', $categoria->id)
                         ->where('id', '!=', $Item->id) // Exclui o item com o ID de $Item
+                        ->where('status', 'ligado')
                         ->limit(10)
                         ->get();
 
-                    $Bebidas = Cardapio::where('id_categoria', '3')->get();
+                    $Bebidas = Cardapio::where('id_categoria', '3')
+                        ->where('status', 'ligado')
+                        ->get();
                 } else {
                     $Bebidas = Cardapio::where('id_categoria', $categoria->id)
                         ->where('id', '!=', $Item->id)
+                        ->where('status', 'ligado')
                         ->get();
-
 
                     if ($Bebidas->isNotEmpty()) {
                         return view("user.Item", compact('Item', 'Bebidas'));
@@ -146,8 +155,13 @@ class CarrinhoController extends Controller
         $itens = $request->input('itens', []);
 
         $carrinho = [];
+
         foreach ($itens as $id => $item) {
-            if ($item['quantidade'] > 0) { // Verifica se a quantidade é maior que 0
+            // Buscar o item no banco
+            $itemCardapio = Cardapio::find($id);
+
+            // Verifica se o item existe, está com status 'ligado' e tem quantidade > 0
+            if ($itemCardapio && $itemCardapio->status === 'ligado' && $item['quantidade'] > 0) {
                 $carrinho[$id] = [
                     'quantidade' => $item['quantidade'],
                     'valor' => $item['valor'],
