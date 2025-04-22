@@ -194,4 +194,9 @@ class CardapioController extends Controller
             return redirect()->route('Cardapio')->with('error', 'Item não encontrado!');
         }
     }
+
+    public function DeleteMultItem()
+    {
+        dd("slk");
+    }
 }

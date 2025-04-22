@@ -43,6 +43,11 @@
                 <button id="eye-off" class="p-2 rounded-lg flex items-center justify-center">
                     <img src="{{ asset('Icons/eye-off.png') }}" alt="Imagem Centralizada" class="h-15 w-15 object-contain" />
                 </button>
+
+                <!-- Botão "delete" para múltiplos itens -->
+                <button id="delete-selected" class="p-2 rounded-lg flex items-center justify-center bg-red-400">
+                    <img src="{{ asset('Icons/trash.png') }}" alt="Deletar selecionados" class="h-15 w-15 object-contain" />
+                </button>
             </div>
 
             <a href="{{ route('ItemCardapio') }}" class="w-full md:w-auto">
@@ -57,6 +62,7 @@
             <table class="min-w-full table-auto text-center">
                 <thead>
                     <tr class="bg-white">
+                        <th class="p-2 text-center">Selecionar</th>
                         <th class="p-2 text-center">Nome</th>
                         <th class="p-2 text-center">Categoria</th>
                         <th class="p-2 text-center">Valor</th>
@@ -69,6 +75,9 @@
                         @csrf
                         <input type="hidden" name="Id" value="{{ $Item->id }}"></input>
                         <tr>
+                            <td class="p-2">
+                                <input type="checkbox" class="item-checkbox" value="{{ $Item->id }}">
+                            </td>
                             <td class="p-2">{{ $Item->nome }}</td>
                             <td class="p-2">{{ $Item->categoria }}</td>
                             <td class="p-2">R$ {{ $Item->valor }}</td>
@@ -89,15 +98,126 @@
     </div>
 
     <script>
+        // Função para obter os IDs selecionados
+        function getSelectedIds() {
+            const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+            return Array.from(checkboxes).map(checkbox => checkbox.value);
+        }
+
         // Adicionar eventos de clique aos botões
         document.getElementById('eye-on').addEventListener('click', function() {
             const categoria = document.getElementById('categoria_eye').value;
-            window.location.href = `/eye-on?categoria=${categoria}`;
+            const selectedIds = getSelectedIds();
+            
+            if (selectedIds.length === 0) {
+                alert('Por favor, selecione pelo menos um item');
+                return;
+            }
+            
+            // Enviar via POST (precisa criar um formulário dinâmico)
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/eye-on';
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = document.querySelector('meta[name="csrf-token"]').content;
+            form.appendChild(csrfToken);
+            
+            const categoriaInput = document.createElement('input');
+            categoriaInput.type = 'hidden';
+            categoriaInput.name = 'categoria';
+            categoriaInput.value = categoria;
+            form.appendChild(categoriaInput);
+            
+            selectedIds.forEach(id => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'ids[]';
+                input.value = id;
+                form.appendChild(input);
+            });
+            
+            document.body.appendChild(form);
+            form.submit();
         });
 
         document.getElementById('eye-off').addEventListener('click', function() {
             const categoria = document.getElementById('categoria_eye').value;
-            window.location.href = `/eye-off?categoria=${categoria}`;
+            const selectedIds = getSelectedIds();
+            
+            if (selectedIds.length === 0) {
+                alert('Por favor, selecione pelo menos um item');
+                return;
+            }
+            
+            // Enviar via POST (precisa criar um formulário dinâmico)
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/eye-off';
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = document.querySelector('meta[name="csrf-token"]').content;
+            form.appendChild(csrfToken);
+            
+            const categoriaInput = document.createElement('input');
+            categoriaInput.type = 'hidden';
+            categoriaInput.name = 'categoria';
+            categoriaInput.value = categoria;
+            form.appendChild(categoriaInput);
+            
+            selectedIds.forEach(id => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'ids[]';
+                input.value = id;
+                form.appendChild(input);
+            });
+            
+            document.body.appendChild(form);
+            form.submit();
+        });
+
+        document.getElementById('delete-selected').addEventListener('click', function() {
+            const selectedIds = getSelectedIds();
+            
+            if (selectedIds.length === 0) {
+                alert('Por favor, selecione pelo menos um item');
+                return;
+            }
+            
+            if (confirm("Você tem certeza que deseja deletar os itens selecionados?")) {
+                // Enviar via POST
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/admin/Cardapio/DeleteMultiple';
+                
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = document.querySelector('meta[name="csrf-token"]').content;
+                form.appendChild(csrfToken);
+                
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'DELETE';
+                form.appendChild(methodInput);
+                
+                selectedIds.forEach(id => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'ids[]';
+                    input.value = id;
+                    form.appendChild(input);
+                });
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
         });
 
         const deleteButtons = document.querySelectorAll('.delete-button');
