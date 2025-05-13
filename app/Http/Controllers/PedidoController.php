@@ -169,18 +169,28 @@ class PedidoController extends Controller
     {
         $pedido = Pedido::findOrFail($id);
 
-        // Lógica para atualizar o status
         $statusAtual = $pedido->status;
-
-        // Definindo os status possíveis
         $statusPossiveis = ['Pendente', 'EmAndamento', 'Concluido'];
 
-        // Pegando o próximo status
         $proximoStatusIndex = array_search($statusAtual, $statusPossiveis) + 1;
-
-        // Se o status atual for o último ('Concluido'), não faz mais a atualização
         if ($proximoStatusIndex < count($statusPossiveis)) {
             $pedido->status = $statusPossiveis[$proximoStatusIndex];
+            $pedido->save();
+        }
+
+        return redirect()->route('Pedidos');
+    }
+
+    public function VoltarPedidos($id)
+    {
+        $pedido = Pedido::findOrFail($id);
+
+        $statusAtual = $pedido->status;
+        $statusPossiveis = ['Pendente', 'EmAndamento', 'Concluido'];
+
+        $statusAnteriorIndex = array_search($statusAtual, $statusPossiveis) - 1;
+        if ($statusAnteriorIndex >= 0) {
+            $pedido->status = $statusPossiveis[$statusAnteriorIndex];
             $pedido->save();
         }
 
@@ -191,14 +201,13 @@ class PedidoController extends Controller
     {
         $request->validate([
             'pedido_id' => 'required|integer',
-            'forma_pagamento' => 'required|string',
+            'forma_pagamento' => 'required|numeric',
             'valor_ajuste' => 'required|numeric',
             'valor_pago' => 'required|numeric',
         ]);
 
         // Busca a forma de pagamento usando LIKE (case insensitive)
-        $forma = FormaPagamento::where('nome', 'LIKE', '%' . $request->forma_pagamento . '%')->first();
-
+        $forma = FormaPagamento::where('id', $request->forma_pagamento)->first();
         if (!$forma) {
             return redirect()->back()->with('error', 'Forma de pagamento não encontrada.');
         }
@@ -217,7 +226,7 @@ class PedidoController extends Controller
         $pedido->status = 'Concluido';
         $pedido->save();
 
-        return redirect()->back()->with('sucess', 'Pedido atualizado com sucesso.');
+        return redirect()->back()->with('success', 'Pedido atualizado com sucesso.');
     }
 
     public function Historico($Pedidos)

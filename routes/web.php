@@ -11,9 +11,7 @@ use App\Models\FormaPagamento;
 
 Route::get('/sessionData', [UserController::class, 'sessionData'])->name("sessionData");
 Route::get('/', [UserController::class, 'UserCardapio']);
-Route::get('/admin', function () {
-    return view('admin.Pedido');
-});
+
 
 
 //login index
@@ -68,9 +66,11 @@ Route::get('/admin/Dashboard', [PedidoController::class, 'IndexDashboard'])->nam
 Route::get('/admin/Dashboard/Filtro', [PedidoController::class, 'IndexDashboard'])->name("Dashboard.get");
 Route::post('/admin/Dashboard/Filtro', [PedidoController::class, 'FilterDashboard'])->name("Dashboard.filtro");
 
+Route::get('/admin', [UserController::class, 'Pedido'])->name("Index.Admin");
 Route::get('/admin/Pedido', [UserController::class, 'Pedido'])->name("Pedidos");
 Route::get('/pedidos/json', [PedidoController::class, 'getPedidosJson'])->name('pedidos.json');
 Route::get('/admin/Pedidos/Avancar/{id}', [PedidoController::class, 'AvancarPedidos'])->name('Avancar.pedidos');
+Route::get('/admin/Pedidos/Voltar/{id}', [PedidoController::class, 'VoltarPedidos'])->name('Voltar.pedidos');
 Route::post('/Atualizar/Pedidos', [PedidoController::class, 'AtualizarPedidos'])->name('pedidos.confirmar-pagamento');
 
 

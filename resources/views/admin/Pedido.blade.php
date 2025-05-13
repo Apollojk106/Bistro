@@ -88,26 +88,11 @@
         }
     });
 
-    // Função para voltar pedido para "Pedidos"
+    // Função para voltar pedido para "Pedidos" (agora sem AJAX)
     function voltarParaPedidos(pedidoId) {
         if (confirm('Deseja realmente voltar este pedido para a lista de Pedidos?')) {
-            $.ajax({
-                url: '/admin/Pedidos/Voltar/' + pedidoId,
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    if (response.success) {
-                        carregarPedidos(); // Recarrega os pedidos
-                    } else {
-                        alert('Erro ao voltar pedido: ' + response.message);
-                    }
-                },
-                error: function() {
-                    alert('Erro ao comunicar com o servidor');
-                }
-            });
+            // Redireciona diretamente para a rota GET
+            window.location.href = '/admin/Pedidos/Voltar/' + pedidoId;
         }
     }
 
@@ -237,8 +222,24 @@
         });
     }
 
+    const formasPagamentoData = @json($pagamentos);
+
     // Função para abrir o modal de pagamento com os dados atuais
     function abrirModalPagamento(pedidoId, statusAtual, formaPagamentoAtual, valorPagoAtual, valorBrutoAtual) {
+
+        // Gerar as opções de forma de pagamento dinamicamente
+        let optionsHTML = '<option value="">Selecione...</option>';
+
+        formasPagamentoData.forEach(pagamento => {
+            // Formatando o nome para exibição (ex: "cartao" -> "Cartão")
+            let nomeFormatado = pagamento.nome.charAt(0).toUpperCase() + pagamento.nome.slice(1);
+            if (nomeFormatado === 'Cartao') nomeFormatado = 'Cartão';
+
+            // Adiciona a opção com value=ID e texto=nome formatado
+            const selected = formaPagamentoAtual === pagamento.id ? 'selected' : '';
+            optionsHTML += `<option value="${pagamento.id}" ${selected}>${nomeFormatado}</option>`;
+        });
+
         const modalHTML = `
         <div id="modal-pagamento" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white p-4 rounded-lg w-full max-w-md">
@@ -251,10 +252,7 @@
                     <div class="mb-4">
                         <label for="forma_pagamento" class="block text-sm font-medium mb-2">Forma de Pagamento:</label>
                         <select id="forma_pagamento" name="forma_pagamento" class="w-full p-2 border rounded" required>
-                            <option value="">Selecione...</option>
-                            <option value="Dinheiro" ${formaPagamentoAtual === 'Dinheiro' ? 'selected' : ''}>Dinheiro</option>
-                            <option value="PIX" ${formaPagamentoAtual === 'PIX' ? 'selected' : ''}>PIX</option>
-                            <option value="Cartão" ${formaPagamentoAtual === 'Cartão' ? 'selected' : ''}>Cartão</option>
+                            ${optionsHTML}
                         </select>
                     </div>
 
