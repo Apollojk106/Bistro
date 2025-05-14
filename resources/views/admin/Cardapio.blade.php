@@ -124,7 +124,7 @@
             csrfToken.name = '_token';
             csrfToken.value = document.querySelector('meta[name="csrf-token"]').content;
             form.appendChild(csrfToken);
-            
+                        
             const categoriaInput = document.createElement('input');
             categoriaInput.type = 'hidden';
             categoriaInput.name = 'categoria';
