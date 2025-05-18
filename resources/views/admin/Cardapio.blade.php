@@ -1,4 +1,5 @@
 <div>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <x-hotbar-admin />
 
     <div class="flex flex-col w-full h-auto space-y-4 p-5">
@@ -28,12 +29,6 @@
         <!-- Botão "mais" e filtro de categoria -->
         <div class="flex flex-col md:flex-row items-center justify-between w-full space-y-4 md:space-y-0 md:space-x-4">
             <div class="bg-[#B7B7B7] p-4 rounded-lg flex items-center space-x-2 w-full md:w-auto">
-                <select id="categoria_eye" name="categoria_eye" class="shadow appearance-none border rounded w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    @foreach($Categorias as $Categoria)
-                    <option value="{{ $Categoria }}">{{ $Categoria }}</option>
-                    @endforeach
-                </select>
-
                 <!-- Botão "eye-on" -->
                 <button id="eye-on" class="p-2 rounded-lg flex items-center justify-center">
                     <img src="{{ asset('Icons/eye-on.png') }}" alt="Imagem Centralizada" class="h-15 w-15 object-contain" />
@@ -62,7 +57,6 @@
             <table class="min-w-full table-auto text-center">
                 <thead>
                     <tr class="bg-white">
-                        <th class="p-2 text-center">Selecionar</th>
                         <th class="p-2 text-center">Nome</th>
                         <th class="p-2 text-center">Categoria</th>
                         <th class="p-2 text-center">Valor</th>
@@ -75,18 +69,18 @@
                         @csrf
                         <input type="hidden" name="Id" value="{{ $Item->id }}"></input>
                         <tr>
-                            <td class="p-2">
-                                <input type="checkbox" class="item-checkbox" value="{{ $Item->id }}">
-                            </td>
                             <td class="p-2">{{ $Item->nome }}</td>
                             <td class="p-2">{{ $Item->categoria }}</td>
                             <td class="p-2">R$ {{ $Item->valor }}</td>
-                            <td class="p-2">
+                            <td class="p-2 flex justify-center space-x-2">
                                 <button type="submit" class="bg-green-500 text-white p-1 rounded">
                                     <img src="{{ asset('Icons/edit.png') }}" alt="Imagem Centralizada" class="h-15 w-15 object-contain" />
                                 </button>
                                 <button type="button" class="bg-red-400 text-white p-1 rounded delete-button" data-id="{{ $Item->id }}">
                                     <img src="{{ asset('Icons/trash.png') }}" alt="Ícone Lixeira" class="h-10 w-10 object-contain" />
+                                </button>
+                                <button type="button" class="bg-blue-500 text-white p-1 rounded select-button" data-id="{{ $Item->id }}">
+                                    <img src="{{ asset('Icons/select.png') }}" alt="Selecionar" class="h-10 w-10 object-contain" />
                                 </button>
                             </td>
                         </tr>
@@ -98,39 +92,63 @@
     </div>
 
     <script>
-        // Função para obter os IDs selecionados
-        function getSelectedIds() {
-            const checkboxes = document.querySelectorAll('.item-checkbox:checked');
-            return Array.from(checkboxes).map(checkbox => checkbox.value);
+        // Array para armazenar os itens selecionados
+        let selectedItems = [];
+
+        function toggleItemSelection(itemId) {
+            const index = selectedItems.indexOf(itemId);
+            if (index === -1) {
+                selectedItems.push(itemId);
+            } else {
+                selectedItems.splice(index, 1);
+            }
+            updateSelectedButton(itemId);
         }
 
-        // Adicionar eventos de clique aos botões
-        document.getElementById('eye-on').addEventListener('click', function() {
-            const categoria = document.getElementById('categoria_eye').value;
+        // Função para atualizar o visual do botão de seleção
+        function updateSelectedButton(itemId) {
+            const button = document.querySelector(`.select-button[data-id="${itemId}"]`);
+            if (selectedItems.includes(itemId)) {
+                button.classList.add('bg-yellow-500');
+                button.classList.remove('bg-blue-500');
+            } else {
+                button.classList.add('bg-blue-500');
+                button.classList.remove('bg-yellow-500');
+            }
+        }
+
+        // Função para obter os IDs selecionados
+        function getSelectedIds() {
+            return selectedItems;
+        }
+
+        // Adicionar eventos de clique aos botões de seleção
+        document.querySelectorAll('.select-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const itemId = this.getAttribute('data-id');
+                toggleItemSelection(itemId);
+            });
+        });
+
+        // Adicionar eventos de clique aos botões de ação
+        function enviarFormularioDeVisibilidade(rota) {
             const selectedIds = getSelectedIds();
-            
+
             if (selectedIds.length === 0) {
                 alert('Por favor, selecione pelo menos um item');
                 return;
             }
-            
-            // Enviar via POST (precisa criar um formulário dinâmico)
+
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = '/eye-on';
-            
+            form.action = rota;
+
             const csrfToken = document.createElement('input');
             csrfToken.type = 'hidden';
             csrfToken.name = '_token';
             csrfToken.value = document.querySelector('meta[name="csrf-token"]').content;
             form.appendChild(csrfToken);
-                        
-            const categoriaInput = document.createElement('input');
-            categoriaInput.type = 'hidden';
-            categoriaInput.name = 'categoria';
-            categoriaInput.value = categoria;
-            form.appendChild(categoriaInput);
-            
+
             selectedIds.forEach(id => {
                 const input = document.createElement('input');
                 input.type = 'hidden';
@@ -138,75 +156,45 @@
                 input.value = id;
                 form.appendChild(input);
             });
-            
+
             document.body.appendChild(form);
             form.submit();
+        }
+
+        document.getElementById('eye-on').addEventListener('click', function() {
+            enviarFormularioDeVisibilidade('/eye-on');
         });
 
         document.getElementById('eye-off').addEventListener('click', function() {
-            const categoria = document.getElementById('categoria_eye').value;
-            const selectedIds = getSelectedIds();
-            
-            if (selectedIds.length === 0) {
-                alert('Por favor, selecione pelo menos um item');
-                return;
-            }
-            
-            // Enviar via POST (precisa criar um formulário dinâmico)
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/eye-off';
-            
-            const csrfToken = document.createElement('input');
-            csrfToken.type = 'hidden';
-            csrfToken.name = '_token';
-            csrfToken.value = document.querySelector('meta[name="csrf-token"]').content;
-            form.appendChild(csrfToken);
-            
-            const categoriaInput = document.createElement('input');
-            categoriaInput.type = 'hidden';
-            categoriaInput.name = 'categoria';
-            categoriaInput.value = categoria;
-            form.appendChild(categoriaInput);
-            
-            selectedIds.forEach(id => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'ids[]';
-                input.value = id;
-                form.appendChild(input);
-            });
-            
-            document.body.appendChild(form);
-            form.submit();
+            enviarFormularioDeVisibilidade('/eye-off');
         });
 
         document.getElementById('delete-selected').addEventListener('click', function() {
             const selectedIds = getSelectedIds();
-            
+
             if (selectedIds.length === 0) {
                 alert('Por favor, selecione pelo menos um item');
                 return;
             }
-            
+
             if (confirm("Você tem certeza que deseja deletar os itens selecionados?")) {
                 // Enviar via POST
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.action = '/admin/Cardapio/DeleteMultiple';
-                
+
                 const csrfToken = document.createElement('input');
                 csrfToken.type = 'hidden';
                 csrfToken.name = '_token';
                 csrfToken.value = document.querySelector('meta[name="csrf-token"]').content;
                 form.appendChild(csrfToken);
-                
+
                 const methodInput = document.createElement('input');
                 methodInput.type = 'hidden';
                 methodInput.name = '_method';
                 methodInput.value = 'DELETE';
                 form.appendChild(methodInput);
-                
+
                 selectedIds.forEach(id => {
                     const input = document.createElement('input');
                     input.type = 'hidden';
@@ -214,7 +202,7 @@
                     input.value = id;
                     form.appendChild(input);
                 });
-                
+
                 document.body.appendChild(form);
                 form.submit();
             }
