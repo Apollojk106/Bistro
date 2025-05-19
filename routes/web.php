@@ -10,7 +10,7 @@ use App\Http\Controllers\FormaPagamentoController;
 use App\Models\FormaPagamento;
 
 Route::get('/sessionData', [UserController::class, 'sessionData'])->name("sessionData");
-Route::get('/', [UserController::class, 'UserCardapio']);
+Route::get('/', [UserController::class, 'Configuracao']);
 
 
 
