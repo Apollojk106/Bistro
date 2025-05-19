@@ -21,6 +21,4 @@ class Configuracao extends Model
     protected $casts = [
         'status' => 'boolean', // Converte automaticamente entre boolean e integer
     ];
-
-    public $timestamps = true;
 }

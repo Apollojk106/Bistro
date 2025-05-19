@@ -80,6 +80,8 @@ Route::post('/Configuracao/forma-pagamento', [ConfiguracaoController::class, 'ge
 Route::put('/Configuracao/forma-pagamento', [ConfiguracaoController::class, 'gerenciarFormaPagamento'])->name('admin.configuracao.forma-pagamento');
 
 Route::put('/Configuracao/categoria/{id}', [ConfiguracaoController::class, 'atualizarCategoria'])->name('admin.configuracao.categoria.update');
+Route::get('/configuracoes/agendamento', [ConfiguracaoController::class, 'getConfiguracoes']); //json
+
 
 Route::get('/admin/Historico', [PedidoController::class, 'PedidosConcluidos'])->name("Historico");
 Route::post('/admin/Historico/Filtro', [PedidoController::class, 'HistoricoFiltro'])->name("Historico.filtro");
