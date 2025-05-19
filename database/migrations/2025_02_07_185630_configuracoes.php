@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('conector')->nullable();
             $table->string('valores2')->nullable();
             $table->enum('type',['1','2','3']);
-            $table->timestamps();
         });
     }
 

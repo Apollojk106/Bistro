@@ -84,4 +84,27 @@ class ConfiguracaoController extends Controller
 
         return redirect()->route('Configuracao')->with('success', 'Categoria atualizada com sucesso!');
     }
+
+    public function getConfiguracoes() //json
+    {
+        $configs = Configuracao::whereIn('nome', [ 
+            'Tempo minimo de Agendamento',
+            'Horario de Funcionamento'
+        ])->get();
+
+        $dados = [];
+
+        foreach ($configs as $config) {
+            if ($config->nome === 'Tempo minimo de Agendamento') {
+                $dados['tempoMinimo'] = $config->valores1; // ex: 0:30
+            }
+
+            if ($config->nome === 'Horario de Funcionamento') {
+                $dados['horarioInicio'] = $config->valores1; // ex: 9:00
+                $dados['horarioFim'] = $config->valores2;    // ex: 21:00
+            }
+        }
+
+        return response()->json($dados);
+    }
 }

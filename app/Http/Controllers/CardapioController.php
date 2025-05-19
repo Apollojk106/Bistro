@@ -64,7 +64,7 @@ class CardapioController extends Controller
                     ->take(10)
                     ->get();
             } catch (\Exception $e) {
-                $Items = collect(); 
+                $Items = collect();
             }
         } else {
             $Items = Cardapio::where($request->categoria, 'like', '%' . $request->conteudo . '%')
@@ -72,8 +72,7 @@ class CardapioController extends Controller
                 ->get();
         }
 
-        if($Items->isEmpty())
-        {
+        if ($Items->isEmpty()) {
             return redirect()->route("Cardapio")->with('error', 'Item não encontrado!');
         }
 
@@ -82,11 +81,9 @@ class CardapioController extends Controller
 
     public function GetCardapio($Items)
     {
-        $Categorias = $this->TodasCategorias();
-
         $Items = $this->PegarCategoria($Items);
 
-        return view('admin.Cardapio', compact('Categorias', 'Items'));
+        return view('admin.Cardapio', compact('Items'));
     }
 
     public function PegarCategoria($Items)
@@ -108,38 +105,36 @@ class CardapioController extends Controller
 
     public function eyeOn(Request $request)
     {
-        return $this->AlterarVisibilidade($request->categoria, "ligado");
+        return $this->AlterarVisibilidade("ligado", $request->ids);
     }
 
     public function eyeOff(Request $request)
     {
-        return $this->AlterarVisibilidade($request->categoria, "desligado");
+        return $this->AlterarVisibilidade("desligado", $request->ids);
     }
 
-    public function AlterarVisibilidade($Categoria, $Status)
+    public function AlterarVisibilidade($status, $ids = [])
     {
-        $Categoria = Categoria::where('nome', $Categoria)
-            ->first();
+        if (empty($ids)) {
+            return redirect()->route('Cardapio')->with('error', 'Nenhum item selecionado.');
+        }
 
-        $items = Cardapio::where('id_categoria', $Categoria->id)->get();
+        $items = Cardapio::whereIn('id', $ids)->get();
 
-        // Atualiza o status de todos os itens para "ligado"
         foreach ($items as $item) {
-            $item->status = $Status;
+            $item->status = $status;
             $item->save();
         }
 
-        return $this->IndexCardapio();
+        return redirect()->route('Cardapio')->with('success', 'Itens atualizados com sucesso.');
     }
 
     //Tela de Item
-
     public function SaveItem($Item)
     {
-        // Processar o upload da imagem
         $imagemPath = null;
         if ($Item->hasFile('Imagem')) {
-            $imagemPath = $Item->file('Imagem')->store('cardapio_imagens', 'public'); // Armazena a imagem na pasta "storage/app/public/cardapio_imagens"
+            $imagemPath = $Item->file('Imagem')->store('cardapio_imagens', 'public');
         }
 
         if ($Item->categoria == "novo") {
@@ -179,14 +174,10 @@ class CardapioController extends Controller
 
     public function DeleteItem($id)
     {
-        // Encontre o item do cardápio
         $item = Cardapio::find($id);
 
         if ($item) {
-            // Exclua todos os registros dependentes na tabela `itens_pedidos`
             $item->itensPedidos()->delete();
-
-            // Agora exclua o item do cardápio
             $item->delete();
 
             return redirect()->route('Cardapio')->with('success', 'Item deletado com sucesso!');
@@ -195,8 +186,23 @@ class CardapioController extends Controller
         }
     }
 
-    public function DeleteMultItem()
+    public function deleteMultiple(Request $request)
     {
-        dd("slk");
+        $ids = $request->input('ids', []);
+
+        if (!empty($ids)) {
+            foreach ($ids as $id) {
+                $item = Cardapio::find($id);
+
+                if ($item) {
+                    $item->itensPedidos()->delete();
+                    $item->delete();
+                }
+            }
+
+            return redirect()->route('Cardapio')->with('success', 'Itens deletados com sucesso!');
+        }
+
+        return redirect()->route('Cardapio')->with('error', 'Nenhum item selecionado para exclusão.');
     }
 }
