@@ -11,6 +11,32 @@
 </head>
 
 <body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+  <script>
+    // Configurações do estabelecimento vindo do banco de dados
+    const configuracoes = {
+      pedidoAtivo: {{ $configuracoes['Pedido'] ?? 0 }},
+      agendamentoAtivo: {{ $configuracoes['Agendamento'] ?? 0 }},
+      tempoMinimo: '{{ $configuracoes["Tempo mínimo de Agendamento"] ?? "00:30" }}',
+      deliveryAtivo: {{ $configuracoes['Delivery'] ?? 0 }},
+      distanciaMaxima: {{ $configuracoes['Distancia Máxima'] ?? 10 }},
+      horarioInicio: '{{ $configuracoes["Horario de Funcionamento"]["valores1"] ?? "09:00" }}',
+      horarioFim: '{{ $configuracoes["Horario de Funcionamento"]["valores2"] ?? "21:00" }}'
+    };
+
+    // Função auxiliar para adicionar minutos a um horário
+    function adicionarMinutos(horario, minutos) {
+      const [h, m] = horario.split(':').map(Number);
+      const date = new Date();
+      date.setHours(h, m + minutos, 0);
+      return date.toTimeString().slice(0, 5);
+    }
+
+    // Função para formatar hora como HH:MM
+    function formatarHora(date) {
+      return date.toTimeString().slice(0, 5);
+    }
+  </script>
+
   <x-hotbar-user />
 
   <nav class="flex justify-center relative bg-[#2E2E2E] py-6">
@@ -27,7 +53,7 @@
         <button id="localBtn" class="flex-1 py-3 rounded-2xl border border-orange-400 text-orange-600 text-lg font-semibold bg-gray-200 hover:bg-orange-100 focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95">
           Local
         </button>
-        <button id="entregaBtn" class="flex-1 py-3 rounded-2xl border border-orange-400 text-gray-600 text-lg font-semibold bg-gray-300 hover:bg-orange-100 focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95">
+        <button id="entregaBtn" class="flex-1 py-3 rounded-2xl border border-orange-400 text-gray-600 text-lg font-semibold bg-gray-300 hover:bg-orange-100 focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95" {{ $configuracoes['Delivery'] ? '' : 'disabled' }}>
           Entrega
         </button>
       </div>
@@ -56,19 +82,22 @@
           </div>
 
           <!-- Bloco: Agendamento -->
-          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="toggleAgendamento()">
+          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="configuracoes.agendamentoAtivo ? toggleAgendamento() : alert('Agendamento está desativado no momento');">
             <div class="flex justify-between items-center">
               <span class="text-lg font-medium">Agendamento</span>
               <div class="w-7 h-7 rounded-full border border-gray-500 flex items-center justify-center transition-colors duration-300 hover:bg-gray-200">
                 <img id="agendamentoCheck" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado" class="hidden w-5 h-5" />
               </div>
             </div>
+            @if(!$configuracoes['Agendamento'])
+              <div class="text-center text-sm text-red-600 mt-2">Agendamento desativado no momento</div>
+            @endif
 
             <!-- Seção de Agendamento (inicialmente oculta) -->
             <div id="agendamentoSection" class="hidden mt-4 space-y-4 border border-orange-400 rounded-xl p-4">
               <div class="flex items-center justify-between">
                 <span class="text-lg font-medium">Horário</span>
-                <input type="time" id="horarioInput" class="bg-gray-300 text-gray-700 rounded-lg px-3 py-1 text-sm font-semibold focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-300 ease-in-out">
+                <input type="time" id="horarioLocalInput" class="bg-gray-300 text-gray-700 rounded-lg px-3 py-1 text-sm font-semibold focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-300 ease-in-out">
               </div>
             </div>
           </div>
@@ -89,21 +118,29 @@
           </div>
 
           <!-- Bloco: Agendamento -->
-          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="selecionarOpcao('Agendamento')">
+          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="configuracoes.agendamentoAtivo ? selecionarOpcao('Agendamento') : alert('Agendamento está desativado no momento');">
             <div class="flex justify-between items-center">
               <span class="text-lg font-medium">Agendamento</span>
               <div class="w-7 h-7 rounded-full border border-gray-500 flex items-center justify-center transition-colors duration-300 hover:bg-gray-200">
                 <img id="agendamentoEntregaCheck" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado" class="hidden w-5 h-5" />
               </div>
             </div>
+            @if(!$configuracoes['Agendamento'])
+              <div class="text-center text-sm text-red-600 mt-2">Agendamento desativado no momento</div>
+            @endif
 
             <!-- Aviso e horário (inicialmente oculto) -->
             <div id="aviso" class="text-center text-sm text-gray-600 mt-4 hidden">
-              A comida terá que ser agendada com até 1 hora antes
+              A comida terá que ser agendada com pelo menos {{ $configuracoes["Tempo mínimo de Agendamento"] ?? "30" }} minutos de antecedência
             </div>
-            <div id="horarioContainer" class="mt-4 hidden">
+            <div id="horarioContainer" class="mt-4">
               <label class="block text-center font-semibold text-gray-700">Horário</label>
-              <input type="time" id="horario" class="block mx-auto mt-2 border rounded-md px-3 py-1 text-gray-700 focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-300 ease-in-out">
+              <input
+                type="time"
+                id="horarioEntregaInput"
+                class="bg-gray-300 text-gray-700 rounded-lg px-3 py-1 text-sm font-semibold focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-300 ease-in-out"
+                min="{{ $configuracoes["Horario de Funcionamento"]["valores1"] ?? "09:00" }}"
+                max="{{ $configuracoes["Horario de Funcionamento"]["valores2"] ?? "21:00" }}">
             </div>
           </div>
         </div>
@@ -125,12 +162,30 @@
   </footer>
 
   <script>
-    document.getElementById('horarioInput').addEventListener('click', (event) => {
-      event.stopPropagation();
+    // Variáveis globais
+    const btnContinuar = document.getElementById('continuarBtn');
+    let opcaoSelecionada = 'Agora'; // Valor padrão
+    let tipoOpcao = 'Local'; // Valor padrão
+    let opcaoLocalSelecionada = 'Agora'; // Armazena a opção de local selecionada (Viagem ou Agora)
+    let agendamentoAtivoLocal = false; // Controla se o agendamento está ativo para local
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', function() {
+      selectLocalOption('Agora'); // Definir retirada como padrão
+      
+      // Desativa o botão de entrega se delivery estiver desligado
+      if (!configuracoes.deliveryAtivo) {
+        document.getElementById('entregaBtn').classList.add('opacity-50', 'cursor-not-allowed');
+      }
     });
 
     // Funções para alternar entre Local e Entrega
     document.getElementById('localBtn').addEventListener('click', () => {
+      if (!configuracoes.pedidoAtivo) {
+        alert('Pedidos estão desativados no momento');
+        return;
+      }
+      
       document.getElementById('localBtn').classList.add('bg-gray-200', 'text-orange-600');
       document.getElementById('entregaBtn').classList.remove('bg-gray-200', 'text-orange-600');
       document.getElementById('entregaBtn').classList.add('bg-gray-300', 'text-gray-600');
@@ -140,6 +195,11 @@
     });
 
     document.getElementById('entregaBtn').addEventListener('click', () => {
+      if (!configuracoes.deliveryAtivo) {
+        alert('Delivery está desativado no momento');
+        return;
+      }
+      
       document.getElementById('entregaBtn').classList.add('bg-gray-200', 'text-orange-600');
       document.getElementById('localBtn').classList.remove('bg-gray-200', 'text-orange-600');
       document.getElementById('localBtn').classList.add('bg-gray-300', 'text-gray-600');
@@ -150,6 +210,11 @@
 
     // Funções para seleção de opções de entrega
     function selecionarOpcao(opcao) {
+      if (opcao === 'Agendamento' && !configuracoes.agendamentoAtivo) {
+        alert('Agendamento está desativado no momento');
+        return;
+      }
+      
       opcaoSelecionada = opcao;
       if (opcao === 'Agora') {
         document.getElementById('agoraCheck').classList.remove('hidden');
@@ -161,17 +226,14 @@
         document.getElementById('agendamentoEntregaCheck').classList.remove('hidden');
         document.getElementById('aviso').classList.remove('hidden');
         document.getElementById('horarioContainer').classList.remove('hidden');
+        atualizarHorarioMinimo('horarioEntregaInput');
       }
     }
-
-    // Variáveis para controle das opções de local
-    let opcaoLocalSelecionada = 'Agora'; // Armazena a opção de local selecionada (Viagem ou Agora)
-    let agendamentoAtivo = false; // Controla se o agendamento está ativo
 
     // Funções para seleção de opções de local
     function selectLocalOption(option) {
       opcaoLocalSelecionada = option;
-      agendamentoAtivo = false;
+      agendamentoAtivoLocal = false;
 
       // Esconde a seção de agendamento se estiver visível
       document.getElementById('agendamentoSection').classList.add('hidden');
@@ -192,6 +254,11 @@
 
     // Funções para agendamento no local
     function toggleAgendamento() {
+      if (!configuracoes.agendamentoAtivo) {
+        alert('Agendamento está desativado no momento');
+        return;
+      }
+      
       const agendamentoSection = document.getElementById('agendamentoSection');
       const agendamentoCheck = document.getElementById('agendamentoCheck');
 
@@ -199,7 +266,7 @@
         // Ativar agendamento
         agendamentoSection.classList.remove('hidden');
         agendamentoCheck.classList.remove('hidden');
-        agendamentoAtivo = true;
+        agendamentoAtivoLocal = true;
 
         // Mantém a opção de local selecionada (Viagem ou Agora) visível
         if (opcaoLocalSelecionada === 'Viagem') {
@@ -208,50 +275,130 @@
           document.getElementById('retiradaCheck').classList.remove('hidden');
         }
 
-        setMinHorario();
+        atualizarHorarioMinimo('horarioLocalInput');
       } else {
         // Desativar agendamento
         agendamentoSection.classList.add('hidden');
         agendamentoCheck.classList.add('hidden');
-        agendamentoAtivo = false;
+        agendamentoAtivoLocal = false;
 
         // Volta para a opção de local selecionada
         selectLocalOption(opcaoLocalSelecionada);
       }
     }
 
-    function setMinHorario() {
-      const now = new Date();
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
+    function atualizarHorarioMinimo(inputId) {
+      const input = document.getElementById(inputId);
+      const agora = new Date();
+      
+      // Converte o tempo mínimo (ex: "0:30") para minutos
+      const [minH, minM] = configuracoes.tempoMinimo.split(':').map(Number);
+      const tempoMinimoMinutos = minH * 60 + minM;
+      
+      agora.setMinutes(agora.getMinutes() + tempoMinimoMinutos);
+      
+      const horarioMinimo = formatarHora(agora);
+      const horarioAbertura = configuracoes.horarioInicio;
+      const horarioFechamento = configuracoes.horarioFim;
 
-      if (hours >= 22) {
-        horarioInput.disabled = true;
-        horarioInput.value = '';
-        alert('Agendamento não disponível após as 22:00.');
-      } else {
-        const minHours = hours.toString().padStart(2, '0');
-        const minMinutes = minutes.toString().padStart(2, '0');
-        horarioInput.min = `${minHours}:${minMinutes}`;
-        horarioInput.value = `${minHours}:${minMinutes}`;
-        horarioInput.max = "22:00";
-        horarioInput.disabled = false;
+      // Verifica se o estabelecimento já fechou hoje
+      if (horarioMinimo > horarioFechamento) {
+        input.disabled = true;
+        alert('Não é possível agendar para hoje, o estabelecimento já fechou.');
+        return;
       }
+
+      // Define o mínimo como o maior entre horário atual + tempo mínimo e horário de abertura
+      const min = horarioMinimo < horarioAbertura ? horarioAbertura : horarioMinimo;
+      
+      input.min = min;
+      input.max = horarioFechamento;
+      input.value = min;
+      input.disabled = false;
     }
 
-    // Variáveis globais
-    const btnContinuar = document.getElementById('continuarBtn');
-    let opcaoSelecionada = 'Agora'; // Valor padrão
-    let tipoOpcao = 'Local'; // Valor padrão
-
-    document.getElementById('continuarBtn').addEventListener('click', function handleClick() {
-      if (validarSelecao()) {
-        enviarPedido();
-        this.removeEventListener('click', handleClick);
+    function validarHorarioAgendamento() {
+      let inputHorario;
+      
+      if (tipoOpcao === 'Local' && agendamentoAtivoLocal) {
+        inputHorario = document.getElementById('horarioLocalInput');
+      } else if (tipoOpcao === 'Entrega' && opcaoSelecionada === 'Agendamento') {
+        inputHorario = document.getElementById('horarioEntregaInput');
+      } else {
+        return true; // Não há agendamento para validar
       }
-    });
+
+      if (inputHorario && inputHorario.disabled) {
+        alert('Não é possível agendar para o horário selecionado. O estabelecimento está fechado.');
+        return false;
+      }
+
+      if (inputHorario && !inputHorario.value) {
+        alert('Por favor, selecione um horário para o agendamento');
+        return false;
+      }
+
+      const horarioSelecionado = inputHorario.value;
+      const horarioMinimo = inputHorario.min;
+      const horarioMaximo = inputHorario.max;
+
+      if (horarioSelecionado < horarioMinimo) {
+        alert('O horário selecionado é muito cedo. Por favor, escolha um horário após ' + horarioMinimo);
+        return false;
+      }
+
+      if (horarioSelecionado > horarioMaximo) {
+        alert('O horário selecionado é após o fechamento. Por favor, escolha um horário antes de ' + horarioMaximo);
+        return false;
+      }
+
+      return true;
+    }
+
+    function validarSelecao() {
+      if (!configuracoes.pedidoAtivo) {
+        alert('Pedidos estão desativados no momento');
+        return false;
+      }
+
+      if (tipoOpcao === 'Entrega' && !configuracoes.deliveryAtivo) {
+        alert('Delivery está desativado no momento');
+        return false;
+      }
+
+      if (!tipoOpcao) {
+        alert('Por favor, selecione Local ou Entrega');
+        return false;
+      }
+
+      if (tipoOpcao === 'Local') {
+        if (!opcaoLocalSelecionada && !agendamentoAtivoLocal) {
+          alert('Por favor, selecione uma opção de Local');
+          return false;
+        }
+
+        if (agendamentoAtivoLocal && !validarHorarioAgendamento()) {
+          return false;
+        }
+      } else if (tipoOpcao === 'Entrega') {
+        if (!opcaoSelecionada) {
+          alert('Por favor, selecione uma opção de Entrega');
+          return false;
+        }
+
+        if (opcaoSelecionada === 'Agendamento' && !validarHorarioAgendamento()) {
+          return false;
+        }
+      }
+
+      return true;
+    }
 
     function enviarPedido() {
+      if (!validarSelecao()) {
+        return;
+      }
+
       btnContinuar.disabled = true;
       btnContinuar.textContent = 'Processando...';
 
@@ -259,27 +406,13 @@
       let opcaoParaEnvio = opcaoSelecionada;
 
       // Se for Local e agendamento estiver ativo, mantemos a opção de local (Viagem/Agora) mas enviamos o horário
-      if (tipoOpcao === 'Local' && agendamentoAtivo) {
+      if (tipoOpcao === 'Local' && agendamentoAtivoLocal) {
         opcaoParaEnvio = opcaoLocalSelecionada;
-        horario = document.getElementById('horarioInput').value;
-
-        if (!horario) {
-          alert('Por favor, selecione um horário para o agendamento');
-          btnContinuar.disabled = false;
-          btnContinuar.textContent = 'Continuar';
-          return;
-        }
+        horario = document.getElementById('horarioLocalInput').value;
       }
       // Se for Entrega e agendamento selecionado
       else if (tipoOpcao === 'Entrega' && opcaoSelecionada === 'Agendamento') {
-        horario = document.getElementById('horario').value;
-
-        if (!horario) {
-          alert('Por favor, selecione um horário para o agendamento');
-          btnContinuar.disabled = false;
-          btnContinuar.textContent = 'Continuar';
-          return;
-        }
+        horario = document.getElementById('horarioEntregaInput').value;
       }
 
       let url = `/Salvar/Selecao/${opcaoParaEnvio}/${tipoOpcao}`;
@@ -290,40 +423,6 @@
 
       window.location.href = url;
     }
-
-    function validarSelecao() {
-      if (!tipoOpcao) {
-        alert('Por favor, selecione Local ou Entrega');
-        return false;
-      }
-
-      if (tipoOpcao === 'Local') {
-        if (!opcaoLocalSelecionada && !agendamentoAtivo) {
-          alert('Por favor, selecione uma opção de Local');
-          return false;
-        }
-
-        if (agendamentoAtivo && !document.getElementById('horarioInput').value) {
-          alert('Por favor, selecione um horário para o agendamento');
-          return false;
-        }
-      } else if (tipoOpcao === 'Entrega') {
-        if (!opcaoSelecionada) {
-          alert('Por favor, selecione uma opção de Entrega');
-          return false;
-        }
-
-        if (opcaoSelecionada === 'Agendamento' && !document.getElementById('horario').value) {
-          alert('Por favor, selecione um horário para o agendamento');
-          return false;
-        }
-      }
-
-      return true;
-    }
-
-    // Inicialização
-    selectLocalOption('Agora'); // Definir retirada como padrão
   </script>
 </body>
 

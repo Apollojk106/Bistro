@@ -322,10 +322,42 @@ class UserController extends Controller
 
     public function Selecao()
     {
+        // Obtém o carrinho do usuário
         $Pedido = $this->GetCarrinho();
-        $Opcoes = session('opcoes', []);
 
-        return view('user.Selecao', compact('Opcoes', 'Pedido'));
+        // Obtém as opções de configuração do banco de dados
+        $configuracoes = Configuracao::all()->mapWithKeys(function ($item) {
+            // Tratamento especial para Horario de Funcionamento
+            if ($item->nome == 'Horario de Funcionamento') {
+                return [
+                    $item->nome => [
+                        'valores1' => $item->valores1,
+                        'valores2' => $item->valores2,
+                        'status' => $item->status
+                    ]
+                ];
+            }
+            return [$item->nome => $item->status ? $item->valores1 : null];
+        });
+
+        // Prepara os dados para a view
+        $dados = [
+            'Opcoes' => session('opcoes', []),
+            'Pedido' => $Pedido,
+            'configuracoes' => [
+                'Pedido' => (bool)$configuracoes->get('Pedido'),
+                'Agendamento' => (bool)$configuracoes->get('Agendamento'),
+                'Tempo mínimo de Agendamento' => $configuracoes->get('Tempo mínimo de Agendamento') ?? '00:30',
+                'Delivery' => (bool)$configuracoes->get('Delivery'),
+                'Distancia Máxima' => $configuracoes->get('Distancia Máxima') ?? 10,
+                'Horario de Funcionamento' => $configuracoes->get('Horario de Funcionamento') ?? [
+                    'valores1' => '09:00',
+                    'valores2' => '21:00'
+                ]
+            ]
+        ];
+
+        return view('user.Selecao', $dados);
     }
 
     public function PessoasDashboard()

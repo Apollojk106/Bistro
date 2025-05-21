@@ -10,12 +10,12 @@ use App\Http\Controllers\FormaPagamentoController;
 use App\Models\FormaPagamento;
 
 Route::get('/sessionData', [UserController::class, 'sessionData'])->name("sessionData");
-Route::get('/', [UserController::class, 'Configuracao']);
+Route::get('/', [UserController::class, 'UserCardapio']);
 
 
 
 //login index
-//user -
+//user
 Route::get('/Login', [UserController::class, 'Login'])->name("User.Login");
 Route::post('/Login/Post', [UserController::class, 'PostLogin'])->name("User.Login.Post");
 
@@ -29,36 +29,42 @@ Route::get('/Logout', [UserController::class, 'Logout'])->name("User.Logout");
 
 //Cardapio
 Route::get('/Cardapio', [UserController::class, 'UserCardapio'])->name("User.Cardapio");
-Route::get('/Item/{id}', [CarrinhoController::class, 'show'])->name('item.get');
 
-Route::get('/PagamentoPix', [UserController::class, 'PagamentoPix'])->name("User.Pix");
+Route::group(['middleware' => [\App\Http\Middleware\CheckPedidoLigado::class]], function () {
 
-Route::get('/OpcaoPedido', [UserController::class, 'OpcaoPedido'])->name("User.OpcaoPedido");
-Route::post('/Salvar/OpcaoPedido', [CarrinhoController::class, 'SalvarOpcaoPedido'])->name("User.OpcaoPedido.Post");
+    Route::get('/Item/{id}', [CarrinhoController::class, 'show'])->name('item.get');
 
-Route::get('/Pagamento', [UserController::class, 'FormaPagamento'])->name("User.Pagamento");
-Route::post('/Salvar/Pagamento', [FormaPagamentoController::class, 'SalvarFormaPagamento'])->name("User.Pagamento.Post");
+    Route::get('/PagamentoPix', [UserController::class, 'PagamentoPix'])->name("User.Pix");
 
-Route::get('/Selecao', [UserController::class, 'Selecao'])->name("User.Selecao");
+    Route::get('/OpcaoPedido', [UserController::class, 'OpcaoPedido'])->name("User.OpcaoPedido");
+    Route::post('/Salvar/OpcaoPedido', [CarrinhoController::class, 'SalvarOpcaoPedido'])->name("User.OpcaoPedido.Post");
 
-Route::get('/Localizacao', [UserController::class, 'Localizacao'])->name("User.Localizacao");
+    Route::get('/Pagamento', [UserController::class, 'FormaPagamento'])->name("User.Pagamento");
+    Route::post('/Salvar/Pagamento', [FormaPagamentoController::class, 'SalvarFormaPagamento'])->name("User.Pagamento.Post");
 
-Route::get('/Sacola', [CarrinhoController::class, 'IndexCarrinho'])->name("User.Sacola");
-Route::get('/Sacola/Limpar', [CarrinhoController::class, 'LimparCarrinho'])->name("User.Sacola.Limpar");
+    Route::get('/Selecao', [UserController::class, 'Selecao'])->name("User.Selecao");
 
-//Rotas Json
-Route::post('/Salvar/pedido', [CarrinhoController::class, 'SalvarPedido'])->name('salvar.pedido');
-Route::post('/Salvar/Sacola', [CarrinhoController::class, 'SalvarSacola'])->name('salvar.sacola');
+    Route::get('/Localizacao', [UserController::class, 'Localizacao'])->name("User.Localizacao");
 
-Route::get('/Salvar/Selecao/{opcaoSelecionada}/{tipoOpcao}', [CarrinhoController::class, 'SalvarSelecao'])->name('salvar.selecao');
-Route::get('/Salvar/Selecao/{opcaoSelecionada}/{tipoOpcao}/{horario}', [CarrinhoController::class, 'SalvarSelecaoHorario'])->name('salvar.selecao.horario');
+    Route::get('/Sacola', [CarrinhoController::class, 'IndexCarrinho'])->name("User.Sacola");
+    Route::get('/Sacola/Limpar', [CarrinhoController::class, 'LimparCarrinho'])->name("User.Sacola.Limpar");
 
-Route::post('/Editar/pedido', [CarrinhoController::class, 'SalvarPedido'])->name('editar.item');
+    //Rotas Json
+    Route::post('/Salvar/pedido', [CarrinhoController::class, 'SalvarPedido'])->name('salvar.pedido');
+    Route::post('/Salvar/Sacola', [CarrinhoController::class, 'SalvarSacola'])->name('salvar.sacola');
 
-Route::get('/Pedido/Solicitado', [UserController::class, 'PedidoSolicitado'])->name("User.Pedido");
-Route::get('/Pedido/User', [UserController::class, 'UltimoPedido'])->name("User.Ultimo.Pedido");
-Route::get('/VerPedido', [UserController::class, 'VerPedido'])->name("User.VerPedido");
-Route::get('/Gerar/Pedido', [PedidoController::class, 'GerarPedido'])->name("Gerar.Pedido");
+    Route::get('/Salvar/Selecao/{opcaoSelecionada}/{tipoOpcao}', [CarrinhoController::class, 'SalvarSelecao'])->name('salvar.selecao');
+    Route::get('/Salvar/Selecao/{opcaoSelecionada}/{tipoOpcao}/{horario}', [CarrinhoController::class, 'SalvarSelecaoHorario'])->name('salvar.selecao.horario');
+
+    Route::post('/Editar/pedido', [CarrinhoController::class, 'SalvarPedido'])->name('editar.item');
+
+    Route::get('/Pedido/Solicitado', [UserController::class, 'PedidoSolicitado'])->name("User.Pedido");
+    Route::get('/Pedido/User', [UserController::class, 'UltimoPedido'])->name("User.Ultimo.Pedido");
+
+
+    Route::get('/VerPedido', [UserController::class, 'VerPedido'])->name('User.VerPedido');
+    Route::post('/gerarPedido', [PedidoController::class, 'gerarPedido'])->name('Pedido.Gerar');
+});
 
 
 //admin
@@ -80,8 +86,6 @@ Route::post('/Configuracao/forma-pagamento', [ConfiguracaoController::class, 'ge
 Route::put('/Configuracao/forma-pagamento', [ConfiguracaoController::class, 'gerenciarFormaPagamento'])->name('admin.configuracao.forma-pagamento');
 
 Route::put('/Configuracao/categoria/{id}', [ConfiguracaoController::class, 'atualizarCategoria'])->name('admin.configuracao.categoria.update');
-Route::get('/configuracoes/agendamento', [ConfiguracaoController::class, 'getConfiguracoes']); //json
-
 
 Route::get('/admin/Historico', [PedidoController::class, 'PedidosConcluidos'])->name("Historico");
 Route::post('/admin/Historico/Filtro', [PedidoController::class, 'HistoricoFiltro'])->name("Historico.filtro");
@@ -98,12 +102,3 @@ Route::get('/admin/Pessoas', [UserController::class, 'PessoasDashboard'])->name(
 Route::get('/admin/ItemCardapio', [UserController::class, 'GetItemCardapio'])->name("ItemCardapio");
 Route::post('/admin/ItemCardapio', [UserController::class, 'EditItemCardapio'])->name("EditItemCardapio");
 Route::post('/admin/ItemCardapio/Save', [UserController::class, 'SaveItem'])->name("SaveItem");
-
-
-
-
-
-
-
-
-

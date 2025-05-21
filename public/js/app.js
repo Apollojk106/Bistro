@@ -49,4 +49,14 @@ document.addEventListener("DOMContentLoaded", function () {
             checkboxIcon.classList.toggle('hidden');
         });
     
+        document.getElementById('horarioInput').addEventListener('change', function () {
+            const min = this.min;
+            const max = this.max;
+            const value = this.value;
+        
+            if (value < min || value > max) {
+                alert(`Por favor, selecione um horário entre ${min} e ${max}.`);
+                this.value = min; // Reseta para o valor mínimo
+            }
+        });
 });
