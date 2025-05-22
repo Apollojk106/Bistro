@@ -8,6 +8,7 @@ use App\Models\Pedido;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\ItensPedido;
+use App\Models\Configuracao;
 
 
 class PedidoController extends Controller
@@ -39,7 +40,8 @@ class PedidoController extends Controller
     public function gerarPedido()
     {
         $dadosPedido = session()->all();
-
+        $this->validarPedido();
+  
         // Verificação prévia do status dos itens do carrinho
         $carrinho = $dadosPedido['carrinho'] ?? [];
         $produtoIds = array_keys($carrinho);
@@ -466,5 +468,27 @@ class PedidoController extends Controller
         });
 
         return $resultados;
+    }
+
+    public function validarPedido()
+    {
+        // Verifica se a configuração "Pedido" está "Ligado"
+        $configuracaoPedido = Configuracao::where('nome', 'Pedido')->value('valores1');
+        if ($configuracaoPedido != 'Ligado') {
+            return redirect()->route('User.Cardapio')->with('error', 'O sistema de pedidos está indisponível no momento.');
+        }
+
+        // Verifica se a configuração "Agendamento" está "Ligado"
+        $configuracaoAgendamento = Configuracao::where('nome', 'Agendamento')->value('valores1');
+        $opcaoUsuario = session('opcoes'); // Obtém a opção atual do usuário da sessão
+        if ($configuracaoAgendamento != 'Ligado' && $opcaoUsuario === 'Agendamento') {
+            return redirect()->route('User.Selecao')->with('error', 'O sistema de agendamento está indisponível no momento.');
+        }
+
+        // Verifica se a configuração "Delivery" está "Ligado"
+        $configuracaoDelivery = Configuracao::where('nome', 'Delivery')->value('valores1');
+        if ($configuracaoDelivery != 'Ligado' && $opcaoUsuario === 'Entrega') {
+            return redirect()->route('User.Selecao')->with('error', 'O sistema de delivery está indisponível no momento.');
+        }
     }
 }

@@ -325,17 +325,31 @@ class UserController extends Controller
         // Obtém o carrinho do usuário
         $Pedido = $this->GetCarrinho();
 
-        // Obtém as opções de configuração do banco de dados
+        // Busca direta das configurações específicas
+        $horario = Configuracao::where('nome', 'Horario de Funcionamento')->first();
+        $tempoMinimo = Configuracao::where('nome', 'Tempo mínimo de Agendamento')->first();
+
+        // Define valores padrão
+        $inicioExpediente = '09:00';
+        $fimExpediente = '21:00';
+        $tempoMinimoAgendamento = '00:30';
+
+        if ($horario && $horario->status) {
+            $inicioExpediente = $horario->valores1 ?? $inicioExpediente;
+            $fimExpediente = $horario->valores2 ?? $fimExpediente;
+        }
+
+        if ($tempoMinimo && $tempoMinimo->status) {
+            $tempoMinimoAgendamento = $tempoMinimo->valores1 ?? $tempoMinimoAgendamento;
+        }
+
+        // Mantém o carregamento das outras configurações como no original
         $configuracoes = Configuracao::all()->mapWithKeys(function ($item) {
-            // Tratamento especial para Horario de Funcionamento
             if ($item->nome == 'Horario de Funcionamento') {
-                return [
-                    $item->nome => [
-                        'valores1' => $item->valores1,
-                        'valores2' => $item->valores2,
-                        'status' => $item->status
-                    ]
-                ];
+                return []; // Já tratado acima
+            }
+            if ($item->nome == 'Tempo mínimo de Agendamento') {
+                return []; // Já tratado acima
             }
             return [$item->nome => $item->status ? $item->valores1 : null];
         });
@@ -345,14 +359,14 @@ class UserController extends Controller
             'Opcoes' => session('opcoes', []),
             'Pedido' => $Pedido,
             'configuracoes' => [
-                'Pedido' => (bool)$configuracoes->get('Pedido'),
-                'Agendamento' => (bool)$configuracoes->get('Agendamento'),
-                'Tempo mínimo de Agendamento' => $configuracoes->get('Tempo mínimo de Agendamento') ?? '00:30',
-                'Delivery' => (bool)$configuracoes->get('Delivery'),
+                'Pedido' => $configuracoes->get('Pedido'),
+                'Agendamento' => $configuracoes->get('Agendamento'),
+                'Tempo mínimo de Agendamento' => $tempoMinimoAgendamento,
+                'Delivery' => $configuracoes->get('Delivery'),
                 'Distancia Máxima' => $configuracoes->get('Distancia Máxima') ?? 10,
-                'Horario de Funcionamento' => $configuracoes->get('Horario de Funcionamento') ?? [
-                    'valores1' => '09:00',
-                    'valores2' => '21:00'
+                'Horario de Funcionamento' => [
+                    'valores1' => $inicioExpediente,
+                    'valores2' => $fimExpediente
                 ]
             ]
         ];
