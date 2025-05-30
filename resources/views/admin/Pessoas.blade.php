@@ -168,11 +168,13 @@
     
     <!-- Lista de clientes -->
     <div id="clientList" class="rounded-b-lg">
-        <!-- Cliente exemplo -->
-        <div class="client-card grid grid-cols-12 gap-1 items-center p-3 hover:bg-gray-50 transition text-sm" data-id="10" data-name="Apollo Henrique" data-situation="-43">
-            <div class="col-span-3 name">Apollo Henrique</div>
-            <div class="col-span-2 id">10</div>
-            <div class="col-span-2 situation text-red-500 font-medium">R$ -43,00</div>
+        @forelse($clientes as $cliente)
+        <div class="client-card grid grid-cols-12 gap-1 items-center p-3 hover:bg-gray-50 transition text-sm" data-id="{{ $cliente->id }}" data-name="{{ $cliente->nome }}" data-situation="{{ $cliente->saldo }}">
+            <div class="col-span-3 name">{{ $cliente->nome }}</div>
+            <div class="col-span-2 id">{{ $cliente->id }}</div>
+            <div class="col-span-2 situation {{ $cliente->saldo < 0 ? 'text-red-500 font-medium' : 'text-gray-800' }}">
+                R$ {{ number_format($cliente->saldo, 2, ',', '.') }}
+            </div>
             <div class="col-span-2 flex justify-start">
                 <button class="expand-btn p-1 hover:bg-gray-100 rounded transition">
                     <img src="{{ asset('Icons/maximize.png') }}" alt="Maximizar" class="icon-img">
@@ -186,14 +188,19 @@
                     <button class="edit-btn p-1 hover:bg-gray-100 rounded transition ml-1">
                         <img src="{{ asset('Icons/edit.png') }}" alt="Editar" class="icon-img">
                     </button>
-                    <button class="delete-btn p-1 hover:bg-red-50 rounded transition ml-1">
-                        <img src="{{ asset('Icons/trash-red.png') }}" alt="Excluir" class="icon-img">
-                    </button>
+                    <form action="{{ route('admin.pessoas.destroy', $cliente->id) }}" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="delete-btn p-1 hover:bg-red-50 rounded transition ml-1">
+                            <img src="{{ asset('Icons/trash-red.png') }}" alt="Excluir" class="icon-img">
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-        
-        <!-- Mais clientes podem ser adicionados dinamicamente -->
+        @empty
+        <div class="p-4 text-center text-gray-500 bg-white rounded-b-lg">Nenhum cliente encontrado</div>
+        @endforelse
     </div>
 </div>
 

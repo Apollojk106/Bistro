@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\ItensPedido;
 use App\Models\Configuracao;
+use App\Models\Cliente; // Certifique-se de importar o modelo Cliente
 
 
 class PedidoController extends Controller
@@ -41,7 +42,7 @@ class PedidoController extends Controller
     {
         $dadosPedido = session()->all();
         $this->validarPedido();
-  
+
         // Verificação prévia do status dos itens do carrinho
         $carrinho = $dadosPedido['carrinho'] ?? [];
         $produtoIds = array_keys($carrinho);
@@ -72,6 +73,19 @@ class PedidoController extends Controller
 
             $valorTotalItens = collect($carrinhoValido)->sum(fn($item) => $item['quantidade'] * $item['valor']);
             $valorTaxa = $valorTotalItens * ($formaPagamento->taxa / 100);
+
+            // Verifica se o cliente já existe na tabela de clientes
+            $cliente = Cliente::where('email', strtolower($dadosPedido['User']['email']))->first();
+
+            if (!$cliente) {
+                // Registra o cliente caso não exista
+                $cliente = Cliente::create([
+                    'nome' => ucfirst(strtolower($dadosPedido['User']['nome'])),
+                    'numero' => $dadosPedido['User']['telefone'],
+                    'email' => strtolower($dadosPedido['User']['email']),
+                    'anotacoes' => null, // Pode ser preenchido posteriormente
+                ]);
+            }
 
             $pedido = Pedido::create([
                 'nome'              => ucfirst(strtolower($dadosPedido['User']['nome'])),
