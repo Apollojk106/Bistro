@@ -9,12 +9,17 @@ class Cliente extends Model
 {
     use HasFactory;
 
-    protected $table = 'clientes'; // Nome da tabela no banco de dados
+    protected $table = 'clientes'; 
 
     protected $fillable = [
         'nome',
         'numero',
         'email',
-        'anotacoes',
     ];
+
+    // Relação 1 para muitos com Anotacoes
+    public function anotacoes()
+    {
+        return $this->hasMany(Anotacao::class, 'cliente_id');
+    }
 }

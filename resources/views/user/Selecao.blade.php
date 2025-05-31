@@ -115,6 +115,7 @@
           </div>
 
           <!-- Bloco: Agendamento -->
+          @if($configuracoes['Agendamento'] === 'Ligado')
           <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="selecionarOpcao('Agendamento')">
             <div class="flex justify-between items-center">
               <span class="text-lg font-medium">Agendamento</span>
@@ -138,6 +139,7 @@
                 value="{{ $horarioAbertura }}">
             </div>
           </div>
+          @endif
         </div>
       </div>
       @endif

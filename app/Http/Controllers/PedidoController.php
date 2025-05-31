@@ -40,8 +40,12 @@ class PedidoController extends Controller
 
     public function gerarPedido()
     {
+        $validacao = $this->validarPedido();
+        if ($validacao !== true) {
+            return $validacao; // Retorna o redirecionamento com erro se a validação falhar
+        }
+
         $dadosPedido = session()->all();
-        $this->validarPedido();
 
         // Verificação prévia do status dos itens do carrinho
         $carrinho = $dadosPedido['carrinho'] ?? [];
@@ -116,10 +120,10 @@ class PedidoController extends Controller
                 ]);
             }
 
-            session(['pedido_id' => $pedido->id]);
+            //session(['pedido_id' => $pedido->id]);
             DB::commit();
 
-            session()->forget(['carrinho', 'opcoes', 'pagamento', 'observacao']);
+            //session()->forget(['carrinho', 'opcoes', 'pagamento', 'observacao']);
 
             return redirect()->route("User.Pedido")->with('success', 'Pedido realizado com sucesso!');
         } catch (\Exception $e) {
@@ -494,15 +498,18 @@ class PedidoController extends Controller
 
         // Verifica se a configuração "Agendamento" está "Ligado"
         $configuracaoAgendamento = Configuracao::where('nome', 'Agendamento')->value('valores1');
-        $opcaoUsuario = session('opcoes'); // Obtém a opção atual do usuário da sessão
+        $opcaoUsuario = session('opcoes')['opcao_entrega'] ?? null; // Ajuste para pegar corretamente a opção
         if ($configuracaoAgendamento != 'Ligado' && $opcaoUsuario === 'Agendamento') {
             return redirect()->route('User.Selecao')->with('error', 'O sistema de agendamento está indisponível no momento.');
         }
 
         // Verifica se a configuração "Delivery" está "Ligado"
         $configuracaoDelivery = Configuracao::where('nome', 'Delivery')->value('valores1');
-        if ($configuracaoDelivery != 'Ligado' && $opcaoUsuario === 'Entrega') {
+        $opcaoCategoria = session('opcoes')['categoria'] ?? null;
+        if ($configuracaoDelivery != 'Ligado' && $opcaoCategoria === 'Entrega') {
             return redirect()->route('User.Selecao')->with('error', 'O sistema de delivery está indisponível no momento.');
         }
+
+        return true;
     }
 }

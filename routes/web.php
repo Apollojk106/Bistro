@@ -7,7 +7,7 @@ use App\Http\Controllers\CardapioController;
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\FormaPagamentoController;
-use App\Http\Controllers\ItensPedidoController;
+use App\Http\Controllers\ClientesController;
 
 Route::get('/sessionData', [UserController::class, 'sessionData'])->name("sessionData");
 Route::get('/', [UserController::class, 'UserCardapio']);
@@ -57,7 +57,7 @@ Route::get('/Pedido/Solicitado', [UserController::class, 'PedidoSolicitado'])->n
 Route::get('/Pedido/User', [UserController::class, 'UltimoPedido'])->name("User.Ultimo.Pedido");
 
 Route::get('/VerPedido', [UserController::class, 'VerPedido'])->name('User.VerPedido');
-Route::post('/gerarPedido', [PedidoController::class, 'gerarPedido'])->name('Pedido.Gerar');
+Route::get('/gerarPedido', [PedidoController::class, 'gerarPedido'])->name('Gerar.Pedido');
 
 //admin
 Route::get('/admin/Dashboard', [PedidoController::class, 'IndexDashboard'])->name("Dashboard");
@@ -92,5 +92,7 @@ Route::delete('/admin/Cardapio/DeleteMultiple', [CardapioController::class, 'del
 Route::get('/admin/ItemCardapio', [UserController::class, 'GetItemCardapio'])->name("ItemCardapio");
 Route::post('/admin/ItemCardapio', [UserController::class, 'EditItemCardapio'])->name("EditItemCardapio");
 Route::post('/admin/ItemCardapio/Save', [UserController::class, 'SaveItem'])->name("SaveItem");
-Route::get('/admin/Pessoas', [ItensPedidoController::class, 'index'])->name("Pessoas");
-Route::delete('/admin/Pessoas/{id}', [ItensPedidoController::class, 'destroy'])->name('admin.pessoas.destroy');
+
+Route::get('/admin/Pessoas', [ClientesController::class, 'index'])->name("Pessoas");
+Route::post('/clientes/{cliente}/anotacoes', [ClientesController::class, 'storeAnotacao'])->name('admin.clientes.anotacoes.store');
+    Route::delete('/pessoas/{cliente}', [ClientesController::class, 'destroy'])->name('admin.pessoas.destroy');

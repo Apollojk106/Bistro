@@ -523,5 +523,238 @@ class DatabaseSeeder extends Seeder
                 'type' => '3',
             ]
         ]);
+
+        // Criar usuários caloteiros
+        DB::table('Users')->insert([
+            [
+                'nome' => 'João Caloteiro',
+                'apelido' => 'João',
+                'email' => 'joao.caloteiro@email.com',
+                'telefone' => '11911112222',
+                'senha' => 'senha123',
+                'salt' => 'abc123',
+                'cep' => '01001000',
+                'rua' => 'Rua do Calote',
+                'bairro' => 'Centro',
+                'numero_residencia' => '100',
+                'complemento' => 'Apto 101',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nome' => 'Maria Devedora',
+                'apelido' => 'Maria',
+                'email' => 'maria.devedora@email.com',
+                'telefone' => '11922223333',
+                'senha' => 'senha123',
+                'salt' => 'def456',
+                'cep' => '02002000',
+                'rua' => 'Avenida do Débito',
+                'bairro' => 'Vila Madalena',
+                'numero_residencia' => '200',
+                'complemento' => 'Casa 2',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nome' => 'Carlos Negativado',
+                'apelido' => 'Carlos',
+                'email' => 'carlos.negativado@email.com',
+                'telefone' => '11933334444',
+                'senha' => 'senha123',
+                'salt' => 'ghi789',
+                'cep' => '03003000',
+                'rua' => 'Travessa da Inadimplência',
+                'bairro' => 'Jardins',
+                'numero_residencia' => '300',
+                'complemento' => 'Sala 3',
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
+        ]);
+
+        DB::table('Pedidos')->insert([
+            [
+                'nome' => 'João Caloteiro',
+                'email' => 'joao.caloteiro@email.com',
+                'telefone' => '11911112222',
+                'rua' => 'Rua do Calote',
+                'bairro' => 'Centro',
+                'numero_residencia' => '100',
+                'complemento' => 'Apto 101',
+                'categoria_pedido' => 'Entrega',
+                'status_pedido' => 'Pendente',
+                'opcao_entrega' => 'Agora',
+                'status' => 'Pendente',
+                'horario' => now()->subDays(10),
+                'id_forma_pagamento' => 1, // Cartão
+                'descricao' => 'Pedido grande não pago',
+                'frete' => 15.00,
+                'valor_total' => 350.00,
+                'valor_taxa' => 35.00,
+                'created_at' => now()->subDays(10),
+                'updated_at' => now()->subDays(10)
+            ],
+            [
+                'nome' => 'João Caloteiro',
+                'email' => 'joao.caloteiro@email.com',
+                'telefone' => '11911112222',
+                'rua' => 'Rua do Calote',
+                'bairro' => 'Centro',
+                'numero_residencia' => '100',
+                'complemento' => 'Apto 101',
+                'categoria_pedido' => 'Local',
+                'status_pedido' => 'Pendente',
+                'opcao_entrega' => 'Viagem',
+                'status' => 'Pendente',
+                'horario' => now()->subDays(5),
+                'id_forma_pagamento' => 1, // Cartão
+                'descricao' => 'Outro pedido não pago',
+                'frete' => 0.00,
+                'valor_total' => 120.00,
+                'valor_taxa' => 12.00,
+                'created_at' => now()->subDays(5),
+                'updated_at' => now()->subDays(5)
+            ],
+
+            // Pedidos para Maria Devedora (saldo negativo moderado)
+            [
+                'nome' => 'Maria Devedora',
+                'email' => 'maria.devedora@email.com',
+                'telefone' => '11922223333',
+                'rua' => 'Avenida do Débito',
+                'bairro' => 'Vila Madalena',
+                'numero_residencia' => '200',
+                'complemento' => 'Casa 2',
+                'categoria_pedido' => 'Entrega',
+                'status_pedido' => 'Pendente',
+                'opcao_entrega' => 'Agora',
+                'status' => 'Pendente',
+                'horario' => now()->subDays(7),
+                'id_forma_pagamento' => 2, // Dinheiro
+                'descricao' => 'Pedido em atraso',
+                'frete' => 10.00,
+                'valor_total' => 180.00,
+                'valor_taxa' => 0.00,
+                'created_at' => now()->subDays(7),
+                'updated_at' => now()->subDays(7)
+            ],
+
+            // Pedidos para Carlos Negativado (saldo levemente negativo)
+            [
+                'nome' => 'Carlos Negativado',
+                'email' => 'carlos.negativado@email.com',
+                'telefone' => '11933334444',
+                'rua' => 'Travessa da Inadimplência',
+                'bairro' => 'Jardins',
+                'numero_residencia' => '300',
+                'complemento' => 'Sala 3',
+                'categoria_pedido' => 'Local',
+                'status_pedido' => 'Pendente',
+                'opcao_entrega' => 'Agora',
+                'status' => 'Pendente',
+                'horario' => now()->subDays(3),
+                'id_forma_pagamento' => 3, // Pix
+                'descricao' => 'Pedido pequeno não pago',
+                'frete' => 0.00,
+                'valor_total' => 85.50,
+                'valor_taxa' => 8.55,
+                'created_at' => now()->subDays(3),
+                'updated_at' => now()->subDays(3)
+            ]
+        ]);
+
+        DB::table('Itens_pedidos')->insert([
+            [
+                'id_pedido' => DB::table('Pedidos')->where('email', 'joao.caloteiro@email.com')->first()->id,
+                'id_cardapio' => 1, // Feijoada Completa
+                'quantidade' => 5,
+                'valor_unitario' => 29.99,
+                'subtotal' => 149.95,
+                'created_at' => now()->subDays(10),
+                'updated_at' => now()->subDays(10)
+            ],
+            [
+                'id_pedido' => DB::table('Pedidos')->where('email', 'joao.caloteiro@email.com')->first()->id,
+                'id_cardapio' => 5, // Suco de Laranja
+                'quantidade' => 5,
+                'valor_unitario' => 7.50,
+                'subtotal' => 37.50,
+                'created_at' => now()->subDays(10),
+                'updated_at' => now()->subDays(10)
+            ],
+            [
+                'id_pedido' => DB::table('Pedidos')->where('email', 'joao.caloteiro@email.com')->skip(1)->first()->id,
+                'id_cardapio' => 2, // Bife à Parmegiana
+                'quantidade' => 3,
+                'valor_unitario' => 24.50,
+                'subtotal' => 73.50,
+                'created_at' => now()->subDays(5),
+                'updated_at' => now()->subDays(5)
+            ],
+            [
+                'id_pedido' => DB::table('Pedidos')->where('email', 'maria.devedora@email.com')->first()->id,
+                'id_cardapio' => 1, // Feijoada Completa
+                'quantidade' => 2,
+                'valor_unitario' => 29.99,
+                'subtotal' => 59.98,
+                'created_at' => now()->subDays(7),
+                'updated_at' => now()->subDays(7)
+            ],
+            [
+                'id_pedido' => DB::table('Pedidos')->where('email', 'maria.devedora@email.com')->first()->id,
+                'id_cardapio' => 3, // Arroz de Brócolis
+                'quantidade' => 2,
+                'valor_unitario' => 10.00,
+                'subtotal' => 20.00,
+                'created_at' => now()->subDays(7),
+                'updated_at' => now()->subDays(7)
+            ],
+            [
+                'id_pedido' => DB::table('Pedidos')->where('email', 'carlos.negativado@email.com')->first()->id,
+                'id_cardapio' => 2, // Bife à Parmegiana
+                'quantidade' => 1,
+                'valor_unitario' => 24.50,
+                'subtotal' => 24.50,
+                'created_at' => now()->subDays(3),
+                'updated_at' => now()->subDays(3)
+            ],
+            [
+                'id_pedido' => DB::table('Pedidos')->where('email', 'carlos.negativado@email.com')->first()->id,
+                'id_cardapio' => 4, // Batata Frita
+                'quantidade' => 1,
+                'valor_unitario' => 8.50,
+                'subtotal' => 8.50,
+                'created_at' => now()->subDays(3),
+                'updated_at' => now()->subDays(3)
+            ]
+        ]);
+
+        DB::table('Anotacoes')->insert([
+            [
+                'cliente_id' => DB::table('users')->where('email', 'joao.caloteiro@email.com')->first()->id,
+                'conteudo' => 'Cliente com histórico de não pagamento. Bloquear novos pedidos até regularizar situação.',
+                'created_at' => now()->subDays(2),
+                'updated_at' => now()->subDays(2)
+            ],
+            [
+                'cliente_id' => DB::table('users')->where('email', 'maria.devedora@email.com')->first()->id,
+                'conteudo' => 'Entrar em contato para cobrança. Valor pendente: R$ 180,00',
+                'created_at' => now()->subDays(1),
+                'updated_at' => now()->subDays(1)
+            ],
+            [
+                'cliente_id' => DB::table('users')->where('email', 'carlos.negativado@email.com')->first()->id,
+                'conteudo' => 'Cliente com pagamento em atraso. Verificar se foi esquecimento.',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'cliente_id' => DB::table('users')->where('email', 'joao.caloteiro@email.com')->first()->id,
+                'conteudo' => 'Tentativa de contato em 15/05 - não atendeu. Deixar recado.',
+                'created_at' => now()->subDay(),
+                'updated_at' => now()->subDay()
+            ]
+        ]);
     }
 }

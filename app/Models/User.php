@@ -36,6 +36,16 @@ class User extends Authenticatable
         'salt',
     ];
 
+    public function anotacoes()
+    {
+        return $this->hasMany(Anotacao::class, 'cliente_id');
+    }
+
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class, 'email', 'email');
+    }
+
     public $timestamps = true;
 
     /**

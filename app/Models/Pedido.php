@@ -33,11 +33,6 @@ class Pedido extends Model
         return $this->hasMany(ItensPedido::class, 'id_pedido');
     }
 
-    public function itensPedido()
-    {
-        return $this->hasMany(ItensPedido::class, 'id_pedido');
-    }
-
     public function getItensAttribute()
     {
         return $this->itensPedido->map(function ($item) {
@@ -48,6 +43,16 @@ class Pedido extends Model
                 'subtotal' => $item->subtotal,
             ];
         });
+    }
+
+     public function cliente()
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
+    }
+
+    public function formaPagamento()
+    {
+        return $this->belongsTo(FormaPagamento::class, 'id_forma_pagamento');
     }
 
     public $timestamps = true;
