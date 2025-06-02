@@ -25,6 +25,7 @@ class Pedido extends Model
         'frete',
         'valor_total',
         'valor_taxa',
+        'valor_pago',
         'updated_at'
     ];
 

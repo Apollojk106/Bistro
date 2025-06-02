@@ -3,32 +3,63 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Cliente; // Modelo para a tabela de clientes
-use App\Models\User; // Modelo para a tabela de usuários (clientes)
+use App\Models\User;
+use App\Models\Pedido;
 
 class ClientesController extends Controller
 {
     public function index()
     {
-        $clientes = User::with(['anotacoes', 'pedidos'])
-            ->orderBy('nome')
-            ->get()
-            ->map(function ($cliente) {
-                // Calcular saldo (soma dos valores dos pedidos)
-                $cliente->saldo = $cliente->pedidos->sum('valor_total');
+        // Primeiro busca os emails únicos da tabela pedidos
+        $emailsUnicos = Pedido::select('email')
+            ->distinct()
+            ->pluck('email');
 
-                // Total de pedidos
-                $cliente->total_pedidos = $cliente->pedidos->count();
+        $clientes = collect();
 
-                // Último pedido
-                $cliente->ultimo_pedido = $cliente->pedidos->sortByDesc('created_at')->first();
+        foreach ($emailsUnicos as $email) {
+            // Busca usuário existente ou cria um novo
+            $cliente = User::firstOrNew(['email' => $email]);
 
-                return $cliente;
-            });
+            // Se não tem nome ou telefone, busca do último pedido
+            if (empty($cliente->nome) || empty($cliente->telefone)) {
+                $ultimoPedido = Pedido::where('email', $email)
+                    ->orderByDesc('created_at')
+                    ->first();
+
+                if ($ultimoPedido) {
+                    $cliente->nome = empty($cliente->nome) ? $ultimoPedido->nome : $cliente->nome;
+                    $cliente->telefone = empty($cliente->telefone) ? $ultimoPedido->telefone : $cliente->telefone;
+
+                    // Atualiza outros campos se necessário
+                    $cliente->rua = $cliente->rua ?? $ultimoPedido->rua;
+                    $cliente->bairro = $cliente->bairro ?? $ultimoPedido->bairro;
+                    $cliente->numero_residencia = $cliente->numero_residencia ?? $ultimoPedido->numero_residencia;
+                    $cliente->complemento = $cliente->complemento ?? $ultimoPedido->complemento;
+                }
+            }
+
+            // Calcula os totais dos pedidos deste cliente
+            $pedidosCliente = Pedido::where('email', $email)->get();
+
+            $cliente->total_pedidos = $pedidosCliente->count();
+            $cliente->total_valor = $pedidosCliente->sum('valor_total');
+            $cliente->total_pago = $pedidosCliente->sum('valor_pago');
+            $cliente->saldo = $cliente->total_pago - $cliente->total_valor;
+
+            $clientes->push($cliente);
+        }
 
         return view('admin.Pessoas', compact('clientes'));
     }
 
+    public function updateCliente(REQUEST $request)
+    {
+        dd($request->all());
+
+        return back()->with('success', 'Dados do cliente atualizados com sucesso!');
+    }
+  
     public function storeAnotacao(Request $request, User $cliente)
     {
         $request->validate([

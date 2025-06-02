@@ -78,19 +78,6 @@ class PedidoController extends Controller
             $valorTotalItens = collect($carrinhoValido)->sum(fn($item) => $item['quantidade'] * $item['valor']);
             $valorTaxa = $valorTotalItens * ($formaPagamento->taxa / 100);
 
-            // Verifica se o cliente já existe na tabela de clientes
-            $cliente = Cliente::where('email', strtolower($dadosPedido['User']['email']))->first();
-
-            if (!$cliente) {
-                // Registra o cliente caso não exista
-                $cliente = Cliente::create([
-                    'nome' => ucfirst(strtolower($dadosPedido['User']['nome'])),
-                    'numero' => $dadosPedido['User']['telefone'],
-                    'email' => strtolower($dadosPedido['User']['email']),
-                    'anotacoes' => null, // Pode ser preenchido posteriormente
-                ]);
-            }
-
             $pedido = Pedido::create([
                 'nome'              => ucfirst(strtolower($dadosPedido['User']['nome'])),
                 'email'             => strtolower($dadosPedido['User']['email']),

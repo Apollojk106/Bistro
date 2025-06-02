@@ -730,31 +730,5 @@ class DatabaseSeeder extends Seeder
             ]
         ]);
 
-        DB::table('Anotacoes')->insert([
-            [
-                'cliente_id' => DB::table('users')->where('email', 'joao.caloteiro@email.com')->first()->id,
-                'conteudo' => 'Cliente com histórico de não pagamento. Bloquear novos pedidos até regularizar situação.',
-                'created_at' => now()->subDays(2),
-                'updated_at' => now()->subDays(2)
-            ],
-            [
-                'cliente_id' => DB::table('users')->where('email', 'maria.devedora@email.com')->first()->id,
-                'conteudo' => 'Entrar em contato para cobrança. Valor pendente: R$ 180,00',
-                'created_at' => now()->subDays(1),
-                'updated_at' => now()->subDays(1)
-            ],
-            [
-                'cliente_id' => DB::table('users')->where('email', 'carlos.negativado@email.com')->first()->id,
-                'conteudo' => 'Cliente com pagamento em atraso. Verificar se foi esquecimento.',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'cliente_id' => DB::table('users')->where('email', 'joao.caloteiro@email.com')->first()->id,
-                'conteudo' => 'Tentativa de contato em 15/05 - não atendeu. Deixar recado.',
-                'created_at' => now()->subDay(),
-                'updated_at' => now()->subDay()
-            ]
-        ]);
     }
 }
