@@ -223,7 +223,7 @@
             <form id="editClientForm" method="POST">
                 @csrf
                 <input type="hidden" name="client_id" id="editClientId">
-                <input type="hidden" name="email" id="editClientEmail">
+            <input type="hidden" name="email" id="editClientEmail">
 
                 <div class="space-y-4">
                     <div>
