@@ -36,7 +36,7 @@ class Pedido extends Model
 
     public function getItensAttribute()
     {
-        return $this->itensPedido->map(function ($item) {
+        return $this->itensPedidos->map(function ($item) {
             return [
                 'nome' => $item->cardapio->nome,
                 'quantidade' => $item->quantidade,

@@ -62,6 +62,9 @@ class ClientesController extends Controller
   
     public function storeAnotacao(Request $request, User $cliente)
     {
+
+        dd($request->all(), $cliente);
+
         $request->validate([
             'conteudo' => 'required|string|max:1000'
         ]);

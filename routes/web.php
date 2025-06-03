@@ -96,4 +96,3 @@ Route::post('/admin/ItemCardapio/Save', [UserController::class, 'SaveItem'])->na
 Route::get('/admin/Pessoas', [ClientesController::class, 'index'])->name("Pessoas");
 Route::post('/clientes/{cliente}/anotacoes', [ClientesController::class, 'storeAnotacao'])->name('admin.clientes.anotacoes.store');
 Route::post('/admin/Pessoas', [ClientesController::class, 'updateCliente'])->name('admin.pessoas.update');
-Route::delete('/pessoas/{cliente}', [ClientesController::class, 'destroy'])->name('admin.pessoas.destroy');

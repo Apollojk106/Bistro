@@ -171,12 +171,19 @@
         <!-- Lista de clientes -->
         <div id="clientList" class="rounded-b-lg">
             @forelse($clientes as $cliente)
-            <div class="client-card grid grid-cols-12 gap-1 items-center p-3 hover:bg-gray-50 transition text-sm" 
-                data-id="{{ $cliente->id ?? '' }}" 
-                data-name="{{ $cliente->nome ?? '' }}" 
+            <div class="client-card grid grid-cols-12 gap-1 items-center p-3 hover:bg-gray-50 transition text-sm"
+                data-id="{{ $cliente->id ?? '' }}"
+                data-name="{{ $cliente->nome ?? '' }}"
                 data-situation="{{ $cliente->saldo ?? 0 }}"
-                data-email="{{ $cliente->email ?? '' }}" 
-                >
+                data-email="{{ $cliente->email ?? '' }}"
+                data-telefone="{{ $cliente->telefone ?? '' }}"
+                data-rua="{{ $cliente->rua ?? '' }}"
+                data-bairro="{{ $cliente->bairro ?? '' }}"
+                data-numero="{{ $cliente->numero_residencia ?? '' }}"
+                data-complemento="{{ $cliente->complemento ?? '' }}"
+                data-total-pedidos="{{ $cliente->total_pedidos ?? 0 }}"
+                data-total-pago="{{ number_format($cliente->total_pago ?? 0, 2, ',', '') }}"
+                data-saldo="{{ number_format($cliente->saldo ?? 0, 2, ',', '') }}">
 
                 <div class="col-span-3 name">{{ $cliente->nome ?? $cliente->apelido ?? '' }}</div>
                 <div class="col-span-2 id">{{ $cliente->apelido ?? '' }}</div>
@@ -196,13 +203,6 @@
                         <button class="edit-btn p-1 hover:bg-gray-100 rounded transition ml-1">
                             <img src="{{ asset('Icons/edit.png') }}" alt="Editar" class="icon-img">
                         </button>
-                        <form action="{{ route('admin.pessoas.destroy', $cliente->id ?? '') }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="delete-btn p-1 hover:bg-red-50 rounded transition ml-1">
-                                <img src="{{ asset('Icons/trash-red.png') }}" alt="Excluir" class="icon-img">
-                            </button>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -223,7 +223,7 @@
             <form id="editClientForm" method="POST">
                 @csrf
                 <input type="hidden" name="client_id" id="editClientId">
-            <input type="hidden" name="email" id="editClientEmail">
+                <input type="hidden" name="email" id="editClientEmail">
 
                 <div class="space-y-4">
                     <div>
@@ -258,22 +258,6 @@
         </div>
     </div>
 
-    <!-- Modal de Confirmação de Exclusão -->
-    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-        <div class="bg-white rounded-lg p-6 w-96 text-gray-800">
-            <h3 class="text-xl font-bold mb-4">Confirmar Exclusão</h3>
-            <p class="mb-4 text-sm">Tem certeza que deseja excluir este cliente?</p>
-            <div id="passwordSection" class="hidden">
-                <label class="block mb-1 text-sm font-medium">Digite a senha para confirmar:</label>
-                <input type="password" id="deletePassword" class="w-full bg-gray-50 rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-[#ff6d00]/50 focus:border-[#ff6d00] border border-gray-200 text-sm">
-                <p id="passwordError" class="text-red-600 text-sm hidden">Senha incorreta!</p>
-            </div>
-            <div class="flex justify-end space-x-3">
-                <button id="cancelDelete" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-sm font-medium">Cancelar</button>
-                <button id="confirmDelete" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition text-sm font-medium">Excluir</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Painel de Dados do Cliente -->
     <div id="detailsPanel" class="side-panel">
@@ -286,57 +270,69 @@
             </button>
         </div>
 
-        <div id="detailsClientName" class="client-name-display"></div>
+        <div id="detailsClientName" class="client-name-display text-xl font-semibold px-4 py-2 border-b"></div>
 
-        <div class="panel-content">
-            <div class="detail-item">
-                <div class="detail-label">Nome Completo</div>
-                <div class="detail-value" id="detailFullName"></div>
+        <div class="panel-content space-y-4 p-4">
+            <!-- Seção de Informações Pessoais -->
+            <div class="space-y-2">
+                <h3 class="font-medium text-gray-500 text-sm uppercase">Informações Pessoais</h3>
+                <div class="detail-item grid grid-cols-3 gap-2">
+                    <div class="detail-label col-span-1">Nome Completo</div>
+                    <div class="detail-value col-span-2 font-medium" id="detailFullName">-</div>
+                </div>
+
+                <div class="detail-item grid grid-cols-3 gap-2">
+                    <div class="detail-label col-span-1">E-mail</div>
+                    <div class="detail-value col-span-2" id="detailEmail">-</div>
+                </div>
+
+                <div class="detail-item grid grid-cols-3 gap-2">
+                    <div class="detail-label col-span-1">Telefone</div>
+                    <div class="detail-value col-span-2" id="detailPhone">-</div>
+                </div>
             </div>
 
-            <div class="detail-item">
-                <div class="detail-label">E-mail</div>
-                <div class="detail-value" id="detailEmail"></div>
+            <!-- Seção de Endereço -->
+            <div class="space-y-2">
+                <h3 class="font-medium text-gray-500 text-sm uppercase">Endereço</h3>
+                <div class="detail-item grid grid-cols-3 gap-2">
+                    <div class="detail-label col-span-1">Logradouro</div>
+                    <div class="detail-value col-span-2" id="detailAddress">-</div>
+                </div>
+
+                <div class="detail-item grid grid-cols-3 gap-2">
+                    <div class="detail-label col-span-1">Bairro</div>
+                    <div class="detail-value col-span-2" id="detailBairro">-</div>
+                </div>
+
+                <div class="detail-item grid grid-cols-3 gap-2">
+                    <div class="detail-label col-span-1">Número</div>
+                    <div class="detail-value col-span-2" id="detailNumero">-</div>
+                </div>
+
+                <div class="detail-item grid grid-cols-3 gap-2">
+                    <div class="detail-label col-span-1">Complemento</div>
+                    <div class="detail-value col-span-2" id="detailComplemento">-</div>
+                </div>
             </div>
 
-            <div class="detail-item">
-                <div class="detail-label">Telefone</div>
-                <div class="detail-value" id="detailPhone"></div>
-            </div>
+            <!-- Seção Financeira -->
+            <div class="space-y-2">
+                <h3 class="font-medium text-gray-500 text-sm uppercase">Financeiro</h3>
+                <div class="detail-item grid grid-cols-3 gap-2">
+                    <div class="detail-label col-span-1">Saldo</div>
+                    <div class="detail-value col-span-2 font-medium" id="detailBalance">R$ 0,00</div>
+                </div>
 
-            <div class="detail-item">
-                <div class="detail-label">Endereço</div>
-                <div class="detail-value" id="detailAddress"></div>
-            </div>
+                <div class="detail-item grid grid-cols-3 gap-2">
+                    <div class="detail-label col-span-1">Total Pedidos</div>
+                    <div class="detail-value col-span-2" id="detailTotalPedidos">0</div>
+                </div>
 
-            <div class="detail-item">
-                <div class="detail-label">Bairro</div>
-                <div class="detail-value" id="detailBairro"></div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">Número</div>
-                <div class="detail-value" id="detailNumero"></div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">Complemento</div>
-                <div class="detail-value" id="detailComplemento"></div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">Saldo</div>
-                <div class="detail-value" id="detailBalance"></div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">Total de Pedidos</div>
-                <div class="detail-value" id="detailTotalPedidos"></div>
-            </div>
-
-            <div class="detail-item">
-                <div class="detail-label">Total Pago</div>
-                <div class="detail-value" id="detailTotalPago"></div>
+                <div class="detail-item grid grid-cols-3 gap-2">
+                    <div class="detail-label col-span-1">Total Pago</div>
+                    <div class="detail-value col-span-2" id="detailTotalPago">R$ 0,00</div>
+                </div>
             </div>
         </div>
     </div>
@@ -354,16 +350,12 @@
 
         <div id="notesClientName" class="client-name-display"></div>
 
-        <div class="panel-content" id="notesContent">
-            <div class="detail-item">
-                <div class="detail-label">05/04/2025 20:11</div>
-                <div class="detail-value">Escreva as anotações</div>
-            </div>
-        </div>
-
         <div class="mt-auto">
-            <textarea id="notesInput" class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6d00]/50 focus:border-[#ff6d00] resize-none" placeholder="Digite suas anotações aqui..." rows="4"></textarea>
-            <button id="saveNote" class="w-full bg-[#ff6d00] hover:bg-[#ff8500] text-white py-2 px-4 rounded-lg transition font-medium mt-2">Salvar Anotação</button>
+            <form id="noteForm" method="POST">
+                @csrf
+                <textarea id="notesInput" name="anotacao" class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6d00]/50 focus:border-[#ff6d00] resize-none" placeholder="Digite suas anotações aqui..." rows="4" required></textarea>
+                <button type="submit" id="saveNote" class="w-full bg-[#ff6d00] hover:bg-[#ff8500] text-white py-2 px-4 rounded-lg transition font-medium mt-2">Salvar Anotação</button>
+            </form>
         </div>
     </div>
 
@@ -381,8 +373,6 @@
             const searchInput = document.getElementById('searchInput');
             const clientList = document.getElementById('clientList');
             const editModal = document.getElementById('editModal');
-            const deleteModal = document.getElementById('deleteModal');
-            const passwordSection = document.getElementById('passwordSection');
 
             // Painéis laterais
             const detailsPanel = document.getElementById('detailsPanel');
@@ -545,54 +535,11 @@
                     // Mostrar modal
                     editModal.classList.remove('hidden');
                 }
-
-                // Botão de excluir
-                if (e.target.closest('.delete-btn')) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    deleteModal.classList.remove('hidden');
-                    passwordSection.classList.add('hidden');
-                    document.getElementById('deletePassword').value = '';
-                    document.getElementById('passwordError').classList.add('hidden');
-                }
             });
 
             // Cancelar edição
             document.getElementById('cancelEdit').addEventListener('click', function() {
                 editModal.classList.add('hidden');
-            });
-
-            // Modal de exclusão
-            document.getElementById('cancelDelete').addEventListener('click', function() {
-                deleteModal.classList.add('hidden');
-            });
-
-            document.getElementById('confirmDelete').addEventListener('click', function() {
-                if (!passwordSection.classList.contains('hidden')) {
-                    // Verificar senha
-                    if (document.getElementById('deletePassword').value === 'terraço') {
-                        // Excluir cliente via formulário normal (já que é DELETE)
-                        const form = document.querySelector(`form[action*="${currentClientId}"]`);
-                        if (form) {
-                            form.submit();
-                        }
-
-                        deleteModal.classList.add('hidden');
-
-                        // Fechar painéis laterais se estiverem abertos
-                        detailsPanel.classList.remove('active');
-                        notesPanel.classList.remove('active');
-                        document.querySelectorAll('.expand-btn, .clipboard-btn').forEach(btn => {
-                            btn.classList.remove('active-btn');
-                        });
-                    } else {
-                        document.getElementById('passwordError').classList.remove('hidden');
-                    }
-                } else {
-                    // Mostrar campo de senha
-                    passwordSection.classList.remove('hidden');
-                }
             });
 
             // Fechar painéis laterais
@@ -650,27 +597,44 @@
                 notesInput.value = '';
             });
 
-            // Função para carregar detalhes do cliente
             function loadClientDetails(clientItem) {
+                // Obter todos os atributos de dados
                 const clientId = clientItem.getAttribute('data-id');
                 const clientName = clientItem.getAttribute('data-name');
                 const clientApelido = clientItem.getAttribute('data-apelido');
                 const clientSaldo = parseFloat(clientItem.getAttribute('data-saldo'));
 
+                // Dados adicionais - verifique se os nomes dos atributos batem com o HTML
+                const clientEmail = clientItem.getAttribute('data-email');
+                const clientTelefone = clientItem.getAttribute('data-telefone');
+                const clientRua = clientItem.getAttribute('data-rua');
+                const clientBairro = clientItem.getAttribute('data-bairro');
+                const clientNumero = clientItem.getAttribute('data-numero'); // Note que no HTML anterior tinha um typo (numero vs numero_residencia)
+                const clientComplemento = clientItem.getAttribute('data-complemento');
+                const clientTotalPedidos = clientItem.getAttribute('data-total-pedidos');
+                const clientTotalPago = parseFloat(clientItem.getAttribute('data-total-pago') || 0);
+
+                // Atualizar informações principais
                 detailsClientName.textContent = clientApelido ? `${clientName} (${clientApelido})` : clientName;
                 detailFullName.textContent = clientName;
-                detailBalance.textContent = `R$ ${clientSaldo.toFixed(2).replace('.', ',')}`;
+
+                // Atualizar saldo
+                detailBalance.textContent = `R$ ${Math.abs(clientSaldo).toFixed(2).replace('.', ',')}`;
                 detailBalance.className = clientSaldo < 0 ? 'detail-value text-red-500' : 'detail-value';
 
-                // Preencher outros campos (substitua por dados reais ou requisição AJAX)
-                detailEmail.textContent = "carregando...";
-                detailPhone.textContent = "carregando...";
-                detailAddress.textContent = "carregando...";
-                detailBairro.textContent = "carregando...";
-                detailNumero.textContent = "carregando...";
-                detailComplemento.textContent = "carregando...";
-                detailTotalPedidos.textContent = "carregando...";
-                detailTotalPago.textContent = "carregando...";
+                // Atualizar informações pessoais
+                detailEmail.textContent = clientEmail || "Não informado";
+                detailPhone.textContent = clientTelefone || "Não informado";
+
+                // Atualizar endereço
+                detailAddress.textContent = clientRua || "Não informado";
+                detailBairro.textContent = clientBairro || "Não informado";
+                detailNumero.textContent = clientNumero || "Não informado"; // Note o ID do elemento - verifique se está correto no HTML
+                detailComplemento.textContent = clientComplemento || "Não informado";
+
+                // Atualizar informações financeiras
+                detailTotalPedidos.textContent = clientTotalPedidos || "0";
+                detailTotalPago.textContent = `R$ ${clientTotalPago.toFixed(2).replace('.', ',')}`;
             }
         });
     </script>

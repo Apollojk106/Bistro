@@ -243,7 +243,7 @@ class PedidoController extends Controller
 
     public function PedidosConcluidos()
     {
-        $PedidosConcluidos = Pedido::with('itensPedido.cardapio')
+        $PedidosConcluidos = Pedido::with('itensPedidos.cardapio')
             ->where('status', 'Concluido')
             ->take(10)
             ->get();
