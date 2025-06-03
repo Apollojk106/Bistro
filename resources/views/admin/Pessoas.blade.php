@@ -171,7 +171,13 @@
         <!-- Lista de clientes -->
         <div id="clientList" class="rounded-b-lg">
             @forelse($clientes as $cliente)
-            <div class="client-card grid grid-cols-12 gap-1 items-center p-3 hover:bg-gray-50 transition text-sm" data-id="{{ $cliente->id ?? '' }}" data-name="{{ $cliente->nome ?? '' }}" data-situation="{{ $cliente->saldo ?? 0 }}">
+            <div class="client-card grid grid-cols-12 gap-1 items-center p-3 hover:bg-gray-50 transition text-sm" 
+                data-id="{{ $cliente->id ?? '' }}" 
+                data-name="{{ $cliente->nome ?? '' }}" 
+                data-situation="{{ $cliente->saldo ?? 0 }}"
+                data-email="{{ $cliente->email ?? '' }}" 
+                >
+
                 <div class="col-span-3 name">{{ $cliente->nome ?? $cliente->apelido ?? '' }}</div>
                 <div class="col-span-2 id">{{ $cliente->apelido ?? '' }}</div>
                 <div class="col-span-2 situation {{ ($cliente->saldo ?? 0) < 0 ? 'text-red-500 font-medium' : 'text-gray-800' }}">
@@ -217,6 +223,7 @@
             <form id="editClientForm" method="POST">
                 @csrf
                 <input type="hidden" name="client_id" id="editClientId">
+                <input type="hidden" name="email" id="editClientEmail">
 
                 <div class="space-y-4">
                     <div>
@@ -523,11 +530,14 @@
                     document.getElementById('modalClientName').textContent = currentClientName;
                     document.getElementById('editClientId').value = currentClientId;
                     document.getElementById('editApelido').value = clientItem.getAttribute('data-apelido');
-                    document.getElementById('modalClientEmail').textContent = clientItem.getAttribute('data-email');
-                    document.getElementById('editClientEmail').value = clientItem.getAttribute('data-email');
+
+                    // Preencher o e-mail
+                    const clientEmail = clientItem.getAttribute('data-email');
+                    document.getElementById('modalClientEmail').textContent = clientEmail;
+                    document.getElementById('editClientEmail').value = clientEmail;
 
                     // Mostrar saldo atual formatado igual ao painel de detalhes
-                    const saldoAtual = parseFloat(clientItem.getAttribute('data-saldo'));
+                    const saldoAtual = parseFloat(clientItem.getAttribute('data-situation'));
                     const currentBalanceElement = document.getElementById('currentBalance');
                     currentBalanceElement.textContent = `R$ ${saldoAtual.toFixed(2).replace('.', ',')}`;
                     currentBalanceElement.className = saldoAtual < 0 ? 'detail-value text-red-500' : 'detail-value';
