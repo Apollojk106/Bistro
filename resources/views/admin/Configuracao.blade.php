@@ -4,7 +4,7 @@
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         <!-- Configurações Gerais -->
         <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-            <div class="bg-blue-600 px-6 py-4">
+            <div class="bg-orange-600 px-6 py-4">
                 <h2 class="text-xl font-semibold text-white">Configurações Gerais</h2>
             </div>
             
@@ -19,7 +19,7 @@
                     <div class="flex flex-col md:flex-row items-center justify-between p-4 bg-gray-50 rounded-lg">
                         <span class="text-gray-700 font-medium mb-2 md:mb-0">{{$config->nome}}</span>
                         <select name="configs[{{ $config->id }}][status]" 
-                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
                             <option value="1" {{ $config->status ? 'selected' : '' }}>Ativo</option>
                             <option value="0" {{ !$config->status ? 'selected' : '' }}>Inativo</option>
                         </select>
@@ -29,7 +29,7 @@
                         <span class="text-gray-700 font-medium mb-2 md:mb-0">{{$config->nome}}</span>
                         <input type="text" name="configs[{{ $config->id }}][valores1]" 
                                value="{{ $config->valores1 ?? '' }}" 
-                               class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-64">
+                               class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 w-full md:w-64">
                     </div>
                     @elseif($config->type == '3')
                     <div class="flex flex-col md:flex-row items-center justify-between p-4 bg-gray-50 rounded-lg">
@@ -37,11 +37,11 @@
                         <div class="flex items-center space-x-2 w-full md:w-auto">
                             <input type="text" name="configs[{{ $config->id }}][valores1]" 
                                    value="{{ $config->valores1 ?? '' }}" 
-                                   class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex-1">
+                                   class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 flex-1">
                             <span class="text-gray-500">às</span>
                             <input type="text" name="configs[{{ $config->id }}][valores2]" 
                                    value="{{ $config->valores2 ?? '' }}" 
-                                   class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex-1">
+                                   class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 flex-1">
                         </div>
                     </div>
                     @endif
@@ -50,7 +50,7 @@
 
                 <div class="flex justify-center mt-6">
                     <button type="submit" 
-                            class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition duration-200 flex items-center space-x-2">
+                            class="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg shadow-md transition duration-200 flex items-center space-x-2">
                         <span>Aplicar Alterações</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -62,7 +62,7 @@
 
         <!-- Formas de Pagamento -->
         <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-            <div class="bg-blue-600 px-6 py-4">
+            <div class="bg-orange-600 px-6 py-4">
                 <h2 class="text-xl font-semibold text-white">Formas de Pagamento</h2>
             </div>
             
@@ -86,16 +86,16 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <input type="text" name="forma[{{$Form->id}}][nome]" 
                                                value="{{$Form->nome}}" 
-                                               class="px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 w-full">
+                                               class="px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500 w-full">
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <input type="text" name="forma[{{$Form->id}}][taxa]" 
                                                value="{{$Form->taxa}}" 
-                                               class="px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 w-20">
+                                               class="px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500 w-20">
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                         <button type="submit" name="action" value="edit" 
-                                                class="text-blue-600 hover:text-blue-900">
+                                                class="text-orange-600 hover:text-orange-900">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                                             </svg>
@@ -113,12 +113,12 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <input type="text" name="forma[new][nome]" 
                                                value="Cartão" 
-                                               class="px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 w-full">
+                                               class="px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500 w-full">
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <input type="text" name="forma[new][taxa]" 
                                                value="2" 
-                                               class="px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 w-20">
+                                               class="px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500 w-20">
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right">
                                         <button type="submit" name="action" value="add" 
@@ -138,16 +138,16 @@
 
         <!-- Estrutura de Recomendados por Categoria -->
         <div class="bg-white rounded-xl shadow-md overflow-hidden">
-            <div class="bg-blue-600 px-6 py-4">
+            <div class="bg-orange-600 px-6 py-4">
                 <h2 class="text-xl font-semibold text-white">Estrutura de Recomendados por Categoria</h2>
-                <p class="text-blue-100 mt-1">Primária > Secundária > Terciária</p>
+                <p class="text-orange-100 mt-1">Primária > Secundária > Terciária</p>
             </div>
             
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     @foreach($Categorias as $nivel => $categoriasNivel)
                     <div class="bg-gray-50 rounded-lg overflow-hidden">
-                        <div class="bg-blue-500 px-4 py-3">
+                        <div class="bg-orange-500 px-4 py-3">
                             <h3 class="text-lg font-medium text-white text-center">
                                 @if($nivel == 'Primaria') Primária
                                 @elseif($nivel == 'Secundária') Secundária
@@ -167,14 +167,14 @@
                                         @method('PUT')
                                         
                                         <select name="nivel" 
-                                                class="px-2 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                                class="px-2 py-1 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500 text-sm">
                                             <option value="Primaria" {{ $categoria->nivel == 'Primaria' ? 'selected' : '' }}>Primária</option>
                                             <option value="Secundária" {{ $categoria->nivel == 'Secundária' ? 'selected' : '' }}>Secundária</option>
                                             <option value="Terciária" {{ $categoria->nivel == 'Terciária' ? 'selected' : '' }}>Terciária</option>
                                         </select>
                                         
                                         <button type="submit" 
-                                                class="text-blue-600 hover:text-blue-800 p-1">
+                                                class="text-orange-600 hover:text-orange-800 p-1">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                                             </svg>
