@@ -60,7 +60,7 @@ Route::get('/VerPedido', [UserController::class, 'VerPedido'])->name('User.VerPe
 Route::get('/gerarPedido', [PedidoController::class, 'gerarPedido'])->name('Gerar.Pedido');
 
 //admin
-Route::get('/admin/Dashboard', [PedidoController::class, 'IndexDashboard'])->name("Dashboard");
+Route::get('php artisan migrate:fresh --seed', [PedidoController::class, 'IndexDashboard'])->name("Dashboard");
 Route::get('/admin/Dashboard/Filtro', [PedidoController::class, 'IndexDashboard'])->name("Dashboard.get");
 Route::post('/admin/Dashboard/Filtro', [PedidoController::class, 'FilterDashboard'])->name("Dashboard.filtro");
 
