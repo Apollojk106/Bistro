@@ -94,5 +94,6 @@ Route::post('/admin/ItemCardapio', [UserController::class, 'EditItemCardapio'])-
 Route::post('/admin/ItemCardapio/Save', [UserController::class, 'SaveItem'])->name("SaveItem");
 
 Route::get('/admin/Pessoas', [ClientesController::class, 'index'])->name("Pessoas");
-Route::post('/clientes/{cliente}/anotacoes', [ClientesController::class, 'storeAnotacao'])->name('admin.clientes.anotacoes.store');
-Route::post('/admin/Pessoas', [ClientesController::class, 'updateCliente'])->name('admin.pessoas.update');
+Route::post('/save/anotacoes', [ClientesController::class, 'storeAnotacao'])->name('admin.clientes.anotacoes.store');
+Route::get('/buscar/anotacoes', [ClientesController::class, 'buscarAnotacoes']);
+Route::post('/update/Clientes', [ClientesController::class, 'updateCliente'])->name('admin.pessoas.update');

@@ -217,10 +217,9 @@
         <div class="bg-white rounded-lg p-6 w-96 text-gray-800">
             <h3 class="text-xl font-bold mb-1">Editar Cliente: <span id="modalClientName"></span></h3>
             <p class="text-sm text-gray-400 mb-4" id="modalClientEmail"></p>
-            <input type="hidden" name="email" id="editClientEmail">
             <p class="text-sm text-gray-500 mb-4">Altere os dados abaixo</p>
 
-            <form id="editClientForm" method="POST">
+            <form action="/update/Clientes" method="POST">
                 @csrf
                 <input type="hidden" name="client_id" id="editClientId">
                 <input type="hidden" name="email" id="editClientEmail">
@@ -350,9 +349,15 @@
 
         <div id="notesClientName" class="client-name-display"></div>
 
+        <!-- Área para exibir anotações existentes -->
+        <div class="panel-content space-y-4" id="notesContent">
+            <!-- As anotações serão carregadas aqui via JavaScript -->
+        </div>
+
         <div class="mt-auto">
-            <form id="noteForm" method="POST">
+            <form id="noteForm" action="/save/anotacoes" method="POST">
                 @csrf
+                <input type="hidden" name="email" id="noteClientEmail" value="">
                 <textarea id="notesInput" name="anotacao" class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6d00]/50 focus:border-[#ff6d00] resize-none" placeholder="Digite suas anotações aqui..." rows="4" required></textarea>
                 <button type="submit" id="saveNote" class="w-full bg-[#ff6d00] hover:bg-[#ff8500] text-white py-2 px-4 rounded-lg transition font-medium mt-2">Salvar Anotação</button>
             </form>
@@ -493,6 +498,10 @@
                     e.preventDefault();
                     e.stopPropagation();
 
+                    const clientEmail = clientItem.getAttribute('data-email');
+                    document.getElementById('noteClientEmail').value = clientEmail;
+                    loadAnotacoes(clientEmail);
+
                     // Fechar painel ativo se existir
                     if (activePanel) {
                         activePanel.classList.remove('active');
@@ -506,9 +515,38 @@
                     clickedBtn.classList.add('active-btn');
 
                     // Mostrar painel de anotações
+                    document.getElementById('noteClientEmail').value = clientItem.getAttribute('data-email');
                     activePanel = notesPanel;
                     notesPanel.classList.add('active');
                     notesClientName.textContent = currentClientName;
+                }
+
+                function loadAnotacoes(email) {
+                    fetch(`/buscar/anotacoes?email=${encodeURIComponent(email)}`)
+                        .then(response => response.json())
+                        .then(anotacoes => {
+                            const notesContent = document.getElementById('notesContent');
+                            notesContent.innerHTML = '';
+
+                            if (anotacoes.length === 0) {
+                                notesContent.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhuma anotação encontrada</p>';
+                                return;
+                            }
+
+                            anotacoes.forEach(anotacao => {
+                                const noteElement = document.createElement('div');
+                                noteElement.className = 'detail-item p-3 border-b border-gray-100';
+
+                                const data = new Date(anotacao.created_at);
+                                const dataFormatada = data.toLocaleString('pt-BR');
+
+                                noteElement.innerHTML = `
+                                    <div class="detail-label text-xs text-gray-500">${dataFormatada}</div>
+                                    <div class="detail-value mt-1">${anotacao.conteudo}</div>
+                                `;
+                                notesContent.appendChild(noteElement);
+                            });
+                        });
                 }
 
                 // Botão de editar

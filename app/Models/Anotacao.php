@@ -12,13 +12,7 @@ class Anotacao extends Model
     protected $table = 'anotacoes';
 
     protected $fillable = [
-        'cliente_id',
+        'email',
         'conteudo',
     ];
-
-    // Relação inversa com Cliente
-    public function cliente()
-    {
-        return $this->belongsTo(User::class, 'cliente_id');
-    }
 }

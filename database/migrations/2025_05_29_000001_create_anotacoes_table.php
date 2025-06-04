@@ -15,12 +15,10 @@ class CreateAnotacoesTable extends Migration
     {
         Schema::create('Anotacoes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); // Chave estrangeira para users
+            $table->text('email'); // Chave estrangeira para users não oficial
             $table->text('conteudo');
             $table->timestamps();
 
-            // Define a chave estrangeira
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
