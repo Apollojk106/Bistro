@@ -524,6 +524,24 @@ class DatabaseSeeder extends Seeder
             ]
         ]);
 
+        DB::table('Users')->insert([
+            [
+                'nome' => 'Fabio',
+                'email' => 'Fabio@email.com',
+                'telefone' => '11911112222',
+                'senha' => bcrypt('senha123.abc123'), 
+                'salt' => 'abc123',
+                'cep' => '01001000',
+                'rua' => 'Rua do Calote',
+                'bairro' => 'Centro',
+                'numero_residencia' => '100',
+                'complemento' => 'Apto 101',
+                'role' => 'admin',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+        ]);
+
         // Criar usuários caloteiros
         DB::table('Users')->insert([
             [
@@ -729,6 +747,5 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now()->subDays(3)
             ]
         ]);
-
     }
 }

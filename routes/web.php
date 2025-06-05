@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\CheckAdminRole;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PedidoController;
@@ -14,16 +16,19 @@ Route::get('/', [UserController::class, 'UserCardapio']);
 
 //login index
 //user
-Route::get('/Login', [UserController::class, 'Login'])->name("User.Login");
+Route::get('/Login', [UserController::class, 'Login'])->name("login");
 Route::post('/Login/Post', [UserController::class, 'PostLogin'])->name("User.Login.Post");
 
 Route::get('/Cadastro', [UserController::class, 'Cadastro'])->name("User.Cadastro");
 Route::post('/Cadastro/Post', [UserController::class, 'PostCadastro'])->name("User.Cadastro.Post");
 
-Route::get('/Perfil', [UserController::class, 'Perfil'])->name("User.Perfil");
-Route::post('/Save/Perfil', [UserController::class, 'SavePerfil'])->name("User.Save.Perfil");
-Route::post('/Historico/id', [PedidoController::class, 'GetPedido'])->name("Pedido.Historico");
-Route::get('/Logout', [UserController::class, 'Logout'])->name("User.Logout");
+//Rotas para usuários autenticados
+Route::middleware(['auth'])->group(function () {
+    Route::get('/Perfil', [UserController::class, 'Perfil'])->name("User.Perfil");
+    Route::post('/Save/Perfil', [UserController::class, 'SavePerfil'])->name("User.Save.Perfil");
+    Route::post('/Historico/id', [PedidoController::class, 'GetPedido'])->name("Pedido.Historico");
+    Route::get('/Logout', [UserController::class, 'Logout'])->name("User.Logout");
+});
 
 //Cardapio
 Route::get('/Cardapio', [UserController::class, 'UserCardapio'])->name("User.Cardapio");
@@ -60,40 +65,41 @@ Route::get('/VerPedido', [UserController::class, 'VerPedido'])->name('User.VerPe
 Route::get('/gerarPedido', [PedidoController::class, 'gerarPedido'])->name('Gerar.Pedido');
 
 //admin
-Route::get('php artisan migrate:fresh --seed', [PedidoController::class, 'IndexDashboard'])->name("Dashboard");
-Route::get('/admin/Dashboard/Filtro', [PedidoController::class, 'IndexDashboard'])->name("Dashboard.get");
-Route::post('/admin/Dashboard/Filtro', [PedidoController::class, 'FilterDashboard'])->name("Dashboard.filtro");
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('php artisan migrate:fresh --seed', [PedidoController::class, 'IndexDashboard'])->name("Dashboard");
+    Route::get('/admin/Dashboard/Filtro', [PedidoController::class, 'IndexDashboard'])->name("Dashboard.get");
+    Route::post('/admin/Dashboard/Filtro', [PedidoController::class, 'FilterDashboard'])->name("Dashboard.filtro");
 
-Route::get('/admin', [UserController::class, 'Pedido'])->name("Index.Admin");
-Route::get('/admin/Pedido', [UserController::class, 'Pedido'])->name("Pedidos");
-Route::get('/pedidos/json', [PedidoController::class, 'getPedidosJson'])->name('pedidos.json');
-Route::get('/admin/Pedidos/Avancar/{id}', [PedidoController::class, 'AvancarPedidos'])->name('Avancar.pedidos');
-Route::get('/admin/Pedidos/Voltar/{id}', [PedidoController::class, 'VoltarPedidos'])->name('Voltar.pedidos');
-Route::post('/Atualizar/Pedidos', [PedidoController::class, 'AtualizarPedidos'])->name('pedidos.confirmar-pagamento');
+    Route::get('/admin', [UserController::class, 'Pedido'])->name("Index.Admin");
+    Route::get('/admin/Pedido', [UserController::class, 'Pedido'])->name("Pedidos");
+    Route::get('/pedidos/json', [PedidoController::class, 'getPedidosJson'])->name('pedidos.json');
+    Route::get('/admin/Pedidos/Avancar/{id}', [PedidoController::class, 'AvancarPedidos'])->name('Avancar.pedidos');
+    Route::get('/admin/Pedidos/Voltar/{id}', [PedidoController::class, 'VoltarPedidos'])->name('Voltar.pedidos');
+    Route::post('/Atualizar/Pedidos', [PedidoController::class, 'AtualizarPedidos'])->name('pedidos.confirmar-pagamento');
 
-Route::get('/admin/Configuracao', [UserController::class, 'Configuracao'])->name("Configuracao");
-Route::post('/Configuracao/update', [ConfiguracaoController::class, 'updateConfiguracoes'])->name('admin.configuracao.update');
-Route::post('/Configuracao/forma-pagamento', [ConfiguracaoController::class, 'gerenciarFormaPagamento'])->name('admin.configuracao.forma-pagamento');
-Route::put('/Configuracao/forma-pagamento', [ConfiguracaoController::class, 'gerenciarFormaPagamento'])->name('admin.configuracao.forma-pagamento');
+    Route::get('/admin/Configuracao', [UserController::class, 'Configuracao'])->name("Configuracao");
+    Route::post('/Configuracao/update', [ConfiguracaoController::class, 'updateConfiguracoes'])->name('admin.configuracao.update');
+    Route::post('/Configuracao/forma-pagamento', [ConfiguracaoController::class, 'gerenciarFormaPagamento'])->name('admin.configuracao.forma-pagamento');
+    Route::put('/Configuracao/forma-pagamento', [ConfiguracaoController::class, 'gerenciarFormaPagamento'])->name('admin.configuracao.forma-pagamento');
 
-Route::put('/Configuracao/categoria/{id}', [ConfiguracaoController::class, 'atualizarCategoria'])->name('admin.configuracao.categoria.update');
+    Route::put('/Configuracao/categoria/{id}', [ConfiguracaoController::class, 'atualizarCategoria'])->name('admin.configuracao.categoria.update');
 
-Route::get('/admin/Historico', [PedidoController::class, 'PedidosConcluidos'])->name("Historico");
-Route::post('/admin/Historico/Filtro', [PedidoController::class, 'HistoricoFiltro'])->name("Historico.filtro");
+    Route::get('/admin/Historico', [PedidoController::class, 'PedidosConcluidos'])->name("Historico");
+    Route::post('/admin/Historico/Filtro', [PedidoController::class, 'HistoricoFiltro'])->name("Historico.filtro");
 
-Route::get('/admin/Cardapio', [CardapioController::class, 'IndexCardapio'])->name("Cardapio");
-Route::post('/eye-on', [CardapioController::class, 'eyeOn'])->name('rota-eye-on');
-Route::post('/eye-off', [CardapioController::class, 'eyeOff'])->name('rota-eye-off');
-Route::post('/admin/Cardapio/Filtro', [CardapioController::class, 'CardapioFiltro'])->name("Cardapio.Filtro");
-Route::get('/admin/Cardapio/Delete{id}', [CardapioController::class, 'DeleteItem'])->name('DeleteItem');
-Route::delete('/admin/Cardapio/DeleteMultiple', [CardapioController::class, 'deleteMultiple']);
+    Route::get('/admin/Cardapio', [CardapioController::class, 'IndexCardapio'])->name("Cardapio");
+    Route::post('/eye-on', [CardapioController::class, 'eyeOn'])->name('rota-eye-on');
+    Route::post('/eye-off', [CardapioController::class, 'eyeOff'])->name('rota-eye-off');
+    Route::post('/admin/Cardapio/Filtro', [CardapioController::class, 'CardapioFiltro'])->name("Cardapio.Filtro");
+    Route::get('/admin/Cardapio/Delete{id}', [CardapioController::class, 'DeleteItem'])->name('DeleteItem');
+    Route::delete('/admin/Cardapio/DeleteMultiple', [CardapioController::class, 'deleteMultiple']);
 
+    Route::get('/admin/ItemCardapio', [UserController::class, 'GetItemCardapio'])->name("ItemCardapio");
+    Route::post('/admin/ItemCardapio', [UserController::class, 'EditItemCardapio'])->name("EditItemCardapio");
+    Route::post('/admin/ItemCardapio/Save', [UserController::class, 'SaveItem'])->name("SaveItem");
 
-Route::get('/admin/ItemCardapio', [UserController::class, 'GetItemCardapio'])->name("ItemCardapio");
-Route::post('/admin/ItemCardapio', [UserController::class, 'EditItemCardapio'])->name("EditItemCardapio");
-Route::post('/admin/ItemCardapio/Save', [UserController::class, 'SaveItem'])->name("SaveItem");
-
-Route::get('/admin/Pessoas', [ClientesController::class, 'index'])->name("Pessoas");
-Route::post('/save/anotacoes', [ClientesController::class, 'storeAnotacao'])->name('admin.clientes.anotacoes.store');
-Route::get('/buscar/anotacoes', [ClientesController::class, 'buscarAnotacoes']);
-Route::post('/update/Clientes', [ClientesController::class, 'updateCliente'])->name('admin.pessoas.update');
+    Route::get('/admin/Pessoas', [ClientesController::class, 'index'])->name("Pessoas");
+    Route::post('/save/anotacoes', [ClientesController::class, 'storeAnotacao'])->name('admin.clientes.anotacoes.store');
+    Route::get('/buscar/anotacoes', [ClientesController::class, 'buscarAnotacoes']);
+    Route::post('/update/Clientes', [ClientesController::class, 'updateCliente'])->name('admin.pessoas.update');
+});

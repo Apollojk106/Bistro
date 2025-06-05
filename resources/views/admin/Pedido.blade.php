@@ -88,10 +88,26 @@
         }
     });
 
-    // Função para voltar pedido para "Pedidos" (agora sem AJAX)
+    // Funções auxiliares
+    function safeString(value) {
+        return value ? value : '';
+    }
+
+    function formatMoney(value) {
+        const num = parseFloat(value || 0);
+        return num.toLocaleString('pt-BR', { 
+            style: 'currency', 
+            currency: 'BRL' 
+        });
+    }
+
+    function escapeSingleQuotes(str) {
+        return str ? str.replace(/'/g, "\\'") : '';
+    }
+
+    // Função para voltar pedido para "Pedidos"
     function voltarParaPedidos(pedidoId) {
         if (confirm('Deseja realmente voltar este pedido para a lista de Pedidos?')) {
-            // Redireciona diretamente para a rota GET
             window.location.href = '/admin/Pedidos/Voltar/' + pedidoId;
         }
     }
@@ -107,136 +123,103 @@
                 $('#pedidos').empty();
                 $('#em-andamento').empty();
 
-                // Função para gerar o endereço completo, caso a categoria seja "Entrega"
+                // Função para gerar o endereço completo
                 function gerarEnderecoCompleto(pedido) {
                     if (pedido.categoria_pedido === 'Entrega') {
                         return `
-                            <p>Endereço: <br>${pedido.rua}, ${pedido.numero_residencia}, ${pedido.bairro} ${pedido.complemento ? `<br> ${pedido.complemento}` : ''}</p>
+                            <p>Endereço: <br>${safeString(pedido.rua)}, ${safeString(pedido.numero_residencia)}, 
+                            ${safeString(pedido.bairro)} ${pedido.complemento ? `<br>${safeString(pedido.complemento)}` : ''}</p>
                         `;
                     }
-                    return ''; // Retorna uma string vazia se não for "Entrega"
+                    return '';
                 }
 
-                // Função para mostrar horário apenas se não for null
+                // Função para mostrar horário
                 function mostrarHorario(horario) {
-                    return horario ? `<p class="text-sm"><strong>Para:</strong> ${horario}</p>` : '';
+                    return horario ? `<p class="text-sm"><strong>Para:</strong> ${safeString(horario)}</p>` : '';
                 }
 
-                // Preenche a coluna Agendados
-                response.agendamentos.forEach(function(pedido) {
+                // Função para criar card de pedido
+                function criarCardPedido(pedido, bgColor, isEmAndamento = false) {
                     let enderecoCompleto = gerarEnderecoCompleto(pedido);
                     let horarioDisplay = mostrarHorario(pedido.horario);
+                    let valorFormatado = formatMoney(pedido.valor_total);
 
-                    $('#agendados').append(`
-                        <div class="mb-2 mt-1 bg-[#A7C7E7] border-2 border-black border-opacity-30 p-2 rounded-lg">
-                            <p class="text-sm"><strong>Pagamento:</strong> ${pedido.formapagamento} - ${pedido.status_pedido}</p>
+                    return `
+                        <div class="mb-2 mt-1 bg-[${bgColor}] border-2 border-black border-opacity-30 p-2 rounded-lg">
+                            <p class="text-sm"><strong>Pagamento:</strong> ${safeString(pedido.formapagamento)} - ${safeString(pedido.status_pedido)}</p>
                             ${horarioDisplay}
-                            <p class="text-sm"><strong>Nome:</strong> ${pedido.nome}</p>
-                            <p class="text-sm"><strong>Contato:</strong> ${pedido.telefone}</p>
-                            <p class="text-sm"><strong>Opção:</strong> ${pedido.categoria_pedido}</p>
-                            <p class="text-sm"><strong>Items:</strong> ${pedido.Items}</p>
-                            <p class="text-sm"><strong>Valor:</strong> ${pedido.valor_total}</p>
-                            <p class="text-sm"><strong>Comentários:</strong><br> ${pedido.descricao}</p>
-
+                            <p class="text-sm"><strong>Nome:</strong> ${safeString(pedido.nome)}</p>
+                            <p class="text-sm"><strong>Contato:</strong> ${safeString(pedido.telefone)}</p>
+                            <p class="text-sm"><strong>Opção:</strong> ${safeString(pedido.categoria_pedido)}</p>
+                            <p class="text-sm"><strong>Items:</strong> ${safeString(pedido.Items)}</p>
+                            <p class="text-sm"><strong>Valor:</strong> ${valorFormatado}</p>
+                            <p class="text-sm"><strong>Comentários:</strong><br> ${safeString(pedido.descricao)}</p>
                             ${enderecoCompleto}
-
-                            <div class="flex space-x-2 justify-center mt-2">
+                            <div class="flex ${isEmAndamento ? 'justify-between' : 'space-x-2 justify-center'} mt-2">
                                 <button class="bg-[#A74A04] text-white px-4 py-1 rounded-lg flex items-center space-x-1 text-sm">
                                     <span>Imprimir</span> <img src="{{ asset('Icons/box.png') }}" alt="Imagem Centralizada" class="h-4 w-4 object-contain" />
                                 </button>
-                                <button class="bg-[#A74A04] text-white px-4 py-1 rounded-lg flex items-center space-x-1 text-sm" onclick="window.location.href='/admin/Pedidos/Avancar/${pedido.id}'">
-                                    <span>Avançar</span> <img src="{{ asset('Icons/arrow-left.png') }}" alt="Imagem Centralizada" class="h-4 w-4 object-contain" />
-                                </button>
+                                ${isEmAndamento ? `
+                                    <button onclick="voltarParaPedidos(${pedido.id})" class="bg-gray-500 text-white px-4 py-1 rounded-lg flex items-center space-x-1 text-sm">
+                                        <img src="{{ asset('Icons/btn-back.png') }}" alt="Voltar" class="h-4 w-4 object-contain" />
+                                    </button>
+                                    <button onclick="abrirModalPagamento(
+                                        ${pedido.id}, 
+                                        '${escapeSingleQuotes(pedido.status_pedido)}', 
+                                        '${pedido.formapagamento ? escapeSingleQuotes(pedido.formapagamento) : ''}', 
+                                        ${pedido.valor_pago ?? pedido.valor_total},
+                                        ${pedido.valor_total}
+                                    )" 
+                                        class="bg-[#A74A04] text-white px-4 py-1 rounded-lg flex items-center space-x-1 text-sm">
+                                        <span>Confirmar</span>
+                                    </button>
+                                ` : `
+                                    <button onclick="window.location.href='/admin/Pedidos/Avancar/${pedido.id}'" 
+                                        class="bg-[#A74A04] text-white px-4 py-1 rounded-lg flex items-center space-x-1 text-sm">
+                                        <span>Avançar</span> <img src="{{ asset('Icons/arrow-left.png') }}" alt="Imagem Centralizada" class="h-4 w-4 object-contain" />
+                                    </button>
+                                `}
                             </div>
                         </div>
-                    `);
+                    `;
+                }
+
+                // Preenche as colunas
+                response.agendamentos.forEach(pedido => {
+                    $('#agendados').append(criarCardPedido(pedido, '#A7C7E7'));
                 });
 
-                // Preenche a coluna Pedidos
-                response.pendentes.forEach(function(pedido) {
-                    let enderecoCompleto = gerarEnderecoCompleto(pedido);
-                    let horarioDisplay = mostrarHorario(pedido.horario);
-
-                    $('#pedidos').append(`
-                        <div class="mb-2 mt-1 bg-[#F2A97E] border-2 border-black border-opacity-30 p-2 rounded-lg">
-                            <p class="text-sm"><strong>Pagamento:</strong> ${pedido.formapagamento} - ${pedido.status_pedido}</p>
-                            ${horarioDisplay}
-                            <p class="text-sm"><strong>Nome:</strong> ${pedido.nome}</p>
-                            <p class="text-sm"><strong>Contato:</strong> ${pedido.telefone}</p>
-                            <p class="text-sm"><strong>Opção:</strong> ${pedido.categoria_pedido}</p>
-                            <p class="text-sm"><strong>Items:</strong> ${pedido.Items}</p>
-                            <p class="text-sm"><strong>Valor:</strong> ${pedido.valor_total}</p>
-                            <p class="text-sm"><strong>Comentários:</strong><br> ${pedido.descricao}</p>
-
-                            ${enderecoCompleto}
-
-                            <div class="flex space-x-2 justify-center mt-2">
-                                <button class="bg-[#A74A04] text-white px-4 py-1 rounded-lg flex items-center space-x-1 text-sm">
-                                    <span>Imprimir</span> <img src="{{ asset('Icons/box.png') }}" alt="Imagem Centralizada" class="h-4 w-4 object-contain" />
-                                </button>
-                                <button class="bg-[#A74A04] text-white px-4 py-1 rounded-lg flex items-center space-x-1 text-sm" onclick="window.location.href='/admin/Pedidos/Avancar/${pedido.id}'">
-                                    <span>Avançar</span> <img src="{{ asset('Icons/arrow-left.png') }}" alt="Imagem Centralizada" class="h-4 w-4 object-contain" />
-                                </button>
-                            </div>
-                        </div>
-                    `);
+                response.pendentes.forEach(pedido => {
+                    $('#pedidos').append(criarCardPedido(pedido, '#F2A97E'));
                 });
 
-                // Preenche a coluna Em andamento com botão único de confirmação
-                response.em_andamento.forEach(function(pedido) {
-                    let enderecoCompleto = gerarEnderecoCompleto(pedido);
-                    let horarioDisplay = mostrarHorario(pedido.horario);
-
-                    $('#em-andamento').append(`
-                        <div class="mb-2 mt-1 bg-[#F9E3A1] border-2 border-black border-opacity-30 p-2 rounded-lg">
-                            <p class="text-sm"><strong>Pagamento:</strong> ${pedido.formapagamento} - ${pedido.status_pedido}</p>
-                            ${horarioDisplay}
-                            <p class="text-sm"><strong>Nome:</strong> ${pedido.nome}</p>
-                            <p class="text-sm"><strong>Contato:</strong> ${pedido.telefone}</p>
-                            <p class="text-sm"><strong>Opção:</strong> ${pedido.categoria_pedido}</p>
-                            <p class="text-sm"><strong>Items:</strong> ${pedido.Items}</p>
-                            <p class="text-sm"><strong>Valor:</strong> ${pedido.valor_total}</p>
-                            <p class="text-sm"><strong>Comentários:</strong><br> ${pedido.descricao}</p>
-
-                            ${enderecoCompleto}
-
-                            <div class="flex justify-between mt-2">
-                                <button onclick="voltarParaPedidos(${pedido.id})" class="bg-gray-500 text-white px-4 py-1 rounded-lg flex items-center space-x-1 text-sm">
-                                    <img src="{{ asset('Icons/btn-back.png') }}" alt="Voltar" class="h-4 w-4 object-contain" />
-                                </button>
-                                <button onclick="abrirModalPagamento(
-                                    ${pedido.id}, 
-                                    '${pedido.status_pedido || ''}', 
-                                    '${pedido.formapagamento ? pedido.formapagamento.replace(/'/g, "\\'") : ''}', 
-                                    ${pedido.valor_pago ?? pedido.valor_total},
-                                    ${pedido.valor_total}
-                                )" 
-                                    class="bg-[#A74A04] text-white px-4 py-1 rounded-lg flex items-center space-x-1 text-sm">
-                                    <span>Confirmar Pedido</span>
-                                </button>
-                            </div>
-                        </div>
-                    `);
+                response.em_andamento.forEach(pedido => {
+                    $('#em-andamento').append(criarCardPedido(pedido, '#F9E3A1', true));
                 });
+            },
+            error: function(xhr, status, error) {
+                console.error("Erro ao carregar pedidos:", error);
+            },
+            complete: function() {
+                // Agenda a próxima atualização somente após esta terminar
+                setTimeout(carregarPedidos, 5000);
             }
         });
     }
 
     const formasPagamentoData = @json($pagamentos);
 
-    // Função para abrir o modal de pagamento com os dados atuais
+    // Função para abrir o modal de pagamento
     function abrirModalPagamento(pedidoId, statusAtual, formaPagamentoAtual, valorPagoAtual, valorBrutoAtual) {
-
-        // Gerar as opções de forma de pagamento dinamicamente
+        // Gerar as opções de forma de pagamento
         let optionsHTML = '<option value="">Selecione...</option>';
-
+        
         formasPagamentoData.forEach(pagamento => {
-            // Formatando o nome para exibição (ex: "cartao" -> "Cartão")
             let nomeFormatado = pagamento.nome.charAt(0).toUpperCase() + pagamento.nome.slice(1);
             if (nomeFormatado === 'Cartao') nomeFormatado = 'Cartão';
-
-            // Adiciona a opção com value=ID e texto=nome formatado
-            const selected = formaPagamentoAtual === pagamento.id ? 'selected' : '';
+            
+            const selected = formaPagamentoAtual == pagamento.id ? 'selected' : '';
             optionsHTML += `<option value="${pagamento.id}" ${selected}>${nomeFormatado}</option>`;
         });
 
@@ -264,12 +247,15 @@
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium mb-1">Valor Total Atualizado</label>
-                        <input type="text" id="valor_total_atualizado" class="w-full p-2 border rounded bg-gray-100" value="R$ ${valorBrutoAtual.toFixed(2)}" readonly>
+                        <input type="text" id="valor_total_atualizado" class="w-full p-2 border rounded bg-gray-100" 
+                               value="${formatMoney(valorBrutoAtual)}" readonly>
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium mb-1">Valor Pago</label>
-                        <input type="number" id="valor_pago" name="valor_pago" step="0.01" value="${valorBrutoAtual.toFixed(2)}" class="w-full p-2 border rounded" required>
+                        <input type="number" id="valor_pago" name="valor_pago" step="0.01" 
+                               value="${parseFloat(valorPagoAtual || valorBrutoAtual).toFixed(2)}" 
+                               class="w-full p-2 border rounded" required>
                     </div>
 
                     <p class="mb-4">Deseja marcar este pedido como concluído?</p>
@@ -289,12 +275,9 @@
     // Função para calcular o valor pago com base no ajuste
     function calcularValorPago(valorBruto) {
         const ajuste = parseFloat(document.getElementById('valor_ajuste').value) || 0;
-        const valorTotalAtualizado = valorBruto + ajuste;
+        const valorTotalAtualizado = parseFloat(valorBruto) + ajuste;
 
-        // Atualiza o campo de valor total atualizado
-        document.getElementById('valor_total_atualizado').value = `R$ ${valorTotalAtualizado.toFixed(2)}`;
-
-        // Atualiza o campo de valor pago com o novo valor
+        document.getElementById('valor_total_atualizado').value = formatMoney(valorTotalAtualizado);
         document.getElementById('valor_pago').value = valorTotalAtualizado.toFixed(2);
     }
 
@@ -306,11 +289,8 @@
         }
     }
 
-    // Carrega os pedidos ao carregar a página
+    // Inicialização
     $(document).ready(function() {
         carregarPedidos();
     });
-
-    // Atualiza os pedidos a cada 5 segundos
-    setInterval(carregarPedidos, 5000);
 </script>

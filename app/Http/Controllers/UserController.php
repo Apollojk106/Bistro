@@ -43,13 +43,23 @@ class UserController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if ($user && Hash::check($request->senha, $user->senha)) {
-            Auth::login($user);
+        if ($user) {
+            // Combina a senha fornecida com o salt armazenado
+            $senhaComSalt = $request->senha . '.' . $user->salt;
 
-            return redirect()->route('User.Perfil')->with('success', 'Login realizado com sucesso!');
-        } else {
-            return back()->with('error', 'Credenciais inválidas. Tente novamente.');
+            // Verifica se a senha (com salt) corresponde ao hash salvo no banco
+            if (Hash::check($senhaComSalt, $user->senha)) {
+                Auth::login($user);
+
+                if ($user->role === 'admin') {
+                    return redirect()->route('Index.Admin')->with('success', 'Login realizado com sucesso!');
+                }
+
+                return redirect()->route('User.Perfil')->with('success', 'Login realizado com sucesso!');
+            }
         }
+
+        return back()->with('error', 'Credenciais inválidas. Tente novamente.');
     }
 
     public function PostCadastro(Request $request)
@@ -70,7 +80,7 @@ class UserController extends Controller
         $usuarioExistente = User::where('email', $request->email)->first();
 
         if ($usuarioExistente) {
-            return redirect()->route('User.Login')->with('error', 'Já existe uma conta com esse e-mail. Faça login.');
+            return redirect()->route('login')->with('error', 'Já existe uma conta com esse e-mail. Faça login.');
         }
 
         $user = new User();
@@ -81,9 +91,9 @@ class UserController extends Controller
         $user->rua = $request->rua;
         $user->bairro = $request->bairro;
         $user->numero_residencia = $request->numero_residencia;
-        $user->complemento = $request->complemento; // Campo complementar
-        $user->senha = Hash::make($request->senha); // Criptografando a senha
-        $user->salt = bin2hex(random_bytes(16)); // Gerando salt para maior segurança
+        $user->complemento = $request->complemento;
+        $user->senha = Hash::make($request->senha);
+        $user->salt = bin2hex(random_bytes(16));
         $user->save();
 
         Auth::login($user);
@@ -96,7 +106,7 @@ class UserController extends Controller
     {
         Auth::logout();
 
-        return redirect()->back()->with('success', 'Você foi desconectado com sucesso!');
+        return redirect()->route('login')->with('success', 'Você foi desconectado com sucesso!');
     }
 
     //Esse controler é somente para a rota view
@@ -104,7 +114,7 @@ class UserController extends Controller
     public function Perfil()
     {
         if (!Auth::check()) {
-            return redirect()->route("User.Login");
+            return redirect()->route("login");
         }
         $usuario = Auth::user();
 
@@ -120,7 +130,7 @@ class UserController extends Controller
     public function SavePerfil(UpdatePerfilRequest $request)
     {
         if (!Auth::check()) {
-            return redirect()->route("User.Login");
+            return redirect()->route("login");
         }
 
         $usuario = User::find(Auth::id());
@@ -282,7 +292,7 @@ class UserController extends Controller
         $id = session('pedido_id');
 
         if (!$id) {
-            return redirect()->route('User.Login')->with(
+            return redirect()->route('login')->with(
                 'error',
                 'Sua sessão expirou ou o pedido não foi iniciado.
             Por favor, registre-se ou faça login para continuar.'

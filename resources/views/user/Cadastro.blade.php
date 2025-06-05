@@ -61,7 +61,7 @@
 
         <!-- Link de Cadastro -->
         <div class="mt-4 text-center mb-4">
-            <a href="{{ route('User.Login') }}" class=" underline text-black font-bold hover:text-gray-700">Logar</a>
+            <a href="{{ route('login') }}" class=" underline text-black font-bold hover:text-gray-700">Logar</a>
         </div>
         </form>
     </div>
