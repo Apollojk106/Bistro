@@ -92,8 +92,8 @@ class UserController extends Controller
         $user->bairro = $request->bairro;
         $user->numero_residencia = $request->numero_residencia;
         $user->complemento = $request->complemento;
-        $user->senha = Hash::make($request->senha);
         $user->salt = bin2hex(random_bytes(16));
+        $user->senha = bcrypt($request->senha . '.' . $user->salt); // Armazena a senha com o salt
         $user->save();
 
         Auth::login($user);
