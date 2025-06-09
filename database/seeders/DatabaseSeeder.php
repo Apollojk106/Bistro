@@ -111,7 +111,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Pedido especial',
                 'frete' => 7.00,
                 'valor_total' => 80.00,
-                'valor_taxa' => 8.00,
                 'created_at' => "2025-03-10 00:46:14",
                 'updated_at' => now()
             ],
@@ -132,7 +131,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Pedido rápido',
                 'frete' => 5.00,
                 'valor_total' => 60.00,
-                'valor_taxa' => 6.00,
                 'created_at' => "2025-03-10 00:46:14",
                 'updated_at' => now()
             ],
@@ -153,7 +151,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Pedido agendado',
                 'frete' => 6.00,
                 'valor_total' => 75.00,
-                'valor_taxa' => 7.50,
                 'created_at' => "2025-03-11 00:46:14",
                 'updated_at' => now()
             ],
@@ -174,7 +171,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Pedido premium',
                 'frete' => 10.00,
                 'valor_total' => 120.00,
-                'valor_taxa' => 12.00,
                 'created_at' => "2025-03-9 00:46:14",
                 'updated_at' => now()
             ],
@@ -195,7 +191,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Pedido gourmet',
                 'frete' => 8.00,
                 'valor_total' => 95.00,
-                'valor_taxa' => 9.50,
                 'created_at' => "2025-03-8 00:46:14",
                 'updated_at' => now()
             ],
@@ -216,7 +211,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Pedido simples',
                 'frete' => 5.00,
                 'valor_total' => 50.00,
-                'valor_taxa' => 5.00,
                 'created_at' => "2025-02-10 00:46:14",
                 'updated_at' => now()
             ],
@@ -237,7 +231,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Pedido com entrega programada',
                 'frete' => 10.00,
                 'valor_total' => 80.00,
-                'valor_taxa' => 8.00,
                 'created_at' => "2025-02-11 00:46:14",
                 'updated_at' => now()
             ],
@@ -258,7 +251,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Pedido de almoço para consumo local',
                 'frete' => 0.00,
                 'valor_total' => 45.00,
-                'valor_taxa' => 5.00,
                 'created_at' => "2025-03-11 00:46:14",
                 'updated_at' => now()
             ],
@@ -279,7 +271,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Pedido de café e sobremesa',
                 'frete' => 5.50,
                 'valor_total' => 35.00,
-                'valor_taxa' => 3.50,
                 'created_at' => "2026-03-10 00:46:14",
                 'updated_at' => now()
             ],
@@ -300,7 +291,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Pedido de jantar com entrega imediata',
                 'frete' => 7.00,
                 'valor_total' => 100.00,
-                'valor_taxa' => 10.00,
                 'created_at' => "2026-02-10 00:46:14",
                 'updated_at' => now()
             ]
@@ -609,7 +599,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Pedido grande não pago',
                 'frete' => 15.00,
                 'valor_total' => 350.00,
-                'valor_taxa' => 35.00,
                 'created_at' => now()->subDays(10),
                 'updated_at' => now()->subDays(10)
             ],
@@ -630,7 +619,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Outro pedido não pago',
                 'frete' => 0.00,
                 'valor_total' => 120.00,
-                'valor_taxa' => 12.00,
                 'created_at' => now()->subDays(5),
                 'updated_at' => now()->subDays(5)
             ],
@@ -653,7 +641,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Pedido em atraso',
                 'frete' => 10.00,
                 'valor_total' => 180.00,
-                'valor_taxa' => 0.00,
                 'created_at' => now()->subDays(7),
                 'updated_at' => now()->subDays(7)
             ],
@@ -676,7 +663,6 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Pedido pequeno não pago',
                 'frete' => 0.00,
                 'valor_total' => 85.50,
-                'valor_taxa' => 8.55,
                 'created_at' => now()->subDays(3),
                 'updated_at' => now()->subDays(3)
             ]

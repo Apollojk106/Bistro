@@ -41,11 +41,7 @@ class FormaPagamentoController extends Controller
 
         session()->put('pagamento', $pagamento);
 
-        if ($request->metodo_pagamento === 'pix') {
-            return redirect()->route("User.Pix");
-        } else
-        {      
-            return redirect()->route("User.VerPedido");
-        }
+        return redirect()->route("User.VerPedido");
+        
     }
 }

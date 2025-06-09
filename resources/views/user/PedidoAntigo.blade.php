@@ -43,7 +43,7 @@
 
                 <!-- Iterando os Itens do Pedido -->
                 <div class="border-t border-[#2E2E2E] pt-4 ml-4">
-                    @foreach($pedido->itensPedido as $item)
+                    @foreach($pedido->itensPedidos as $item)
                     <p class="text-lg text-[#2E2E2E]">
                         <strong>{{ $item->cardapio->nome }}</strong><br>
                         Qtd: {{ $item->quantidade }} -
@@ -52,14 +52,14 @@
                     </p>
                     @endforeach
 
-                    <p class="text-lg font-bold text-[#2E2E2E] mt-4">
-                        Total: R$ {{ number_format($pedido->valor_total, 2, ',', '.') }}
-                    </p>
                     @if($pedido->frete != 0)
                     <p class="text-lg text-[#2E2E2E]">
                         Frete: R$ {{ number_format($pedido->frete, 2, ',', '.') }}
                     </p>
                     @endif
+                    <p class="text-lg font-bold text-[#2E2E2E] mt-4">
+                        Total: R$ {{ number_format($pedido->valor_total, 2, ',', '.') }}
+                    </p>
                     <p class="text-lg text-[#2E2E2E] mt-2">
                         Forma de Pagamento: {{ $pagamento }}
                     </p>

@@ -52,6 +52,13 @@
                     @endif
                     @endforeach
 
+                    <!-- Exibe o frete apenas se for delivery e valor existir -->
+                    @if(isset($dadosPedido['opcoes']['categoria']) && $dadosPedido['opcoes']['categoria'] === 'Entrega')
+                    <p class="text-lg text-[#2E2E2E]">
+                        <strong>Frete:</strong> R$ {{ number_format($valorFrete, 2, ',', '.') }}
+                    </p>
+                    @endif
+
                     <p class="text-lg font-bold text-[#2E2E2E] mt-4">Total: R$ {{ number_format($valorTotal, 2, ',', '.') }}</p>
 
                     <p class="text-lg text-[#2E2E2E] mt-2">Forma de Pagamento: {{ ucfirst($dadosPedido['pagamento']['metodo'] ?? 'não informado') }}</p>

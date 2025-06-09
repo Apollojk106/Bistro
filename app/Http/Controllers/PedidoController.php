@@ -40,6 +40,24 @@ class PedidoController extends Controller
 
     public function gerarPedido()
     {
+        $dadosPedido = session()->all();
+
+        if (strtolower($dadosPedido['pagamento']['metodo']) === 'pix') {
+            return $this->processarPagamentoPix();
+        }
+        else
+        {
+            return $this->storePedido();
+        }    
+    }
+
+    public function processarPagamentoPix()
+    {
+        dd('processarPagamentoPix');
+    }
+
+    public function storePedido()
+    {
         $validacao = $this->validarPedido();
         if ($validacao !== true) {
             return $validacao; // Retorna o redirecionamento com erro se a validação falhar
@@ -92,9 +110,8 @@ class PedidoController extends Controller
                 'horario'           => isset($dadosPedido['opcoes']['horario']) ? date('Y-m-d H:i:s', strtotime($dadosPedido['opcoes']['horario'])) : null,
                 'id_forma_pagamento' => $formaPagamento->id,
                 'descricao'         => $dadosPedido['observacao'] ?? "",
-                'valor_total'       => $valorTotalItens,
-                'frete'             => 0,
-                'valor_taxa'        => $valorTaxa,
+                'valor_total'       => $valorTotalItens + $dadosPedido['Frete'],
+                'frete'             => $dadosPedido['Frete'],
             ]);
 
             foreach ($carrinhoValido as $id_cardapio => $item) {
@@ -107,7 +124,7 @@ class PedidoController extends Controller
                 ]);
             }
 
-            //session(['pedido_id' => $pedido->id]);
+            session(['pedido_id' => $pedido->id]);
             DB::commit();
 
             //session()->forget(['carrinho', 'opcoes', 'pagamento', 'observacao']);

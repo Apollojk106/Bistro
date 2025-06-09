@@ -118,7 +118,7 @@ class UserController extends Controller
         }
         $usuario = Auth::user();
 
-        $PedidosUser = Pedido::with('itensPedido.cardapio')
+        $PedidosUser = Pedido::with('itensPedidos.cardapio')
             //->where('status', 'Concluido')
             ->where('email', $usuario->email)
             ->take(10)
@@ -221,6 +221,7 @@ class UserController extends Controller
             $dadosPedido = session()->all();
             $pedidoIncompleto = false;
             $mensagemIncompleto = '';
+            $valorFrete = 0; // Inicializa com valor padrão
 
             // Verificar campos obrigatórios
             if (empty($dadosPedido['User']['nome'])) {
@@ -237,12 +238,12 @@ class UserController extends Controller
                 $mensagemIncompleto = 'Endereço não informado para delivery';
             } elseif ($dadosPedido['opcoes']['categoria'] === 'Entrega') {
                 $Frete = new FreteController();
-
                 $cepOrigem = '06754-140';
                 $cepDestino = $dadosPedido['User']['cep'];
-                $valorKm = null ?? 0.5;
+                $valorKm = 0.5;
 
-                session(['Frete' => $Frete->calcularFretePorDistancia($cepOrigem, $cepDestino, $valorKm)] ?? 5);
+                $valorFrete = $Frete->calcularFretePorDistancia($cepOrigem, $cepDestino, $valorKm) ?? 5.00;
+                session(['Frete' => $valorFrete]);
             }
 
             // Verificação dos itens com status = 'ligado'
@@ -275,16 +276,24 @@ class UserController extends Controller
             foreach ($carrinhoAtualizado as $id => $item) {
                 $valorTotal += $item['quantidade'] * $item['valor'];
             }
+
+            // Adiciona o frete apenas se for delivery
+            if (isset($dadosPedido['opcoes']['categoria']) && $dadosPedido['opcoes']['categoria'] === 'Entrega') {
+                $valorTotal += $valorFrete;
+            }
+
         } catch (Exception $X) {
+            dd($X->getMessage());
             $dadosPedido = [];
             $produtoIds = [];
             $produtos = [];
             $valorTotal = 0;
+            $valorFrete = 0;
             $pedidoIncompleto = true;
             $mensagemIncompleto = 'Erro ao processar pedido';
         }
 
-        return view('user.VerPedido', compact('dadosPedido', 'produtos', 'valorTotal', 'pedidoIncompleto', 'mensagemIncompleto'));
+        return view('user.VerPedido', compact('dadosPedido', 'produtos', 'valorTotal', 'pedidoIncompleto', 'mensagemIncompleto', 'valorFrete'));
     }
 
     public function PedidoSolicitado()
@@ -299,7 +308,7 @@ class UserController extends Controller
             );
         }
 
-        $pedido = Pedido::with('itensPedido.cardapio')
+        $pedido = Pedido::with('itensPedidos.cardapio')
             ->where('id', $id)
             ->first();
 
@@ -314,7 +323,7 @@ class UserController extends Controller
 
         $email = Auth::user()->email;
 
-        $pedido = Pedido::with('itensPedido.cardapio')
+        $pedido = Pedido::with('itensPedidos.cardapio')
             ->where('email', $email)
             ->orderBy('created_at', 'desc')
             ->first();

@@ -28,7 +28,6 @@ return new class extends Migration
             $table->text('descricao')->nullable();
             $table->decimal('frete', 8, 2);
             $table->decimal('valor_total', 8, 2);
-            $table->decimal('valor_taxa', 8, 2);
             $table->decimal('valor_pago', 8, 2)->default(0.00);
             
             // Add the 'id_forma_pagamento' column before defining the foreign key

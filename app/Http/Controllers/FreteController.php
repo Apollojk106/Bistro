@@ -9,81 +9,119 @@ class FreteController extends Controller
 {
     public function calcularFretePorDistancia($cepOrigem, $cepDestino, $valorKm)
     {
-    try {
-        // Busca coordenadas em paralelo para melhor performance
-        $coordenadasOrigem = $this->buscarCoordenadasPorCep($cepOrigem);
-        $coordenadasDestino = $this->buscarCoordenadasPorCep($cepDestino);
+        $valorminimo = 5.00; // Valor mínimo do frete
+        $distancia = $this->calcularFretePorCep($cepOrigem, $cepDestino) ?? 0;
+        $valorvariado = $distancia * $valorKm;
 
-        if (!$coordenadasOrigem || !$coordenadasDestino) {
-            return response()->json([
-                'erro' => 'Não foi possível obter a localização de um ou ambos os CEPs.'
-            ], 400);
-        }
+        $valortotal = $valorminimo + $valorvariado;
 
-        // Valida coordenadas
-        if (!isset($coordenadasOrigem['lat'], $coordenadasOrigem['lng'], 
-                  $coordenadasDestino['lat'], $coordenadasDestino['lng'])) {
-            return response()->json(['erro' => 'Coordenadas inválidas para cálculo'], 400);
-        }
-
-        $distanciaKm = $this->calcularDistanciaHaversine(
-            $coordenadasOrigem['lat'],
-            $coordenadasOrigem['lng'],
-            $coordenadasDestino['lat'],
-            $coordenadasDestino['lng']
-        );
-
-        // Cálculo do frete com arredondamento
-        $valorFrete = round($distanciaKm * $valorKm, 2);
-
-        return response()->json([
-            'distancia_km' => round($distanciaKm, 2),
-            'valor_frete' => number_format($valorFrete, 2, ',', '.'),
-            'cep_origem' => $cepOrigem,
-            'cep_destino' => $cepDestino,
-            'valor_por_km' => $valorKm
-        ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-            'erro' => 'Ocorreu um erro ao calcular o frete',
-                'detalhes' => $e->getMessage()
-            ], 500);
-        }
+        return $valortotal;
     }
 
-    private function buscarCoordenadasPorCep($cep)
+    public function calcularFretePorCep($cepOrigem, $cepDestino)
     {
-        $cepLimpo = preg_replace('/[^0-9]/', '', $cep);
-        $response = Http::get("https://brasilapi.com.br/api/cep/v2/{$cepLimpo}");
+        // 1. Obter coordenadas do restaurante (CEP origem)
+        $coordenadasOrigem = $this->obterCoordenadas($cepOrigem);
+        if (!$coordenadasOrigem) return null;
 
-        if ($response->ok()) {
-            $data = $response->json();
-            return [
-                'lat' => $data['location']['coordinates']['latitude'] ?? null,
-                'lng' => $data['location']['coordinates']['longitude'] ?? null,
-            ];
+        // 2. Obter coordenadas do cliente (CEP destino)
+        $coordenadasDestino = $this->obterCoordenadas($cepDestino);
+        if (!$coordenadasDestino) return null;
+
+        // 3. Calcular distância em km
+        return $this->calcularDistanciaEmKm(
+            $coordenadasOrigem['lat'],
+            $coordenadasOrigem['lon'],
+            $coordenadasDestino['lat'],
+            $coordenadasDestino['lon']
+        );
+    }
+
+    private function obterCoordenadas($cep)
+    {
+        $cep = substr(preg_replace('/[^0-9]/', '', $cep), 0, 8);
+        if (strlen($cep) !== 8) {
+            return null;
         }
 
+        static $cache = [];
+        if (isset($cache[$cep])) {
+            return $cache[$cep];
+        }
+
+        $cacheFile = sys_get_temp_dir() . '/cep_' . $cep . '.cache';
+        if (file_exists($cacheFile)) {
+            return $cache[$cep] = json_decode(file_get_contents($cacheFile), true);
+        }
+
+        $context = stream_context_create([
+            'http' => [
+                'timeout' => 5,
+                'header' => "User-Agent: SeuAppNome/1.0 (seuemail@dominio.com)\r\n"
+            ]
+        ]);
+
+        // Tentativa 1: BrasilAPI
+        $response = @file_get_contents("https://brasilapi.com.br/api/cep/v2/{$cep}", false, $context);
+
+        if ($response !== false) {
+            $data = json_decode($response, true);
+            if (!empty($data['location']['coordinates'])) {
+                $coords = [
+                    'lat' => (float)$data['location']['coordinates']['latitude'],
+                    'lon' => (float)$data['location']['coordinates']['longitude'],
+                ];
+                file_put_contents($cacheFile, json_encode($coords));
+                return $cache[$cep] = $coords;
+            }
+        }
+
+        // Tentativa 2: Nominatim (OpenStreetMap)
+        // Para chamar Nominatim, primeiro pega o endereço pelo ViaCEP
+        $viaCepResponse = @file_get_contents("https://viacep.com.br/ws/{$cep}/json/", false, $context);
+        if ($viaCepResponse !== false) {
+            $endereco = json_decode($viaCepResponse, true);
+            if (!empty($endereco) && !isset($endereco['erro'])) {
+                $query = urlencode("{$endereco['logradouro']}, {$endereco['localidade']}, {$endereco['uf']}, Brasil");
+                $nominatimUrl = "https://nominatim.openstreetmap.org/search?q={$query}&format=json&limit=1";
+
+                $nominatimResponse = @file_get_contents($nominatimUrl, false, $context);
+                if ($nominatimResponse !== false) {
+                    $nominatimData = json_decode($nominatimResponse, true);
+                    if (!empty($nominatimData) && isset($nominatimData[0]['lat']) && isset($nominatimData[0]['lon'])) {
+                        $coords = [
+                            'lat' => (float)$nominatimData[0]['lat'],
+                            'lon' => (float)$nominatimData[0]['lon'],
+                        ];
+                        file_put_contents($cacheFile, json_encode($coords));
+                        return $cache[$cep] = $coords;
+                    }
+                }
+            }
+        }
+
+        // Se tudo falhar, retorna null
         return null;
     }
 
-    private function calcularDistanciaHaversine($lat1, $lon1, $lat2, $lon2)
+    private function calcularDistanciaEmKm($lat1, $lon1, $lat2, $lon2)
     {
-        $raioTerra = 6371; // km
+        $raioTerra = 6371; // Raio da Terra em km
 
         $lat1 = deg2rad($lat1);
         $lon1 = deg2rad($lon1);
         $lat2 = deg2rad($lat2);
         $lon2 = deg2rad($lon2);
 
-        $deltaLat = $lat2 - $lat1;
-        $deltaLon = $lon2 - $lon1;
+        $dLat = $lat2 - $lat1;
+        $dLon = $lon2 - $lon1;
 
-        $a = sin($deltaLat / 2) ** 2 +
-            cos($lat1) * cos($lat2) * sin($deltaLon / 2) ** 2;
+        $a = sin($dLat / 2) * sin($dLat / 2) +
+            cos($lat1) * cos($lat2) *
+            sin($dLon / 2) * sin($dLon / 2);
 
-        $c = 2 * asin(sqrt($a));
-        return $raioTerra * $c;
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        return round($raioTerra * $c, 2); // Distância em km com 2 casas decimais
     }
 }

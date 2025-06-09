@@ -24,7 +24,6 @@ class Pedido extends Model
         'descricao',
         'frete',
         'valor_total',
-        'valor_taxa',
         'valor_pago',
         'updated_at'
     ];
@@ -44,11 +43,6 @@ class Pedido extends Model
                 'subtotal' => $item->subtotal,
             ];
         });
-    }
-
-     public function cliente()
-    {
-        return $this->belongsTo(User::class, 'email', 'email');
     }
 
     public function formaPagamento()
