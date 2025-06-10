@@ -10,7 +10,6 @@ class FreteController extends Controller
 {
     public function calcularFretePorDistancia($cepOrigem, $cepDestino)
     {
-        // Valores padrão (fallback)
         $valorminimoPadrao = 8.00;
         $valorKmPadrao = 5.7;
 
