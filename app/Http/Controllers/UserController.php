@@ -240,9 +240,8 @@ class UserController extends Controller
                 $Frete = new FreteController();
                 $cepOrigem = '06754-140';
                 $cepDestino = $dadosPedido['User']['cep'];
-                $valorKm = 0.5;
 
-                $valorFrete = $Frete->calcularFretePorDistancia($cepOrigem, $cepDestino, $valorKm) ?? 5.00;
+                $valorFrete = $Frete->calcularFretePorDistancia($cepOrigem, $cepDestino) ?? 5.00;
                 session(['Frete' => $valorFrete]);
             }
 

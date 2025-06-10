@@ -4,12 +4,40 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Models\Configuracao;
 
 class FreteController extends Controller
 {
-    public function calcularFretePorDistancia($cepOrigem, $cepDestino, $valorKm)
+    public function calcularFretePorDistancia($cepOrigem, $cepDestino)
     {
-        $valorminimo = 5.00; // Valor mínimo do frete
+        // Valores padrão (fallback)
+        $valorminimoPadrao = 8.00;
+        $valorKmPadrao = 5.7;
+
+        try {
+            $configMinimo = Configuracao::where('nome', 'Valor do minimo para entrega')->first();
+            $valorminimo = $valorminimoPadrao; // Fallback inicial
+
+            if ($configMinimo && !empty($configMinimo->valores1)) {
+                $valorMinimoStr = preg_replace('/[^0-9,.]/', '', $configMinimo->valores1);
+                $valorminimo = (float) str_replace(',', '.', $valorMinimoStr);
+                if ($valorminimo <= 0) $valorminimo = $valorminimoPadrao;
+            }
+
+            // Busca o valor por km
+            $configKm = Configuracao::where('nome', 'Valor por km para entrega')->first();
+            $valorKm = $valorKmPadrao; // Fallback inicial
+
+            if ($configKm && !empty($configKm->valores1)) {
+                $valorKmStr = preg_replace('/[^0-9,.]/', '', $configKm->valores1);
+                $valorKm = (float) str_replace(',', '.', $valorKmStr);
+                if ($valorKm <= 0) $valorKm = $valorKmPadrao;
+            }
+        } catch (\Exception $e) {
+            $valorminimo = $valorminimoPadrao;
+            $valorKm = $valorKmPadrao;
+        }
+
         $distancia = $this->calcularFretePorCep($cepOrigem, $cepDestino) ?? 0;
         $valorvariado = $distancia * $valorKm;
 

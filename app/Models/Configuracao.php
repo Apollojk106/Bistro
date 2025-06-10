@@ -16,6 +16,7 @@ class Configuracao extends Model
         'valores2',
         'conector',
         'type',
+        'updated_at'
     ];
 
     protected $casts = [

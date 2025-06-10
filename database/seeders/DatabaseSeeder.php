@@ -505,6 +505,22 @@ class DatabaseSeeder extends Seeder
                 'type' => '2',
             ],
             [
+                'nome' => 'Valor do minimo para entrega',
+                'status' => true,
+                'valores1' => '8.00',
+                'conector' => 'R$',
+                'valores2' => null,
+                'type' => '2',
+            ],
+            [
+                'nome' => 'Valor por km para entrega',
+                'status' => true,
+                'valores1' => '5.8',
+                'conector' => 'R$',
+                'valores2' => null,
+                'type' => '2',
+            ],
+            [
                 'nome' => 'Horario de Funcionamento ',
                 'status' => true,
                 'valores1' => '9:00',
