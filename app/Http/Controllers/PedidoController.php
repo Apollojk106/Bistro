@@ -9,14 +9,13 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\ItensPedido;
 use App\Models\Configuracao;
-use App\Models\Cliente; // Certifique-se de importar o modelo Cliente
 
 
 class PedidoController extends Controller
 {
     public function GetPedido(Request $request)
     {
-        $PedidosUser = Pedido::with('itensPedido.cardapio')
+        $PedidosUser = Pedido::with('itensPedidos.cardapio')
             ->where('id', $request->id)
             ->first();
 
@@ -138,7 +137,7 @@ class PedidoController extends Controller
 
     public function GetPedidos()
     {
-        $TodosPedidos = Pedido::with('itensPedido.cardapio')
+        $TodosPedidos = Pedido::with('itensPedidos.cardapio')
             ->where('opcao_entrega', '!=', 'Agendamento')
             ->where('status', 'Pendente')
             ->get();
@@ -149,7 +148,7 @@ class PedidoController extends Controller
 
     public function GetAgendados()
     {
-        $Agendados = Pedido::with('itensPedido.cardapio')
+        $Agendados = Pedido::with('itensPedidos.cardapio')
             ->where('opcao_entrega', 'Agendamento')
             ->where('status', 'Pendente')
             ->get();
@@ -160,7 +159,7 @@ class PedidoController extends Controller
 
     public function GetEmAndamento()
     {
-        $EmAndamento = Pedido::with('itensPedido.cardapio')
+        $EmAndamento = Pedido::with('itensPedidos.cardapio')
             ->where('status', 'EmAndamento')
             ->get();
 
@@ -272,7 +271,7 @@ class PedidoController extends Controller
 
     public function HistoricoFiltro(Request $request)
     {
-        $PedidosFiltrado = Pedido::with('itensPedido.cardapio')
+        $PedidosFiltrado = Pedido::with('itensPedidos.cardapio')
             ->where($request->categoria, 'like', '%' . $request->pesquisa . '%')
             ->where('status', 'Concluido')
             ->take(10)

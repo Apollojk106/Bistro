@@ -6,9 +6,6 @@ use App\Http\Controllers\CardapioController;
 use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\FormaPagamentoController;
-use App\Http\Controllers\ItensPedidoController;
-use App\Http\Controllers\PedidoController;
-use App\Http\Controllers\PixController;
 
 use App\Http\Requests\UpdatePerfilRequest;
 
@@ -16,7 +13,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\CardapioRequest;
 use App\Models\Cardapio;
-use Illuminate\Support\Facades\View;
 use App\Models\Categoria;
 use App\Models\Configuracao;
 use App\Models\FormaPagamento;
