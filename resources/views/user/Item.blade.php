@@ -42,17 +42,17 @@
     </div>
 
     <!-- Opções de adicionais -->
-    @foreach($Itens as $Iten)
-    <div class="w-full bg-white py-3 px-4 item-container" data-item-id="{{$Iten->id}}">
+    @foreach($Itens as $Item)
+    <div class="w-full bg-white py-3 px-4 item-container" data-item-id="{{$Item->id}}">
         <div class="flex items-center justify-between">
             <!-- Texto e descrição -->
             <div class="flex-1">
-                <h3 class="text-lg font-semibold">{{$Iten->nome}}</h3>
-                <p class="text-gray-600 text-sm">{{$Iten->descricao}}</p>
-                <span class="text-gray-900 font-medium item-price" data-price="{{$Iten->valor}}">+R$ {{$Iten->valor}}</span>
+                <h3 class="text-lg font-semibold">{{$Item->nome}}</h3>
+                <p class="text-gray-600 text-sm">{{$Item->descricao}}</p>
+                <span class="text-gray-900 font-medium item-price" data-price="{{$Item->valor}}">+R$ {{$Item->valor}}</span>
             </div>
             <!-- Imagem -->
-            <img src="{{ asset('Icons/food2.png') }}" alt="Batata frita com cheddar e bacon" class="w-24 h-24 rounded-lg object-cover">
+            <img src="{{ asset($Item->imagem) }}" alt="Batata frita com cheddar e bacon" class="w-24 h-24 rounded-lg object-cover">
 
             <!-- Controles de quantidade (inicialmente escondidos) -->
             <div class="quantity-control hidden flex items-center space-x-4">
@@ -91,7 +91,7 @@
                 <span class="text-gray-900 font-medium item-price" data-price="{{$Bebida->valor}}">+R$ {{$Bebida->valor}}</span>
             </div>
             <!-- Imagem -->
-            <img src="{{ asset('Icons/drink.png') }}" alt="{{$Bebida->nome}}" class="w-24 h-24 rounded-lg object-cover">
+            <img src="{{ asset($Bebida->imagem) }}" alt="{{$Bebida->nome}}" class="w-24 h-24 rounded-lg object-cover">
 
             <!-- Controles de quantidade (inicialmente escondidos) -->
             <div class="quantity-control hidden flex items-center space-x-4">

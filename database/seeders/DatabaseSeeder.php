@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
         // Cardapio
         DB::table('Cardapios')->insert([
             [
-                'imagem' => 'Cardapio/food.png',
+                'imagem' => 'Cardapio/feijoada-simples.png',
                 'nome' => 'Feijoada Completa',
                 'descricao' => 'Feijão preto, carne de porco, arroz branco, farofa e couve',
                 'valor' => 29.99,
