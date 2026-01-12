@@ -16,7 +16,7 @@
 
     <div class="relative w-full">
         <!-- Ajuste a altura da imagem para telas maiores -->
-        <img class="h-[400px] sm:h-[200px] md:h-[500px] lg:h-[600px] w-full object-cover" src="{{ asset('Icons/food.png') }}" alt="Bife com batata frita">
+        <img class="h-[400px] sm:h-[200px] md:h-[500px] lg:h-[600px] w-full object-cover" src="{{ asset('Cardapio/food.png') }}" alt="Bife com batata frita">
 
         <!-- Botão de voltar com ícone de imagem -->
         <button onclick="window.history.back();" class="absolute top-4 left-4 bg-white p-3 rounded-full shadow-md hover:bg-gray-100 transition duration-200">

@@ -48,7 +48,7 @@
                         @if(isset($Item) && $Item->imagem)
                         <div class="mb-4 flex flex-col items-center">
                             <div class="relative group">
-                                <img src="{{ asset('storage/' . $Item->imagem) }}" alt="{{ $Item->nome }}" 
+                                <img src="{{ asset($Item->imagem) }}" alt="{{ $Item->nome }}" 
                                      class="w-40 h-40 object-cover rounded-lg shadow-md group-hover:opacity-75 transition duration-200">
                                 <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-200">
                                     <span class="bg-black bg-opacity-50 text-white px-3 py-1 rounded-lg text-sm">Imagem Atual</span>

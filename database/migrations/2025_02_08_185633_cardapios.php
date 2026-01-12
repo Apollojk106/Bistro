@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('Cardapios', function (Blueprint $table) {
             $table->id();
-            $table->string('imagem')->nullable();
+            $table->string('imagem')->default('Cardapio/food.png');
             $table->string('nome')->unique();
             $table->text('descricao');
             $table->decimal('valor', 8, 2);

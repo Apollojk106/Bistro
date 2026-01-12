@@ -31,6 +31,7 @@ class CardapioController extends Controller
                         return [
                             'id' => $item->id,
                             'nome' => $item->nome,
+                            'imagem' => $item->imagem,
                             'descricao' => $item->descricao,
                             'valor' => $item->valor,
                             'desconto' => $item->desconto,

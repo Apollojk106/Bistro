@@ -141,7 +141,7 @@
                     @csrf
                     <input type="hidden" name="id" value="{{ $pedido->id }}">
                     <div class="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col border border-gray-200">
-                        <img src="{{ $cardapio && $cardapio->imagem ? asset('storage/' . $cardapio->imagem) : asset('Icons/food.png') }}" alt="{{ $cardapio->nome ?? 'Prato' }}" class="card-image h-40 object-cover">
+                        <img src="{{ $cardapio && $cardapio->imagem ? asset('storage/' . $cardapio->imagem) : asset('Cardapio/food.png') }}" alt="{{ $cardapio->nome ?? 'Prato' }}" class="card-image h-40 object-cover">
                         <div class="p-4 flex flex-col flex-grow">
                             <h3 class="text-lg font-semibold text-gray-800 text-center">{{ $cardapio->nome ?? 'Prato não identificado' }}</h3>
                             <p class="text-gray-600 text-sm mt-2 text-center">{{ $cardapio->descricao ?? 'Sem descrição disponível' }}</p>

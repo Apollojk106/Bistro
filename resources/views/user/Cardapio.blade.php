@@ -95,12 +95,12 @@
                 <div class="card">
                     <a href="{{ route('item.get', $cardapio['id']) }}" class="block h-full">
                         <div class="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col border border-gray-200">
-                            <img src="{{ asset($cardapio['imagem'] ?? 'Icons/food.png') }}"
+                            <img src="{{ asset($cardapio['imagem']) }}"
                                 alt="{{ $cardapio['nome'] }}"
                                 class="card-image">
                             <div class="p-4 flex flex-col flex-grow">
                                 <h3 class="text-lg font-semibold text-gray-800 text-center">{{ $cardapio['nome'] }}</h3>
-                                <p class="text-gray-600 text-sm mt-2 text-center flex-grow">{{ $cardapio['descricao'] }}</p>
+                                <p class="text-gray-600 text-sm mt-2 text-center flex-grow">{{ $cardapio['descricao'] }}{{ $cardapio['imagem'] }}</p>
                                 <p class="text-orange-500 font-bold mt-4 text-center">R$ {{ number_format($cardapio['valor'], 2, ',', '.') }}</p>
                             </div>
                         </div>
