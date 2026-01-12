@@ -21,7 +21,7 @@
 
         <!-- Logo centralizada -->
         <a href="/" class="absolute left-1/2 transform -translate-x-1/2">
-            <img src="Logo.png" alt="Logo" class="h-24 md:h-32 object-contain">
+           <img src="{{ asset('Logo.png') }}" alt="Logo" class="h-24 md:h-32 object-contain">
         </a>
 
         <!-- Ícones do WhatsApp e Instagram -->
