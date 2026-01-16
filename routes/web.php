@@ -95,8 +95,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/admin/Cardapio/DeleteMultiple', [CardapioController::class, 'deleteMultiple']);
 
     Route::get('/admin/ItemCardapio', [UserController::class, 'GetItemCardapio'])->name("ItemCardapio");
-    Route::post('/admin/ItemCardapio', [UserController::class, 'EditItemCardapio'])->name("EditItemCardapio");
-    Route::post('/admin/ItemCardapio/Save', [UserController::class, 'SaveItem'])->name("SaveItem");
+    Route::post('/admin/ItemCardapio', [UserController::class, 'EditItemCardapio'])->name("EditItemCardapio"); //rota get
+    Route::post('/admin/ItemCardapio/Save', [UserController::class, 'SaveItem'])->name("SaveItem"); // rota post
 
     Route::get('/admin/Pessoas', [ClientesController::class, 'index'])->name("Pessoas");
     Route::post('/save/anotacoes', [ClientesController::class, 'storeAnotacao'])->name('admin.clientes.anotacoes.store');

@@ -450,9 +450,7 @@ class UserController extends Controller
     public function SaveItem(CardapioRequest $request)
     {
         $Cardapio = new CardapioController();
-
         $Cardapio->SaveItem($request);
-
         return  $Cardapio->IndexCardapio();
     }
 

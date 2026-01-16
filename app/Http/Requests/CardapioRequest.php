@@ -6,19 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CardapioRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -26,18 +18,13 @@ class CardapioRequest extends FormRequest
             'Imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'Descricao' => 'required|string',
             'Valor' => 'required|numeric',
-            'categoria' => 'required|string', // Categoria pode ser nova ou existente
+            'categoria' => 'required|string',
             'Igredientes' => 'required|string',
             'Desconto' => 'nullable|numeric',
             'Disponibilidade' => 'required|string',
         ];
     }
 
-    /**
-     * Obtenha as mensagens de erro personalizadas para as regras de validação.
-     *
-     * @return array
-     */
     public function messages()
     {
         return [
@@ -47,12 +34,12 @@ class CardapioRequest extends FormRequest
             'Descricao.required' => 'A descrição é obrigatória.',
             'Descricao.string' => 'A descrição deve ser uma string.',
             'Valor.required' => 'O valor é obrigatório.',
-            'Valor.numeric' => 'O valor deve ser um número.',
-            'categoria.required' => 'A categoria é obrigatória.',
+            'Valor.regex' => 'O valor deve ser um número válido (ex: 29,99 ou 29.99).',
+            'categoria.required' =w> 'A categoria é obrigatória.',
             'categoria.string' => 'A categoria deve ser uma string.',
             'Igredientes.required' => 'Os ingredientes são obrigatórios.',
             'Igredientes.string' => 'Os ingredientes devem ser uma string.',
-            'Desconto.numeric' => 'O desconto deve ser um número.',
+            'Desconto.regex' => 'O desconto deve ser um número válido.',
             'Disponibilidade.string' => 'A disponibilidade deve ser uma string.',
         ];
     }

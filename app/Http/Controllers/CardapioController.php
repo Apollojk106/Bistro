@@ -131,37 +131,66 @@ class CardapioController extends Controller
     }
 
     //Tela de Item
-    public function SaveItem($Item)
+    public function SaveItem($request)
     {
-        $imagemPath = null;
-        if ($Item->hasFile('Imagem')) {
-            $imagemPath = $Item->file('Imagem')->store('cardapio_imagens', 'public');
-        }
+        // Se tem ID, é edição
+        $id = $request->input('id');
 
-        if ($Item->categoria == "novo") {
-            $idcategoria = $this->CriarCategoria($Item->newcategory);
+        if ($id) {
+            // EDITION: Buscar pelo ID
+            $item = Cardapio::findOrFail($id);
         } else {
-            $idcategoria = $Item->categoria;
+            // CREATION: Verificar se já existe
+            $item = Cardapio::where('nome', $request->input('Nome'))->first();
+
+            if (!$item) {
+                // Se não existe, criar novo
+                $item = new Cardapio();
+            }
+            // Se existe, reutilizar o item existente (edição implícita)
         }
 
-        $registroExistente = Cardapio::where('nome', $Item->Nome)->first();
+        // Determinar categoria
+        $idcategoria = ($request->categoria == "novo")
+            ? $this->CriarCategoria($request->newcategory)
+            : $request->categoria;
 
-        $ItemCriado = Cardapio::updateOrCreate(
-            ['nome' => $Item->Nome],
-            [
-                'nome' => $Item->Nome,
-                'imagem' => $imagemPath ?? $registroExistente->imagem,
-                'descricao' => $Item->Descricao,
-                'valor' => $Item->Valor,
-                'desconto' => $request->Desconto ?? 0,
-                'disponibilidade' => $Item->Disponibilidade,
-                'status' => 'ligado',
-                'ingredientes' => $Item->Igredientes,
-                'id_categoria' => $idcategoria,
-            ]
-        );
+        // Atualizar dados
+        $item->nome = $request->input('Nome');
+        $item->descricao = $request->input('Descricao');
+        $item->valor = $request->input('Valor');
+        $item->desconto = $request->input('Desconto', 0);
+        $item->disponibilidade = $request->input('Disponibilidade');
+        $item->status = 'ligado';
+        $item->ingredientes = $request->input('Igredientes');
+        $item->id_categoria = $idcategoria;
 
-        return $this->IndexCardapio();
+        $item->save();
+
+        // Processar imagem se for enviada
+        if ($request->hasFile('Imagem')) {
+            // Excluir imagem anterior se existir
+            if ($item->imagem && file_exists(public_path($item->imagem))) {
+                unlink(public_path($item->imagem));
+            }
+
+            // Nome baseado no ID
+            $nomeImagem = 'img' . $item->id . '.png';
+
+            // Garantir diretório
+            if (!file_exists(public_path('Cardapio'))) {
+                mkdir(public_path('Cardapio'), 0755, true);
+            }
+
+            // Mover imagem
+            $request->file('Imagem')->move(public_path('Cardapio'), $nomeImagem);
+
+            // Atualizar caminho
+            $item->imagem = 'Cardapio/' . $nomeImagem;
+            $item->save();
+        }
+
+        return $item;
     }
 
     public function CriarCategoria($nome)
