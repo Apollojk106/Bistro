@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
         // Cardapio
         DB::table('Cardapios')->insert([
             [
-                'imagem' => 'Cardapio/feijoada-simples.png',
+                'imagem' => 'Storage/feijoada-simples.png',
                 'nome' => 'Feijoada Completa',
                 'descricao' => 'Feijão preto, carne de porco, arroz branco, farofa e couve',
                 'valor' => 29.99,
@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'imagem' => 'Cardapio/food.png',
+                'imagem' => 'Storage/bife-parmegiana.png',
                 'nome' => 'Bife à Parmegiana',
                 'descricao' => 'Bife empanado com queijo e molho de tomate, acompanhado de arroz e batata frita',
                 'valor' => 24.50,
@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'imagem' => 'Cardapio/arroz_brocolis.png',
+                'imagem' => 'Storage/arroz_brocolis.png',
                 'nome' => 'Arroz de Brócolis',
                 'descricao' => 'Arroz temperado com brócolis e alho',
                 'valor' => 10.00,
@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'imagem' => 'Cardapio/batata.png',
+                'imagem' => 'Storage/batata.png',
                 'nome' => 'Batata Frita',
                 'descricao' => 'Porção de batatas fritas crocantes',
                 'valor' => 8.50,
@@ -79,7 +79,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'imagem' => "Cardapio/suco-de-laranja.png",
+                'imagem' => "Storage/suco-de-laranja.png",
                 'nome' => 'Suco de Laranja',
                 'descricao' => 'Suco natural de laranja, fresco e sem aditivos',
                 'valor' => 7.50,

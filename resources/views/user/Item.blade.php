@@ -16,7 +16,7 @@
 
     <div class="relative w-full">
         <!-- Ajuste a altura da imagem para telas maiores -->
-        <img class="h-[400px] sm:h-[200px] md:h-[500px] lg:h-[600px] w-full object-cover" src="{{ asset('Cardapio/food.png') }}" alt="Bife com batata frita">
+        <img class="h-[400px] sm:h-[200px] md:h-[500px] lg:h-[600px] w-full object-cover" src="{{ asset($Item->imagem) }}" alt="Bife com batata frita">
 
         <!-- Botão de voltar com ícone de imagem -->
         <button onclick="window.history.back();" class="absolute top-4 left-4 bg-white p-3 rounded-full shadow-md hover:bg-gray-100 transition duration-200">
@@ -42,17 +42,17 @@
     </div>
 
     <!-- Opções de adicionais -->
-    @foreach($Itens as $Item)
-    <div class="w-full bg-white py-3 px-4 item-container" data-item-id="{{$Item->id}}">
+    @foreach($Itens as $Adicionais)
+    <div class="w-full bg-white py-3 px-4 item-container" data-item-id="{{$Adicionais->id}}">
         <div class="flex items-center justify-between">
             <!-- Texto e descrição -->
             <div class="flex-1">
-                <h3 class="text-lg font-semibold">{{$Item->nome}}</h3>
-                <p class="text-gray-600 text-sm">{{$Item->descricao}}</p>
-                <span class="text-gray-900 font-medium item-price" data-price="{{$Item->valor}}">+R$ {{$Item->valor}}</span>
+                <h3 class="text-lg font-semibold">{{$Adicionais->nome}}</h3>
+                <p class="text-gray-600 text-sm">{{$Adicionais->descricao}}</p>
+                <span class="text-gray-900 font-medium item-price" data-price="{{$Adicionais->valor}}">+R$ {{$Adicionais->valor}}</span>
             </div>
             <!-- Imagem -->
-            <img src="{{ asset($Item->imagem) }}" alt="Batata frita com cheddar e bacon" class="w-24 h-24 rounded-lg object-cover">
+            <img src="{{ asset($Adicionais->imagem) }}" alt="Batata frita com cheddar e bacon" class="w-24 h-24 rounded-lg object-cover">
 
             <!-- Controles de quantidade (inicialmente escondidos) -->
             <div class="quantity-control hidden flex items-center space-x-4">

@@ -147,7 +147,6 @@ class CardapioController extends Controller
                 // Se não existe, criar novo
                 $item = new Cardapio();
             }
-            // Se existe, reutilizar o item existente (edição implícita)
         }
 
         // Determinar categoria
@@ -178,15 +177,15 @@ class CardapioController extends Controller
             $nomeImagem = 'img' . $item->id . '.png';
 
             // Garantir diretório
-            if (!file_exists(public_path('Cardapio'))) {
-                mkdir(public_path('Cardapio'), 0755, true);
+            if (!file_exists(public_path('Storage'))) {
+                mkdir(public_path('Storage'), 0755, true);
             }
 
             // Mover imagem
-            $request->file('Imagem')->move(public_path('Cardapio'), $nomeImagem);
+            $request->file('Imagem')->move(public_path('Storage'), $nomeImagem);
 
             // Atualizar caminho
-            $item->imagem = 'Cardapio/' . $nomeImagem;
+            $item->imagem = 'Storage/' . $nomeImagem;
             $item->save();
         }
 

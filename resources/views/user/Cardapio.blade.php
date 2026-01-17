@@ -100,7 +100,7 @@
                                 class="card-image">
                             <div class="p-4 flex flex-col flex-grow">
                                 <h3 class="text-lg font-semibold text-gray-800 text-center">{{ $cardapio['nome'] }}</h3>
-                                <p class="text-gray-600 text-sm mt-2 text-center flex-grow">{{ $cardapio['descricao'] }}{{ $cardapio['imagem'] }}</p>
+                                <p class="text-gray-600 text-sm mt-2 text-center flex-grow">{{ $cardapio['descricao'] }}</p>
                                 <p class="text-orange-500 font-bold mt-4 text-center">R$ {{ number_format($cardapio['valor'], 2, ',', '.') }}</p>
                             </div>
                         </div>
