@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cardapio;
 use App\Models\Categoria;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,7 +12,10 @@ class CarrinhoController extends Controller
 {
     public function IndexCarrinho()
     {
-        $Carrinho = session('carrinho', []);
+        $response = $this->validarItensDisponiveisSession();
+        if ($response) {return $response;}
+
+        $Carrinho = is_array(session('carrinho')) ? session('carrinho') : [];
         $ids = array_keys($Carrinho);
 
         $User = new UserController();
@@ -26,7 +30,7 @@ class CarrinhoController extends Controller
     {
         session()->put('carrinho', []);
 
-        return $this->IndexCarrinho();
+        return redirect()->route("User.Cardapio");
     }
 
     public function show($id)
@@ -36,6 +40,14 @@ class CarrinhoController extends Controller
             ->first();
 
         if ($Item) {
+            $hoje = now()->dayOfWeekIso; // 1 (segunda) a 7 (domingo)
+
+            if (!in_array($hoje, $Item->disponibilidade)) {
+                return redirect()
+                    ->route('User.Cardapio')
+                    ->with('error', 'Infelizmente hoje esse prato está indisponível.');
+            }
+
             // Verifica a categoria do item
             $categoria = Categoria::find($Item->id_categoria);
 
@@ -104,6 +116,11 @@ class CarrinhoController extends Controller
 
     public function SalvarOpcaoPedido(Request $request)
     {
+        //Validação
+        $carrinhoController = new CarrinhoController();
+        $response = $carrinhoController->validarItensDisponiveisSession();
+        if ($response) {return $response;}
+
         // Criando o array de dados do usuário
         $userData = [
             'nome' => $request->input('nome'),
@@ -157,16 +174,23 @@ class CarrinhoController extends Controller
         $carrinho = [];
 
         foreach ($itens as $id => $item) {
-            // Buscar o item no banco
             $itemCardapio = Cardapio::find($id);
 
-            // Verifica se o item existe, está com status 'ligado' e tem quantidade > 0
             if ($itemCardapio && $itemCardapio->status === 'ligado' && $item['quantidade'] > 0) {
                 $carrinho[$id] = [
                     'quantidade' => $item['quantidade'],
-                    'valor' => $item['valor'],
+                    'valor' => $itemCardapio->desconto > 0
+                        ? $itemCardapio->valor - $itemCardapio->desconto
+                        : $itemCardapio->valor,
                 ];
             }
+        }
+
+        $removidos = $this->validarItensDisponiveis($carrinho);
+        if (!empty($removidos)) {
+            return redirect()
+                ->route('User.Selecao')
+                ->with('erro', 'Alguns itens estavam indisponíveis hoje e foram removidos da sacola.');
         }
 
         session(['carrinho' => $carrinho]);
@@ -184,14 +208,22 @@ class CarrinhoController extends Controller
             $item = $dados['mainItem'];
             $id = $item['id'];
 
+            $itemCardapio = Cardapio::where('id', $id)
+                ->where('status', 'ligado')
+                ->first();
+
+            if (!$itemCardapio) {
+                return back()->with('error', 'Item inválido ou indisponível');
+            }
+
             if (isset($carrinho[$id])) {
-                // Se já existe, soma a quantidade
                 $carrinho[$id]['quantidade'] += $item['quantity'];
             } else {
-                // Se não existe, adiciona novo
                 $carrinho[$id] = [
                     'quantidade' => $item['quantity'],
-                    'valor' => $item['price']
+                    'valor' => $itemCardapio->desconto > 0
+                        ? $itemCardapio->valor - $itemCardapio->desconto
+                        : $itemCardapio->valor,
                 ];
             }
         }
@@ -231,9 +263,63 @@ class CarrinhoController extends Controller
         }
 
         // Atualiza a sessão
+        $removidos = $this->validarItensDisponiveis($carrinho);
         session(['carrinho' => $carrinho]);
 
+        if (!empty($removidos)) {
+            return response()->json([
+                'success' => false,
+                'redirect' => route('redirect.cardapio.error')
+            ], 409);
+        }
+
         return response()->json(['success' => true]);
+    }
+
+    public function validarItensDisponiveis(array &$carrinho): array
+    {
+        $hoje = now()->dayOfWeekIso; // 1 (seg) a 7 (dom)
+        $removidos = [];
+
+        foreach ($carrinho as $id => $item) {
+            $cardapio = Cardapio::find($id);
+
+            if (
+                !$cardapio ||
+                $cardapio->status !== 'ligado' ||
+                !in_array($hoje, $cardapio->disponibilidade)
+            ) {
+                //unset($carrinho[$id]); cringe
+                $removidos[] = $id;
+            }
+        }
+
+        return $removidos;
+    }
+
+    public function validarItensDisponiveisSession()
+    {
+        $carrinho = session('carrinho', []);
+
+        if (empty($carrinho)) {
+            return redirect()
+                ->route('User.Cardapio')
+                ->with('error', 'Seu carrinho está vazio!');
+        }
+
+        $removidos = $this->validarItensDisponiveis($carrinho);
+
+        if (!empty($removidos)) {
+            session(['carrinho' => $carrinho]);
+
+            return redirect()
+                ->route('User.Cardapio')
+                ->with('error', 'Infelizmente hoje esse prato está indisponível.');
+        }
+
+        session(['carrinho' => $carrinho]);
+
+        return null; // opcional
     }
 
     public function calcularPedido()

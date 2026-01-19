@@ -11,9 +11,12 @@ class CardapioController extends Controller
 {
     public function CardapioPorCategoria()
     {
-        // Buscar todas as categorias e seus cardápios relacionados com status 'ligado'
-        $categorias = Categoria::with(['cardapios' => function ($query) {
-            $query->where('status', 'ligado');
+        $hoje = now()->dayOfWeekIso;
+
+        // Buscar categorias com cardápios ATIVOS e DISPONÍVEIS HOJE
+        $categorias = Categoria::with(['cardapios' => function ($query) use ($hoje) {
+            $query->where('status', 'ligado')
+                ->whereJsonContains('disponibilidade', $hoje);
         }])->get();
 
         // Formatar a resposta, dividindo o cardápio por categoria
@@ -137,14 +140,11 @@ class CardapioController extends Controller
         $id = $request->input('id');
 
         if ($id) {
-            // EDITION: Buscar pelo ID
             $item = Cardapio::findOrFail($id);
         } else {
-            // CREATION: Verificar se já existe
             $item = Cardapio::where('nome', $request->input('Nome'))->first();
 
             if (!$item) {
-                // Se não existe, criar novo
                 $item = new Cardapio();
             }
         }

@@ -19,6 +19,10 @@ class Cardapio extends Model
         'id_categoria',
     ];
 
+    protected $casts = [
+        'disponibilidade' => 'array',
+    ];
+
     public function itensPedidos()
     {
         return $this->hasMany(ItensPedido::class, 'id_cardapio');

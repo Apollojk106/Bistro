@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Feijão preto, carne de porco, arroz branco, farofa e couve',
                 'valor' => 29.99,
                 'desconto' => 0,
-                'disponibilidade' => 'Todo dia',
+                'disponibilidade' => json_encode([1, 2, 3, 4, 5, 6, 7]), // TODO DIA
                 'ingredientes' => 'Feijão preto, carne de porco, arroz, couve, farofa',
                 'id_categoria' => 1, // Categoria "Almoço"
                 'created_at' => "2025-03-11 00:46:14",
@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Bife empanado com queijo e molho de tomate, acompanhado de arroz e batata frita',
                 'valor' => 24.50,
                 'desconto' => 0,
-                'disponibilidade' => 'Todo dia',
+                'disponibilidade' => json_encode([1, 2, 3, 4, 5, 6, 7]), // TODO DIA
                 'ingredientes' => 'Carne bovina, queijo, molho de tomate, arroz, batata frita',
                 'id_categoria' => 1, // Categoria "Almoço"
                 'created_at' => "2025-03-11 00:46:14",
@@ -60,7 +60,7 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Arroz temperado com brócolis e alho',
                 'valor' => 10.00,
                 'desconto' => 0,
-                'disponibilidade' => 'Todo dia',
+                'disponibilidade' => json_encode([1, 2, 3, 4, 5, 6, 7]), // TODO DIA
                 'ingredientes' => 'Arroz, brócolis, alho, óleo',
                 'id_categoria' => 2, // Categoria "Complemento"
                 'created_at' => "2025-03-10 00:46:14",
@@ -72,7 +72,7 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Porção de batatas fritas crocantes',
                 'valor' => 8.50,
                 'desconto' => 0,
-                'disponibilidade' => 'Todo dia',
+                'disponibilidade' => json_encode([1, 2, 3, 4, 5, 6, 7]), // TODO DIA
                 'ingredientes' => 'Batata, óleo, sal',
                 'id_categoria' => 2, // Categoria "Complemento"
                 'created_at' => "2025-03-10 00:46:14",
@@ -84,11 +84,23 @@ class DatabaseSeeder extends Seeder
                 'descricao' => 'Suco natural de laranja, fresco e sem aditivos',
                 'valor' => 7.50,
                 'desconto' => 0,
-                'disponibilidade' => 'Todo dia',
+                'disponibilidade' => json_encode([1, 2, 3, 4, 5, 6, 7]), // TODO DIA
                 'ingredientes' => 'Laranja',
                 'id_categoria' => 3, // Categoria "Bebida"
                 'created_at' => "2025-03-9 00:46:14",
                 'updated_at' => now()
+            ],
+            [
+                'imagem' => 'imgs/figado-acebolado.png',
+                'nome' => 'Fígado Acebolado',
+                'descricao' => 'Fígado bovino acebolado, grelhado no ponto certo, acompanhado de arroz branco e couve refogada',
+                'valor' => 22.90,
+                'desconto' => 0,
+                'disponibilidade' => json_encode([6, 7]), // Final de semana
+                'ingredientes' => 'Fígado bovino, cebola, alho, arroz, couve, óleo, sal',
+                'id_categoria' => 1, // Categoria "Almoço"
+                'created_at' => '2025-03-11 00:46:14',
+                'updated_at' => now(),
             ]
         ]);
 
@@ -535,7 +547,7 @@ class DatabaseSeeder extends Seeder
                 'nome' => 'Fabio',
                 'email' => 'Fabio@email.com',
                 'telefone' => '11911112222',
-                'senha' => bcrypt('senha123.abc123'), 
+                'senha' => bcrypt('senha123.abc123'),
                 'salt' => 'abc123',
                 'cep' => '01001000',
                 'rua' => 'Rua do Calote',

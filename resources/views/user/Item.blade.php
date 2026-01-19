@@ -60,7 +60,7 @@
                 <span class="quantity-display text-lg">1</span>
                 <button class="increase-btn text-2xl font-bold">+</button>
             </div>
-    
+
             <!-- Checkbox -->
             <div class="item-checkbox w-8 h-8 border-2 border-gray-900 rounded-full flex items-center justify-center ml-4 cursor-pointer">
                 <img class="checkbox-icon w-6 h-6 hidden" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado">
@@ -137,7 +137,7 @@
         </div>
         <div class="flex justify-between items-center p-4 bg-gray-300 rounded-b-lg">
             <span class="text-black font-medium">Item Principal</span>
-        
+
             <div class="flex items-center space-x-4">
                 <button id="decrease" class="text-xl">−</button>
                 <span id="quantity" class="text-black font-medium">1</span>
@@ -337,7 +337,7 @@
 
             const orderData = {
                 mainItem: {
-                    id: mainItem.id, 
+                    id: mainItem.id,
                     quantity: mainItem.quantity,
                     price: mainItem.price
                 },
@@ -361,7 +361,8 @@
                     if (data.success) {
                         window.location.href = $rota;
                     } else {
-                        alert("Erro ao salvar o pedido. Tente novamente.");
+                        sessionStorage.setItem('cardapio_error', data.error_code);
+                        window.location.href = data.redirect;
                     }
                 })
                 .catch(error => {

@@ -39,15 +39,18 @@ class PedidoController extends Controller
 
     public function gerarPedido()
     {
+        //Validação
+        $carrinhoController = new CarrinhoController();
+        $response = $carrinhoController->validarItensDisponiveisSession();
+        if ($response) {return $response; }
+
         $dadosPedido = session()->all();
 
         if (strtolower($dadosPedido['pagamento']['metodo']) === 'pix') {
             return $this->processarPagamentoPix();
-        }
-        else
-        {
+        } else {
             return $this->storePedido();
-        }    
+        }
     }
 
     public function processarPagamentoPix()

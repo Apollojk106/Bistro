@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('descricao');
             $table->decimal('valor', 8, 2);
             $table->decimal('desconto', 8, 2)->default(0);
-            $table->string('disponibilidade'); // Ex: "Todo dia", "Segunda", etc.
+            $table->json('disponibilidade');
             $table->enum('status', ['ligado', 'desligado'])->default('ligado');
             $table->text('ingredientes');
             $table->foreignId('id_categoria')->constrained('Categorias');

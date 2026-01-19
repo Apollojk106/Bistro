@@ -15,6 +15,10 @@ class FormaPagamentoController extends Controller
     public function SalvarFormaPagamento(Request $request)
     {
         // Validar os dados recebidos
+        $carrinhoController = new CarrinhoController();
+        $response = $carrinhoController->validarItensDisponiveisSession();
+        if ($response) {return $response;}
+
         $request->validate([
             'metodo_pagamento' => 'required|in:pix,cartao,dinheiro',
             'troco_para' => 'nullable|numeric|required_if:metodo_pagamento,dinheiro',
@@ -31,10 +35,9 @@ class FormaPagamentoController extends Controller
             unset($pagamento['troco_para']);
         }
 
-        if($request->opcao_cartao != null)
-        {
+        if ($request->opcao_cartao != null) {
             $opcao = FormaPagamento::where('id', $request->opcao_cartao)
-            ->first();
+                ->first();
 
             $pagamento['metodo'] = $opcao->nome;
         }
@@ -42,6 +45,5 @@ class FormaPagamentoController extends Controller
         session()->put('pagamento', $pagamento);
 
         return redirect()->route("User.VerPedido");
-        
     }
 }

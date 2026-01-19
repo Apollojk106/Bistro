@@ -162,8 +162,12 @@ class UserController extends Controller
     }
 
     //User
-    public function UserCardapio()
+    public function UserCardapio(Request $request)
     {
+        if ($request->has('error')) {
+            session()->flash('error', $request->query('error'));
+        }
+
         $Cardapio = new CardapioController();
         $cardapioPorCategoria = $Cardapio->cardapioPorCategoria();
 
@@ -193,6 +197,11 @@ class UserController extends Controller
 
     public function FormaPagamento()
     {
+        //Validação
+        $carrinhoController = new CarrinhoController();
+        $response = $carrinhoController->validarItensDisponiveisSession();
+        if ($response) {return $response;}
+
         $Pedido = $this->GetCarrinho();
         $opcoesCartao = (new FormaPagamento())->getOpcoesCartao();
 
@@ -214,6 +223,11 @@ class UserController extends Controller
 
     public function VerPedido()
     {
+        //Validação
+        $carrinhoController = new CarrinhoController();
+        $response = $carrinhoController->validarItensDisponiveisSession();
+        if ($response) {return $response;}
+
         try {
             $dadosPedido = session()->all();
             $pedidoIncompleto = false;
@@ -277,7 +291,6 @@ class UserController extends Controller
             if (isset($dadosPedido['opcoes']['categoria']) && $dadosPedido['opcoes']['categoria'] === 'Entrega') {
                 $valorTotal += $valorFrete;
             }
-
         } catch (Exception $X) {
             dd($X->getMessage());
             $dadosPedido = [];
@@ -337,6 +350,11 @@ class UserController extends Controller
 
     public function Selecao()
     {
+        //Validação
+        $carrinhoController = new CarrinhoController();
+        $response = $carrinhoController->validarItensDisponiveisSession();
+        if ($response) {return $response;}
+
         // Obtém o carrinho do usuário
         $Pedido = $this->GetCarrinho();
 
