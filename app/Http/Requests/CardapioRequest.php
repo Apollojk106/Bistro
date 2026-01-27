@@ -21,7 +21,7 @@ class CardapioRequest extends FormRequest
             'categoria' => 'required|string',
             'Igredientes' => 'required|string',
             'Desconto' => 'nullable|numeric|min:0|max:100',
-            'Disponibilidade' => 'required|string',
+            //'Disponibilidade' => 'required|string',
         ];
     }
 

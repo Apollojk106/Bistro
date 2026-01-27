@@ -200,7 +200,9 @@ class UserController extends Controller
         //Validação
         $carrinhoController = new CarrinhoController();
         $response = $carrinhoController->validarItensDisponiveisSession();
-        if ($response) {return $response;}
+        if ($response) {
+            return $response;
+        }
 
         $Pedido = $this->GetCarrinho();
         $opcoesCartao = (new FormaPagamento())->getOpcoesCartao();
@@ -226,7 +228,9 @@ class UserController extends Controller
         //Validação
         $carrinhoController = new CarrinhoController();
         $response = $carrinhoController->validarItensDisponiveisSession();
-        if ($response) {return $response;}
+        if ($response) {
+            return $response;
+        }
 
         try {
             $dadosPedido = session()->all();
@@ -353,7 +357,9 @@ class UserController extends Controller
         //Validação
         $carrinhoController = new CarrinhoController();
         $response = $carrinhoController->validarItensDisponiveisSession();
-        if ($response) {return $response;}
+        if ($response) {
+            return $response;
+        }
 
         // Obtém o carrinho do usuário
         $Pedido = $this->GetCarrinho();
@@ -453,23 +459,50 @@ class UserController extends Controller
 
     public function EditItemCardapio(Request $request)
     {
-        $Item = Cardapio::where('id', $request->Id)
-            ->first();
+        $Item = Cardapio::findOrFail($request->Id);
 
         $Categorias = Categoria::pluck('nome', 'id');
 
-        $Item->categoria = Categoria::where('id', $Item->id_categoria)
-            ->first()
-            ->nome ?? null;
+        $Item->categoria = Categoria::find($Item->id_categoria)->nome ?? null;
 
         return view('admin.ItemCardapio', compact('Categorias', 'Item'));
     }
 
     public function SaveItem(CardapioRequest $request)
     {
+        $mapaDias = [
+            'segunda' => 1,
+            'terca'   => 2,
+            'quarta'  => 3,
+            'quinta'  => 4,
+            'sexta'   => 5,
+            'sabado'  => 6,
+            'domingo' => 7,
+        ];
+
+        if ($request->has('disponibilidade_todos')) {
+            $disponibilidade = [1, 2, 3, 4, 5, 6, 7];
+        } else {
+            $diasSelecionados = $request->input('disponibilidade_dias', []);
+
+            $disponibilidade = collect($diasSelecionados)
+                ->map(fn($dia) => $mapaDias[$dia] ?? null)
+                ->filter()       // remove null
+                ->unique()
+                ->sort()
+                ->values()
+                ->toArray();
+        }
+
+        // Injeta corretamente no request
+        $request->merge([
+            'Disponibilidade' => $disponibilidade
+        ]);
+
         $Cardapio = new CardapioController();
         $Cardapio->SaveItem($request);
-        return  $Cardapio->IndexCardapio();
+
+        return $Cardapio->IndexCardapio();
     }
 
     public function Configuracao()
