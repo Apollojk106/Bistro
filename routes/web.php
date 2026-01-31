@@ -56,7 +56,7 @@ Route::get('/redirect-cardapio-error', function () {
     return redirect()
         ->route('User.Cardapio')
         ->with('error', 'Alguns itens estavam indisponíveis hoje e foram removidos da sacola.');
-})->name('redirect.cardapio.error'); // erro da sacola com item indisponivel
+})->name('redirect.cardapio.error'); 
 
 Route::get('/Salvar/Selecao/{opcaoSelecionada}/{tipoOpcao}', [CarrinhoController::class, 'SalvarSelecao'])->name('salvar.selecao');
 Route::get('/Salvar/Selecao/{opcaoSelecionada}/{tipoOpcao}/{horario}', [CarrinhoController::class, 'SalvarSelecaoHorario'])->name('salvar.selecao.horario');

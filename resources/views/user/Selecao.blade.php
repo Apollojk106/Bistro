@@ -73,8 +73,8 @@
 
           @if($configuracoes['Agendamento'] === 'Ligado')
           <!-- Bloco: Agendamento Local -->
-          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer" onclick="toggleAgendamento()">
-            <div class="flex justify-between items-center">
+          <div class="border border-orange-400 rounded-2xl p-4 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg cursor-pointer">
+            <div class="flex justify-between items-center" onclick="toggleAgendamento()">
               <span class="text-lg font-medium">Agendamento</span>
               <div class="w-7 h-7 rounded-full border border-gray-500 flex items-center justify-center transition-colors duration-300 hover:bg-gray-200">
                 <img id="agendamentoCheck" src="{{ asset('Icons/check-green.png') }}" alt="Selecionado" class="hidden w-5 h-5" />
