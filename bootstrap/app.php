@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin' => \App\Http\Middleware\CheckAdminRole::class,
+            'validar.carrinho' => \App\Http\Middleware\ValidarCarrinho::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

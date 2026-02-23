@@ -197,13 +197,6 @@ class UserController extends Controller
 
     public function FormaPagamento()
     {
-        //Validação
-        $carrinhoController = new CarrinhoController();
-        $response = $carrinhoController->validarItensDisponiveisSession();
-        if ($response) {
-            return $response;
-        }
-
         $Pedido = $this->GetCarrinho();
         $opcoesCartao = (new FormaPagamento())->getOpcoesCartao();
 
@@ -225,13 +218,6 @@ class UserController extends Controller
 
     public function VerPedido()
     {
-        //Validação
-        $carrinhoController = new CarrinhoController();
-        $response = $carrinhoController->validarItensDisponiveisSession();
-        if ($response) {
-            return $response;
-        }
-
         try {
             $dadosPedido = session()->all();
             $pedidoIncompleto = false;
@@ -354,13 +340,6 @@ class UserController extends Controller
 
     public function Selecao()
     {
-        //Validação
-        $carrinhoController = new CarrinhoController();
-        $response = $carrinhoController->validarItensDisponiveisSession();
-        if ($response) {
-            return $response;
-        }
-
         // Obtém o carrinho do usuário
         $Pedido = $this->GetCarrinho();
 

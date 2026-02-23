@@ -32,21 +32,11 @@ Route::middleware(['auth'])->group(function () {
 
 //Cardapio
 Route::get('/Cardapio', [UserController::class, 'UserCardapio'])->name("User.Cardapio");
-Route::get('/Item/{id}', [CarrinhoController::class, 'show'])->name('item.get');
 
-Route::get('/PagamentoPix', [UserController::class, 'PagamentoPix'])->name("User.Pix");
-
-Route::get('/OpcaoPedido', [UserController::class, 'OpcaoPedido'])->name("User.OpcaoPedido");
-Route::post('/Salvar/OpcaoPedido', [CarrinhoController::class, 'SalvarOpcaoPedido'])->name("User.OpcaoPedido.Post");
-
-Route::get('/Pagamento', [UserController::class, 'FormaPagamento'])->name("User.Pagamento");
-Route::post('/Salvar/Pagamento', [FormaPagamentoController::class, 'SalvarFormaPagamento'])->name("User.Pagamento.Post");
-
-Route::get('/Selecao', [UserController::class, 'Selecao'])->name("User.Selecao");
 
 Route::get('/Localizacao', [UserController::class, 'Localizacao'])->name("User.Localizacao");
 
-Route::get('/Sacola', [CarrinhoController::class, 'IndexCarrinho'])->name("User.Sacola");
+
 Route::get('/Sacola/Limpar', [CarrinhoController::class, 'LimparCarrinho'])->name("User.Sacola.Limpar");
 
 //Rotas Json
@@ -56,18 +46,34 @@ Route::get('/redirect-cardapio-error', function () {
     return redirect()
         ->route('User.Cardapio')
         ->with('error', 'Alguns itens estavam indisponíveis hoje e foram removidos da sacola.');
-})->name('redirect.cardapio.error'); 
-
-Route::get('/Salvar/Selecao/{opcaoSelecionada}/{tipoOpcao}', [CarrinhoController::class, 'SalvarSelecao'])->name('salvar.selecao');
-Route::get('/Salvar/Selecao/{opcaoSelecionada}/{tipoOpcao}/{horario}', [CarrinhoController::class, 'SalvarSelecaoHorario'])->name('salvar.selecao.horario');
+})->name('redirect.cardapio.error');
 
 Route::post('/Editar/pedido', [CarrinhoController::class, 'SalvarPedido'])->name('editar.item');
 
 Route::get('/Pedido/Solicitado', [UserController::class, 'PedidoSolicitado'])->name("User.Pedido");
 Route::get('/Pedido/User', [UserController::class, 'UltimoPedido'])->name("User.Ultimo.Pedido");
 
-Route::get('/VerPedido', [UserController::class, 'VerPedido'])->name('User.VerPedido');
-Route::get('/gerarPedido', [PedidoController::class, 'gerarPedido'])->name('Gerar.Pedido');
+Route::get('/Item/{id}', [CarrinhoController::class, 'show'])->name('item.get');
+
+Route::middleware(['validar.carrinho'])->group(function () {
+    Route::get('/Sacola', [CarrinhoController::class, 'IndexCarrinho'])->name("User.Sacola");
+
+    Route::get('/Selecao', [UserController::class, 'Selecao'])->name("User.Selecao");
+
+    Route::get('/Salvar/Selecao/{opcaoSelecionada}/{tipoOpcao}', [CarrinhoController::class, 'SalvarSelecao'])->name('salvar.selecao');
+    Route::get('/Salvar/Selecao/{opcaoSelecionada}/{tipoOpcao}/{horario}', [CarrinhoController::class, 'SalvarSelecaoHorario'])->name('salvar.selecao.horario');
+
+    Route::get('/PagamentoPix', [UserController::class, 'PagamentoPix'])->name("User.Pix");
+
+    Route::get('/OpcaoPedido', [UserController::class, 'OpcaoPedido'])->name("User.OpcaoPedido");
+    Route::post('/Salvar/OpcaoPedido', [CarrinhoController::class, 'SalvarOpcaoPedido'])->name("User.OpcaoPedido.Post");
+
+    Route::get('/Pagamento', [UserController::class, 'FormaPagamento'])->name("User.Pagamento");
+    Route::post('/Salvar/Pagamento', [FormaPagamentoController::class, 'SalvarFormaPagamento'])->name("User.Pagamento.Post");
+
+    Route::get('/VerPedido', [UserController::class, 'VerPedido'])->name('User.VerPedido');
+    Route::get('/gerarPedido', [PedidoController::class, 'gerarPedido'])->name('Gerar.Pedido');
+});
 
 //admin
 Route::middleware(['auth', 'admin'])->group(function () {

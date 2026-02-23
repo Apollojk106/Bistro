@@ -13,7 +13,9 @@ class CarrinhoController extends Controller
     public function IndexCarrinho()
     {
         $response = $this->validarItensDisponiveisSession();
-        if ($response) {return $response;}
+        if ($response) {
+            return $response;
+        }
 
         $Carrinho = is_array(session('carrinho')) ? session('carrinho') : [];
         $ids = array_keys($Carrinho);
@@ -116,11 +118,6 @@ class CarrinhoController extends Controller
 
     public function SalvarOpcaoPedido(Request $request)
     {
-        //Validação
-        $carrinhoController = new CarrinhoController();
-        $response = $carrinhoController->validarItensDisponiveisSession();
-        if ($response) {return $response;}
-
         // Criando o array de dados do usuário
         $userData = [
             'nome' => $request->input('nome'),
@@ -170,18 +167,31 @@ class CarrinhoController extends Controller
     public function SalvarSacola(Request $request)
     {
         $itens = $request->input('itens', []);
-
         $carrinho = [];
 
-        foreach ($itens as $id => $item) {
-            $itemCardapio = Cardapio::find($id);
+        foreach ($itens as $item) {
 
-            if ($itemCardapio && $itemCardapio->status === 'ligado' && $item['quantidade'] > 0) {
+            if (!isset($item['id'], $item['quantidade'])) {
+                continue;
+            }
+
+            $id = (int) $item['id'];
+            $quantidade = (int) $item['quantidade'];
+
+            if ($quantidade <= 0) {
+                continue;
+            }
+
+            $produto = Cardapio::find($id);
+
+            if ($produto) {
+                $valorFinal = $produto->desconto > 0
+                    ? $produto->valor - $produto->desconto
+                    : $produto->valor;
+
                 $carrinho[$id] = [
-                    'quantidade' => $item['quantidade'],
-                    'valor' => $itemCardapio->desconto > 0
-                        ? $itemCardapio->valor - $itemCardapio->desconto
-                        : $itemCardapio->valor,
+                    'quantidade' => $quantidade,
+                    'valor' => (float) $valorFinal,
                 ];
             }
         }
@@ -289,7 +299,7 @@ class CarrinhoController extends Controller
                 $cardapio->status !== 'ligado' ||
                 !in_array($hoje, $cardapio->disponibilidade)
             ) {
-                //unset($carrinho[$id]); cringe
+                unset($carrinho[$id]);
                 $removidos[] = $id;
             }
         }
